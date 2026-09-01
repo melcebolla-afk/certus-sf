@@ -3,3 +3,8 @@
 .env
 .env.*
 !.env.example
+
+# Stockfish build artifacts (submodule working tree)
+stockfish/src/*.o
+stockfish/src/stockfish
+stockfish/src/*.nnue

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "content_version": "2026.08.29",
+  "layer": "THEORETICAL",
+  "entries": [
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k b - - 0 1",
+      "result": "D",
+      "note": "K vs K black to move (CI fixture)"
+    },
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k w - - 0 1",
+      "result": "D",
+      "note": "K vs K (CI fixture; lab uses fortresses \u22657)"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "content_version": "2026.08.29",
+  "layer": "PROVEN_MATE",
+  "entries": [
+    {
+      "fen": "6k1/8/6K1/8/8/8/8/7Q w - - 0 1",
+      "plies": 1,
+      "stm_wins": true
+    },
+    {
+      "fen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
+      "plies": 1,
+      "stm_wins": true
+    },
+    {
+      "fen": "8/8/8/8/8/5K2/6Q1/5k2 w - - 0 1",
+      "plies": 1,
+      "stm_wins": true
+    }
+  ]
+}

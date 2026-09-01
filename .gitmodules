@@ -1,3 +1,7 @@
 [submodule "methodology"]
 	path = methodology
 	url = https://github.com/melcebolla-afk/methodology.git
+[submodule "stockfish"]
+	path = stockfish
+	url = https://github.com/official-stockfish/Stockfish.git
+	branch = master

@@ -2,4 +2,11 @@
 
 ## Unreleased
 
-- Adopción del método (submodule `methodology/` @ v1.4.1) + LAYOUT + adaptador Cursor.
+- **Fase 0:** Stockfish 18 submodule (`sf_18` @ `cb3d4ee9`); build release verde.
+- Spec `FEAT-0001-evidence-layers-sf.md`; inventario/guardrails/convenciones actualizados.
+- Bootstrap Certus: `docs/bootstrap/`, `builders/` capas, `testdata/` fixtures, interop, prior-art.
+- `CURSOR-START-PROMPT.md` — prompt arranque agente.
+
+## 2026-09-01
+
+- Repo inicial + methodology submodule @ v1.4.1 + LAYOUT + adaptador Cursor.

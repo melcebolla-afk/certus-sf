@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "oracles": [
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "family": "ab",
+      "wdl": "d",
+      "budget_nodes": 50000000,
+      "status": "DONE",
+      "marked_moves": ["g1f3", "b1c3"]
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "family": "mcts",
+      "wdl": "d",
+      "budget_nodes": 5000000,
+      "status": "DONE",
+      "marked_moves": ["g1f3", "b1c3"]
+    },
+    {
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+      "family": "ab",
+      "wdl": "d",
+      "budget_nodes": 50000000,
+      "status": "DONE",
+      "marked_moves": ["d2d4", "f1c4"]
+    },
+    {
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+      "family": "mcts",
+      "wdl": "d",
+      "budget_nodes": 5000000,
+      "status": "DONE",
+      "marked_moves": ["d2d4", "f1b5"]
+    },
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k w - - 0 1",
+      "family": "ab",
+      "wdl": "w",
+      "budget_nodes": 50000000,
+      "status": "DONE",
+      "marked_moves": ["e1e2"]
+    },
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k w - - 0 1",
+      "family": "mcts",
+      "wdl": "w",
+      "budget_nodes": 5000000,
+      "status": "DONE",
+      "marked_moves": ["e1e2"]
+    },
+    {
+      "fen": "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1",
+      "family": "ab",
+      "wdl": "w",
+      "budget_nodes": 50000000,
+      "status": "DONE",
+      "marked_moves": ["e2e4", "e2e3"]
+    },
+    {
+      "fen": "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1",
+      "family": "mcts",
+      "wdl": "w",
+      "budget_nodes": 5000000,
+      "status": "DONE",
+      "marked_moves": ["e2e4"]
+    },
+    {
+      "fen": "4k3/8/8/8/8/8/8/4K2R w - - 0 1",
+      "family": "ab",
+      "wdl": "w",
+      "budget_nodes": 1000,
+      "status": "DONE",
+      "marked_moves": ["h1h8"]
+    },
+    {
+      "fen": "4k3/8/8/8/8/8/8/4K2R w - - 0 1",
+      "family": "mcts",
+      "wdl": "d",
+      "budget_nodes": 5000000,
+      "status": "DONE",
+      "marked_moves": ["h1h7"]
+    }
+  ]
+}

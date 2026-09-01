@@ -1,0 +1,17 @@
+{
+  "content_version_base": "2026.08.29",
+  "entries": [
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k w - - 0 1",
+      "result": "D",
+      "note": "K vs K (CI fixture; lab uses fortresses ≥7)",
+      "ref": "FIDE insufficient material"
+    },
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k b - - 0 1",
+      "result": "D",
+      "note": "K vs K black to move (CI fixture)",
+      "ref": "FIDE insufficient material"
+    }
+  ]
+}

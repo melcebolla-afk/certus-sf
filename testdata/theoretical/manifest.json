@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "layer": "THEORETICAL",
+  "content_version": "2026.08.29",
+  "checksum": "sha256:3c1948c1de460c68b955b21b4941de2c95577f3f3fcc5ea723a63f802af412e7",
+  "n_entries": 2,
+  "source": "theory_build.py"
+}

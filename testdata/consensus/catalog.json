@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "content_version": "consensus-fixture-2026.08.29",
+  "layer": "STRONG_CONSENSUS",
+  "min_confidence": 0.8,
+  "entries": [
+    {
+      "fen": "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1",
+      "wdl": "w",
+      "confidence": 0.92,
+      "marked_moves": [
+        "e2e4"
+      ],
+      "sources": [
+        "ab:budget=50000000",
+        "mcts:budget=5000000"
+      ],
+      "budgets": {
+        "ab_nodes": 50000000,
+        "mcts_nodes": 5000000
+      }
+    },
+    {
+      "fen": "8/8/8/8/8/8/8/4K2k w - - 0 1",
+      "wdl": "w",
+      "confidence": 0.92,
+      "marked_moves": [
+        "e1e2"
+      ],
+      "sources": [
+        "ab:budget=50000000",
+        "mcts:budget=5000000"
+      ],
+      "budgets": {
+        "ab_nodes": 50000000,
+        "mcts_nodes": 5000000
+      }
+    },
+    {
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+      "wdl": "d",
+      "confidence": 0.92,
+      "marked_moves": [
+        "d2d4"
+      ],
+      "sources": [
+        "ab:budget=50000000",
+        "mcts:budget=5000000"
+      ],
+      "budgets": {
+        "ab_nodes": 50000000,
+        "mcts_nodes": 5000000
+      }
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "wdl": "d",
+      "confidence": 0.92,
+      "marked_moves": [
+        "b1c3",
+        "g1f3"
+      ],
+      "sources": [
+        "ab:budget=50000000",
+        "mcts:budget=5000000"
+      ],
+      "budgets": {
+        "ab_nodes": 50000000,
+        "mcts_nodes": 5000000
+      }
+    }
+  ]
+}

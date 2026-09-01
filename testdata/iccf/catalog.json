@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "content_version": "iccf-fixture-2026.08.29",
+  "layer": "EMPIRICAL_ICCF",
+  "min_n": 10,
+  "min_elo": 2000,
+  "min_date": "2000-01-01",
+  "min_confidence": 0.5,
+  "entries": [
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "wdl": "d",
+      "n": 42,
+      "elo": 2280,
+      "date": "2018-06-01",
+      "confidence": 0.5935,
+      "sources": [
+        "iccf"
+      ]
+    },
+    {
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+      "wdl": "d",
+      "n": 3,
+      "elo": 2300,
+      "date": "2019-01-01",
+      "confidence": 0.4216,
+      "sources": [
+        "iccf"
+      ]
+    },
+    {
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+      "wdl": "d",
+      "n": 120,
+      "elo": 2400,
+      "date": "2020-03-15",
+      "confidence": 0.6619,
+      "sources": [
+        "iccf"
+      ]
+    },
+    {
+      "fen": "8/8/8/8/8/8/4Q3/4K1k1 w - - 0 1",
+      "wdl": "w",
+      "n": 50,
+      "elo": 2100,
+      "date": "2015-01-01",
+      "confidence": 0.6048,
+      "sources": [
+        "iccf"
+      ]
+    }
+  ]
+}

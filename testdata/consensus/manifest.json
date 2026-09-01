@@ -1,0 +1,13 @@
+{
+  "layer": "STRONG_CONSENSUS",
+  "schema_version": 1,
+  "content_version": "consensus-fixture-2026.08.29",
+  "checksum": "sha256:c0396248b4955cc3e47a5c1b3e8c7ffb61f197f2d9769e86bc4c9aab9356fde4",
+  "coverage": {
+    "positions": 4,
+    "skipped_fen": 1
+  },
+  "sources": [
+    "barbol-lite-export"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "layer": "EMPIRICAL_ICCF",
+  "schema_version": 1,
+  "content_version": "iccf-fixture-2026.08.29",
+  "checksum": "sha256:117a215a597d5107ebe1e37e314bd1403e9a6c0b03b5e1c6beb6a196cd2725bd",
+  "coverage": {
+    "positions": 4,
+    "skipped_rows": 0
+  },
+  "sources": [
+    "iccf-export"
+  ]
+}
