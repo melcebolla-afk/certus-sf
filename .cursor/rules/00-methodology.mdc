@@ -1,0 +1,32 @@
+---
+description: Seguir la metodologia en methodology/ (submodule)
+alwaysApply: true
+---
+
+<!--
+PAQUETE METODOLOGÍA.
+- Repo host (este remoto / raíz del paquete): SÍ editar el método aquí (evolución + VERSION/tag). Ese es el propósito de este repo.
+- Repos consumidores: NO editar bajo methodology/; solo checkout de tag. Producto → docs/project/ del consumidor.
+-->
+
+# Metodo comun
+
+Al recibir un pedido de cambio: clasifica **trivial vs no trivial** según `methodology/rhythm.md`. Si es trivial, **propón el carril corto** (`methodology/prompts.md` §0) antes de abrir spec o el ritmo completo. Si hay duda → ritmo completo.
+
+Antes de analisis, plan o implementacion no trivial, lee y aplica:
+
+- `methodology/INDEX.md`
+- `methodology/principles.md`
+- `methodology/rhythm.md`
+- `methodology/layout.md`
+- `methodology/prompts.md` (prompts copiables por fase)
+
+Plantillas: `methodology/templates/`.
+
+**No edites ficheros bajo `methodology/`** (ni plantillas ni principios): solo checkout de tag. Cambios al método → repo del paquete. En el producto solo `docs/project/`, instancias y código de aplicación.
+
+No reimplementes el metodo en otras rules. No inventes reglas de negocio: escala al humano.
+
+Conocimiento de este producto: `docs/project/` (inventory, guardrails, conventions). No uses `docs/PROJECT_STATE.md` como entrada al redactar (solo salida humana al cierre).
+
+Plans canonicos: `docs/plans/<ID>-plan.md` (no tratar `.cursor/plans/` como fuente de verdad).

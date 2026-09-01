@@ -1,0 +1,14 @@
+---
+description: Convenciones de producto (puntero)
+alwaysApply: true
+---
+
+<!--
+PAQUETE METODOLOGÍA.
+- Repo host (este remoto / raíz del paquete): SÍ editar el método aquí (evolución + VERSION/tag). Ese es el propósito de este repo.
+- Repos consumidores: NO editar bajo methodology/; solo checkout de tag. Producto → docs/project/ del consumidor.
+-->
+
+# Convenciones de este repo
+
+Lee y aplica `docs/project/conventions.md` en cambios de codigo y documentacion de este producto.

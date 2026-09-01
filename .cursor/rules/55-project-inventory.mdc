@@ -1,0 +1,16 @@
+---
+description: Inventario de producto para redactar (puntero)
+alwaysApply: true
+---
+
+<!--
+PAQUETE METODOLOGÍA.
+- Repo host (este remoto / raíz del paquete): SÍ editar el método aquí (evolución + VERSION/tag). Ese es el propósito de este repo.
+- Repos consumidores: NO editar bajo methodology/; solo checkout de tag. Producto → docs/project/ del consumidor.
+-->
+
+# Inventario al redactar
+
+Al crear o actualizar specs, analysis, design, open questions, planes o QA, consulta `docs/project/inventory.md`.
+
+No uses `docs/PROJECT_STATE.md` como inventario (es documentacion de salida para humanos).

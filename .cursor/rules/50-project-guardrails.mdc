@@ -1,0 +1,18 @@
+---
+description: Guardrails de producto (puntero)
+alwaysApply: true
+---
+
+<!--
+PAQUETE METODOLOGÍA.
+- Repo host (este remoto / raíz del paquete): SÍ editar el método aquí (evolución + VERSION/tag). Ese es el propósito de este repo.
+- Repos consumidores: NO editar bajo methodology/; solo checkout de tag. Producto → docs/project/ del consumidor.
+-->
+
+# Guardrails de este repo
+
+Lee y respeta `docs/project/guardrails.md`.
+
+Si el producto tiene persistencia (BD/archivos de estado), ese fichero debe incluir límites de **datos/BD destructivos** (sección «Datos / BD — crítico»). No inventes nombres de BD: pregunta al humano.
+
+Si ese fichero no existe, crea un borrador minimo a partir del conocimiento del repo y pide confirmacion al humano antes de asumir limites de negocio.
