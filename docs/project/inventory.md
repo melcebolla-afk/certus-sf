@@ -67,6 +67,7 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | Fase 3 search hooks + info strings | **hecho** 2026-09-01 |
 | Fase 4 CI GitHub + runbooks | **hecho** 2026-09-01 |
 | FEAT-0001 evidence layers SF | **cerrado** 2026-09-01 |
+| FEAT-0002 consensus marked search | **hecho** 2026-09-02 |
 
 ## Fuera de alcance
 

@@ -1034,6 +1034,11 @@ moves_loop:  // When in check, search starts here
         if (!pos.legal(move))
             continue;
 
+#ifdef CERTUS_SF
+        if (!Certus::allow_search_move(pos, move, ss->inCheck, int(pvIdx)))
+            continue;
+#endif
+
         // At root obey the "searchmoves" option and skip moves not listed in Root
         // Move List. In MultiPV mode we also skip PV moves that have been already
         // searched and those of lower "TB rank" if we are in a TB root position.

@@ -16,6 +16,8 @@ namespace Stockfish::Evidence {
 
 enum class EvidenceInfoMode { Off, Root, All };
 
+enum class ConsensusSearchMode { Off, MarkedOnly };
+
 class Manager {
    public:
     Manager() = default;
@@ -34,6 +36,8 @@ class Manager {
     const MateStore&        mate() const { return mate_; }
 
     EvidenceInfoMode evidence_info() const { return evidence_info_; }
+    ConsensusSearchMode consensus_search() const { return consensus_search_; }
+    void                  set_consensus_search(ConsensusSearchMode mode) { consensus_search_ = mode; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -50,6 +54,7 @@ class Manager {
     MateStore             mate_;
     std::string           evidence_root_;
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
+    ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::Off;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

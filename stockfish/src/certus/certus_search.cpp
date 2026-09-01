@@ -198,4 +198,30 @@ void finish_search_evidence() {
         print_info("info string evidence_hits " + parts.str());
 }
 
+std::vector<Move> consensus_marked_legal_moves(const Position& pos) {
+    const Evidence::Manager* mgr = evidence_manager();
+    if (!mgr || !mgr->consensus().ready())
+        return {};
+
+    const Evidence::ConsensusEntry* entry = mgr->probe_consensus(pos);
+    if (!entry || entry->marked_moves.empty())
+        return {};
+
+    return legal_marked_moves(pos, entry->marked_moves);
+}
+
+bool allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx) {
+    const Evidence::Manager* mgr = evidence_manager();
+    if (!mgr || mgr->consensus_search() != Evidence::ConsensusSearchMode::MarkedOnly)
+        return true;
+    if (inCheck || pvIdx > 0)
+        return true;
+
+    const std::vector<Move> marked = consensus_marked_legal_moves(pos);
+    if (marked.empty())
+        return true;
+
+    return std::find(marked.begin(), marked.end(), move) != marked.end();
+}
+
 }  // namespace Stockfish::Certus

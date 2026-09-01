@@ -20,6 +20,15 @@ EvidenceInfoMode parse_evidence_info(const std::string& s) {
     return EvidenceInfoMode::Root;
 }
 
+ConsensusSearchMode parse_consensus_search(const std::string& s) {
+    std::string t;
+    for (char c : s)
+        t += char(std::tolower(static_cast<unsigned char>(c)));
+    if (t == "markedonly" || t == "marked_only")
+        return ConsensusSearchMode::MarkedOnly;
+    return ConsensusSearchMode::Off;
+}
+
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -153,6 +162,12 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
     options.add("EvidenceInfo",
                 Option("Off Root All", "Root", [this](const Option& o) -> std::optional<std::string> {
                     evidence_info_ = parse_evidence_info(std::string(o));
+                    return std::nullopt;
+                }));
+
+    options.add("ConsensusSearch",
+                Option("Off MarkedOnly", "Off", [this](const Option& o) -> std::optional<std::string> {
+                    consensus_search_ = parse_consensus_search(std::string(o));
                     return std::nullopt;
                 }));
 }

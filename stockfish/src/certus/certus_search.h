@@ -24,6 +24,10 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
                          Search::SearchManager& manager);
 void finish_search_evidence();
 
+// FEAT-0002: marked-only movegen in main search (not qsearch).
+std::vector<Move> consensus_marked_legal_moves(const Position& pos);
+bool              allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx);
+
 }  // namespace Certus
 }  // namespace Stockfish
 

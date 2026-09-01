@@ -7,9 +7,11 @@ PROBE="$ROOT/stockfish/src/evidence_probe"
 GOLDEN="$ROOT/stockfish/src/golden_probe"
 
 make -j -C "$ROOT/stockfish/src" build ARCH=x86-64-sse41-popcnt
-make -j -C "$ROOT/stockfish/src" evidence_probe golden_probe ARCH=x86-64-sse41-popcnt
+make -j -C "$ROOT/stockfish/src" evidence_probe golden_probe consensus_search_probe ARCH=x86-64-sse41-popcnt
 
 python3 "$ROOT/builders/test_mate_build.py"
+
+"$ROOT/stockfish/src/consensus_search_probe" "$ROOT"
 
 "$PROBE" "$ROOT"
 "$GOLDEN" "$ROOT"
@@ -23,6 +25,7 @@ echo "$out" | grep -qv 'info depth 1'
 out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
+echo "$out" | grep -q 'option name ConsensusSearch'
 echo "$out" | grep -q 'ConsensusPath ready version='
 
 echo "tests/evidence_probe.sh: OK"

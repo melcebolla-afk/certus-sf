@@ -37,11 +37,16 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `#ifdef CERTUS_SF` / `#include "certus/certus_engine.h"`
 - `engine_info()`: call `Certus::engine_identity(to_uci)` when `CERTUS_SF` defined
 
+### `src/ucioption.cpp`
+
+- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch).
+
 ### `src/search.cpp`
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
+- `Certus::allow_search_move` in main search move loop (FEAT-0002 MarkedOnly)
 - `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 

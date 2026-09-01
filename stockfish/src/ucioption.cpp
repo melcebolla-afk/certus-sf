@@ -193,7 +193,7 @@ std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
                 os << "\noption name " << it.first << " type " << o.type;
 
                 if (o.type == "check" || o.type == "combo")
-                    os << " default " << o.defaultValue;
+                    os << " default " << o.currentValue;
 
                 else if (o.type == "string")
                 {
@@ -204,6 +204,14 @@ std::ostream& operator<<(std::ostream& os, const OptionsMap& om) {
                 else if (o.type == "spin")
                     os << " default " << stoi(o.defaultValue) << " min " << o.min << " max "
                        << o.max;
+
+                if (o.type == "combo")
+                {
+                    std::istringstream ss(o.defaultValue);
+                    std::string        token;
+                    while (ss >> token)
+                        os << " var " << token;
+                }
 
                 break;
             }

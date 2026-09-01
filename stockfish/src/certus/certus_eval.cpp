@@ -79,7 +79,10 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
     if (tracking_hits())
         record_evidence_hit(ev.evidence_class);
 
-    if (ev.evidence_class == Evidence::EvidenceClass::Inference)
+    // FEAT-0002: consensus/ICCF inform telemetry only; numeric eval stays NNUE.
+    if (ev.evidence_class == Evidence::EvidenceClass::Inference
+        || ev.evidence_class == Evidence::EvidenceClass::StrongConsensus
+        || ev.evidence_class == Evidence::EvidenceClass::EmpiricalIccf)
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
 
     return ev.to_value();

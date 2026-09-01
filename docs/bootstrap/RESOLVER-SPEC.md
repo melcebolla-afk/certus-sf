@@ -67,12 +67,14 @@ Si en raíz:
 - `bestmove` = primer marked legal (orden catalog)
 - `info string marked=uci,uci,...`
 
-## ResultBias (post-resolver)
+## ConsensusSearch (FEAT-0002)
 
-Opción UCI `ResultBias`: NeedWin | Neutral | PreferDraw
+| Valor | Movegen (search principal) | Eval estática |
+|-------|---------------------------|---------------|
+| `Off` | Todas legales | NNUE (TB/mate/theory si ganan) |
+| `MarkedOnly` | Solo `marked_moves` ∩ legal si hit consenso | NNUE (consenso/ICCF no sustituyen cp) |
 
-- Modifica **utility** para TM/search; **no** cambia `evidence_class`.
-- Referencia: `result_bias.rs`
+Salvaguardas: en jaque → todas legales; `MultiPV` línea `pvIdx>0` → sin filtro; qsearch sin filtro.
 
 ## EvidenceInfo
 
