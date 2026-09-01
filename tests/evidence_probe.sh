@@ -20,12 +20,13 @@ out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nis
 echo "$out" | grep -q 'info string evidence=STRONG_CONSENSUS'
 echo "$out" | grep -q 'info string marked=b1c3'
 echo "$out" | grep -q 'bestmove b1c3'
-echo "$out" | grep -qv 'info depth 1'
+echo "$out" | grep -q 'info depth 1 score cp'
+echo "$out" | grep -qv 'info depth 1 score cp 0 '
 
 out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
-echo "$out" | grep -q 'option name ConsensusSearch'
+echo "$out" | grep -q 'option name ConsensusSearch type combo default MarkedOnly'
 echo "$out" | grep -q 'ConsensusPath ready version='
 
 echo "tests/evidence_probe.sh: OK"

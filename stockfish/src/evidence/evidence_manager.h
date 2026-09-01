@@ -54,7 +54,7 @@ class Manager {
     MateStore             mate_;
     std::string           evidence_root_;
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
-    ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::Off;
+    ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

@@ -212,7 +212,7 @@ void Search::Worker::start_searching() {
     else
     {
 #ifdef CERTUS_SF
-        if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager()))
+        if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager(), evaluate(rootPos)))
             return;
 #endif
         threads.start_searching();  // start non-main threads

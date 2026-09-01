@@ -166,7 +166,7 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
                 }));
 
     options.add("ConsensusSearch",
-                Option("Off MarkedOnly", "Off", [this](const Option& o) -> std::optional<std::string> {
+                Option("Off MarkedOnly", "MarkedOnly", [this](const Option& o) -> std::optional<std::string> {
                     consensus_search_ = parse_consensus_search(std::string(o));
                     return std::nullopt;
                 }));

@@ -47,7 +47,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
 - `Certus::allow_search_move` in main search move loop (FEAT-0002 MarkedOnly)
-- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut)
+- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut + NNUE display score)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 
 ### `src/thread.cpp`

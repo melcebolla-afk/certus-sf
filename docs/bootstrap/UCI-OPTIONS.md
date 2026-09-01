@@ -20,10 +20,10 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 | Option | Type | Default | Values |
 |--------|------|---------|--------|
 | `EvidenceInfo` | combo | Root | Off, Root, All |
-| `ConsensusSearch` | combo | Off | Off, MarkedOnly |
+| `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly |
 | `UCI_ShowWDL` | check | true | (SF puede tener ya) |
 
-`ConsensusSearch=MarkedOnly`: en nodos con consenso + `marked_moves`, el search principal solo expande marked ∩ legal (eval sigue NNUE). Raíz: atajo FEAT-0010 independiente.
+`ConsensusSearch=MarkedOnly` (default): en nodos con consenso + `marked_moves`, el search principal solo expande marked ∩ legal (eval NNUE). Raíz: atajo FEAT-0010 independiente; emite `info depth 1 score cp <NNUE>` antes del `bestmove`.
 
 ## No implementar en fork (v1)
 

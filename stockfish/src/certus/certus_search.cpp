@@ -3,6 +3,7 @@
 #include "../evidence/resolver.h"
 #include "../misc.h"
 #include "../movegen.h"
+#include "../score.h"
 #include "../search.h"
 #include "../syzygy/tbprobe.h"
 #include "../uci.h"
@@ -127,7 +128,7 @@ EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const S
 }
 
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
-                         Search::SearchManager& manager) {
+                         Search::SearchManager& manager, Value nnueEval) {
     const Evidence::Manager* mgr = evidence_manager();
     if (!mgr)
         return false;
@@ -170,6 +171,20 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
     }
 
     const std::string bestmove = UCIEngine::move(marked[0], rootPos.is_chess960());
+
+    Search::InfoFull info{};
+    info.depth    = 1;
+    info.selDepth = 1;
+    info.multiPV  = 1;
+    info.score    = Score(nnueEval, rootPos);
+    info.timeMs   = 0;
+    info.nodes    = 0;
+    info.nps      = 0;
+    info.tbHits   = 0;
+    info.hashfull = 0;
+    info.pv       = bestmove;
+    manager.updates.onUpdateFull(info);
+
     manager.updates.onBestmove(bestmove, "");
     return true;
 }
