@@ -13,7 +13,7 @@ VPATH := $(VPATH):evidence:certus
 CERTUS_SRCS = certus_engine.cpp certus_eval.cpp certus_search.cpp \
 	certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
-	evidence_manager.cpp resolver.cpp result_bias.cpp
+	evidence_manager.cpp resolver.cpp
 
 SRCS += $(CERTUS_SRCS)
 
@@ -27,7 +27,7 @@ EVIDENCE_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_
 
 GOLDEN_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
-	evidence_manager.cpp resolver.cpp result_bias.cpp \
+	evidence_manager.cpp resolver.cpp \
 	evidence/golden_probe.cpp
 
 EVIDENCE_PROBE_OBJS = $(EVIDENCE_PROBE_SRCS:.cpp=.o) \

@@ -52,7 +52,7 @@ Ver test: `hard_only_thin_midgame_skips_consensus`.
 
 Certus interior: solo NNUE (sin capas). SF ya optimiza eval NNUE — equivalente: skip evidence probe en nodos interiores **salvo** hard cutoffs.
 
-**Decisión v1 fork:** replicar thinning Certus o alinear a SF static eval — documentar delta en analysis; preferir **paridad Certus** para ICCF.
+**Decisión certus-sf (fork SF):** interiores quiet midgame → `SoftOnly` (NNUE directo). `HardOnly` queda en el resolver para tests; no se usa en search.
 
 ## Root STRONG_CONSENSUS (FEAT-0010)
 

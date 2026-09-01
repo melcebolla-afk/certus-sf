@@ -64,7 +64,7 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | Fase 0 Stockfish baseline | **hecho** 2026-09-01 (`sf_18`) |
 | Fase 1 UCI + evidence stores | **hecho** 2026-09-01 |
 | Fase 2 resolver + eval hook + golden | **hecho** 2026-09-01 |
-| Fase 3 search hooks + ResultBias + info strings | **hecho** 2026-09-01 |
+| Fase 3 search hooks + info strings | **hecho** 2026-09-01 |
 | FEAT-0001 evidence layers SF | **en curso** — Fases 0–3 hechas; Fase 4 pendiente |
 
 ## Fuera de alcance

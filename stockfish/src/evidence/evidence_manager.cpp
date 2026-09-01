@@ -20,17 +20,6 @@ EvidenceInfoMode parse_evidence_info(const std::string& s) {
     return EvidenceInfoMode::Root;
 }
 
-ResultBiasMode parse_result_bias(const std::string& s) {
-    std::string t;
-    for (char c : s)
-        t += char(std::tolower(static_cast<unsigned char>(c)));
-    if (t == "needwin")
-        return ResultBiasMode::NeedWin;
-    if (t == "preferdraw")
-        return ResultBiasMode::PreferDraw;
-    return ResultBiasMode::Neutral;
-}
-
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -166,13 +155,6 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
                     evidence_info_ = parse_evidence_info(std::string(o));
                     return std::nullopt;
                 }));
-
-    options.add("ResultBias",
-                Option("NeedWin Neutral PreferDraw", "Neutral",
-                       [this](const Option& o) -> std::optional<std::string> {
-                           result_bias_ = parse_result_bias(std::string(o));
-                           return std::nullopt;
-                       }));
 }
 
 }  // namespace Stockfish::Evidence

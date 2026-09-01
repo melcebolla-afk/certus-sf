@@ -16,8 +16,6 @@ namespace Stockfish::Evidence {
 
 enum class EvidenceInfoMode { Off, Root, All };
 
-enum class ResultBiasMode { NeedWin, Neutral, PreferDraw };
-
 class Manager {
    public:
     Manager() = default;
@@ -36,7 +34,6 @@ class Manager {
     const MateStore&        mate() const { return mate_; }
 
     EvidenceInfoMode evidence_info() const { return evidence_info_; }
-    ResultBiasMode   result_bias() const { return result_bias_; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -53,7 +50,6 @@ class Manager {
     MateStore             mate_;
     std::string           evidence_root_;
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
-    ResultBiasMode        result_bias_   = ResultBiasMode::Neutral;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

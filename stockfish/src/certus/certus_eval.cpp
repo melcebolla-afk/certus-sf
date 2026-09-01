@@ -1,7 +1,6 @@
 #include "certus_eval.h"
 
 #include "../evaluate.h"
-#include "../evidence/result_bias.h"
 #include "../evidence/resolver.h"
 
 #include "certus_search.h"
@@ -60,7 +59,6 @@ Evidence::EvalResult evaluate_layers(const Position& pos, EvalNeed need) {
     const Evidence::EvalContext ctx         = make_context();
     const auto [hard, soft]                 = layer_flags(need);
     Evidence::EvalResult ev = Evidence::evaluate_layers(mutable_pos, ctx, hard, soft);
-    Evidence::ResultBias::apply(g_manager->result_bias(), ev);
     return ev;
 }
 
@@ -70,18 +68,19 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
     if (!g_manager)
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
 
-    const EvalNeed             need = tls_eval_need;
-    const Evidence::EvalResult ev   = evaluate_layers(pos, need);
+    const EvalNeed need = tls_eval_need;
 
-    if (tracking_hits() && (need != EvalNeed::HardOnly || ev.hard_evidence()))
+    // SoftOnly: skip evidence resolver — Stockfish NNUE (interior quiet midgame).
+    if (need == EvalNeed::SoftOnly)
+        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+
+    const Evidence::EvalResult ev = evaluate_layers(pos, need);
+
+    if (tracking_hits())
         record_evidence_hit(ev.evidence_class);
 
     if (ev.evidence_class == Evidence::EvidenceClass::Inference)
-    {
-        if (need == EvalNeed::HardOnly && ev.sources.empty())
-            return VALUE_ZERO;
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
-    }
 
     return ev.to_value();
 }

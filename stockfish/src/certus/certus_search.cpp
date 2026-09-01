@@ -1,6 +1,5 @@
 #include "certus_search.h"
 
-#include "../evidence/result_bias.h"
 #include "../evidence/resolver.h"
 #include "../misc.h"
 #include "../movegen.h"
@@ -121,8 +120,9 @@ void record_evidence_hit(Evidence::EvidenceClass c) {
 EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const Search::Stack* ss) {
     if (rootNode || pvNode)
         return EvalNeed::Full;
+    // Interior quiet midgame: NNUE only (skip catalog probes — SF-native eval, better nps).
     if (ss && !ss->inCheck && pos.count<ALL_PIECES>() > 6)
-        return EvalNeed::HardOnly;
+        return EvalNeed::SoftOnly;
     return EvalNeed::Full;
 }
 
@@ -137,7 +137,6 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
 
     Evidence::EvalResult root_ev =
       Evidence::evaluate_full(const_cast<Position&>(rootPos), make_root_context(*mgr, tbConfig));
-    Evidence::ResultBias::apply(mgr->result_bias(), root_ev);
 
     if (show_root_evidence(*mgr))
         print_info(format_root_evidence(root_ev));

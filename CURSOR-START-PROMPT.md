@@ -88,7 +88,7 @@ Leer **`docs/bootstrap/RESOLVER-SPEC.md`** y **`docs/bootstrap/EVIDENCE-PORT.md`
 
 ### Fase 3 — Resolver completo + search hooks
 
-- Cadena completa, thinning HardOnly, root consensus marked, EvidenceInfo, ResultBias
+- Cadena completa, thinning SoftOnly, root consensus marked, EvidenceInfo
 
 ### Fase 4 — Ops + CI
 
