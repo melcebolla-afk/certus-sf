@@ -19,9 +19,8 @@ Insertar **Evidence Resolver** en el camino de evaluación **antes** del NNUE SF
 | `syzygy::TbStore` | `syzygy.cpp` / TB probe | **Ya existe** — tag `PROVEN_TB` |
 | NNUE `evaluate()` | `nnue/` + eval | **Ya existe** — tag `INFERENCE` |
 | `uci.rs` setoption | `uci.cpp` | Añadir options + reload |
-| Root consensus force | `search.cpp` root move | Port FEAT-0010 |
-| `result_bias.rs` | `evidence/result_bias.cpp` | Post-resolver utility tweak |
-| `hash_placement_stm` | `Position::key()` / Zobrist | Usar key SF **sin** repetir clock si Certus no lo hace |
+| Root consensus force | `certus/certus_search.cpp` | Port FEAT-0010 |
+| `hash_placement_stm` | `evidence/certus_hash.cpp` | Key placement + STM |
 
 ## Hook eval (conceptual)
 

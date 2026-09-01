@@ -25,7 +25,7 @@ Fork de **Stockfish** (GPL-3) + **capas de evidencia Certus** (sin reentrenar NN
 | Interop Bárbol | `docs/interop/` |
 | Inventario borrador | `docs/project/inventory.md` |
 
-**Pendiente:** código Stockfish en el repo (Fase 0).
+**Hecho:** Fases 0–4 (SF baseline, stores, resolver, search hooks, CI GitHub).
 
 ## Referencia oráculo (Rust — no copiar search)
 
@@ -90,9 +90,10 @@ Leer **`docs/bootstrap/RESOLVER-SPEC.md`** y **`docs/bootstrap/EVIDENCE-PORT.md`
 
 - Cadena completa, thinning SoftOnly, root consensus marked, EvidenceInfo
 
-### Fase 4 — Ops + CI
+### Fase 4 — Ops + CI — **hecho**
 
-- Builders ya en `builders/`; documentar refresh en `docs/runbooks/`
+- CI: `.github/workflows/ci.yml` → `./tests/evidence_probe.sh`
+- Runbooks: `docs/runbooks/ci.md`, `docs/runbooks/catalogs-layers.md`
 
 ## Guardrails
 

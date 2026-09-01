@@ -2,7 +2,8 @@
 
 Scripts Python en `builders/`; salida en **`catalogs/`** (EvidenceRoot del motor).
 
-Runbook cron: `docs/runbooks/catalogs-layers.md`
+Runbook cron: `docs/runbooks/catalogs-layers.md`  
+CI local/remoto: `docs/runbooks/ci.md`
 
 ## Cron activo (certus-sf)
 

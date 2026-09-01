@@ -23,7 +23,7 @@ Integrar en el fork SF la **cadena única de evidencia Certus** antes del NNUE, 
 - **RF-3:** Opciones UCI según `docs/bootstrap/UCI-OPTIONS.md`; reload invalida TT/generation.
 - **RF-4:** Root STRONG_CONSENSUS + marked moves legales → `bestmove` sin search (FEAT-0010).
 - **RF-5:** `info string evidence=…` / `marked=…` según `EvidenceInfo`.
-- **RF-6:** Thinning HardOnly en nodos quiet midgame (>6 piezas, !in_check).
+- **RF-6:** Thinning `SoftOnly` en nodos quiet midgame (>6 piezas, !in_check) → NNUE SF directo.
 
 ## Requisitos no funcionales (RNF)
 
@@ -45,13 +45,13 @@ Integrar en el fork SF la **cadena única de evidencia Certus** antes del NNUE, 
 | 0 | Baseline SF — **hecho** |
 | 1 | UCI options + stores (sin eval en search) | **hecho** 2026-09-01 |
 | 2 | Resolver en eval + golden fixtures | **hecho** 2026-09-01 |
-| 3 | Search hooks (root consensus, thinning interior) + info strings | **hecho** 2026-09-01 |
-| 4 | CI + runbooks builders |
+| 3 | Search hooks (root consensus, SoftOnly interior) + info strings | **hecho** 2026-09-01 |
+| 4 | CI + runbooks builders | **hecho** 2026-09-01 |
 
 ## Dudas abiertas
 
 - Nombre producto final UCI (`certus-sf dev` vs otro).
-- Delta documentado si thinning SF difiere de Certus en nodos interiores (preferir paridad Certus).
+- Delta documentado: interiores usan `SoftOnly` (NNUE SF), no paridad HardOnly Certus Rust.
 
 ## Aterrizaje en el repo
 

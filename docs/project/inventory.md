@@ -47,7 +47,7 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 | NNUE | Red Stockfish embebida (sin train propio) |
 | Capas evidencia | C++ stores + `evidence/resolver.cpp` (precedencia Certus); hook eval vía `certus/certus_eval` |
 | Builders | Python 3 |
-| Tests | `evidence_probe`, `golden_probe` (`GOLDEN-FIXTURES.jsonl`) + UCI smoke |
+| Tests | `evidence_probe`, `golden_probe`, `./tests/evidence_probe.sh` (CI) |
 | Licencia | GPL-3.0-or-later |
 
 ## Capas producto
@@ -65,7 +65,8 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | Fase 1 UCI + evidence stores | **hecho** 2026-09-01 |
 | Fase 2 resolver + eval hook + golden | **hecho** 2026-09-01 |
 | Fase 3 search hooks + info strings | **hecho** 2026-09-01 |
-| FEAT-0001 evidence layers SF | **en curso** — Fases 0–3 hechas; Fase 4 pendiente |
+| Fase 4 CI GitHub + runbooks | **hecho** 2026-09-01 |
+| FEAT-0001 evidence layers SF | **cerrado** 2026-09-01 |
 
 ## Fuera de alcance
 
