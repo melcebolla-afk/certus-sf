@@ -35,8 +35,8 @@
 
 ## Submodule Stockfish
 
-- Mantener upstream en `stockfish/`; merges selectivos desde `official-stockfish/Stockfish`.
-- Tag SF documentado en inventario; bump tag = unidad de trabajo explícita.
+- **No** submodule a upstream oficial; código en `stockfish/` dentro de certus-sf.
+- Bump SF: script `scripts/merge-stockfish.sh`; no push a `official-stockfish/Stockfish`.
 
 ## Destructivo (preguntar humano)
 

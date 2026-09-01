@@ -43,7 +43,7 @@ Integrar en el fork SF la **cadena única de evidencia Certus** antes del NNUE, 
 | Fase | Alcance |
 |------|---------|
 | 0 | Baseline SF — **hecho** |
-| 1 | UCI options + stores (sin eval en search) |
+| 1 | UCI options + stores (sin eval en search) | **hecho** 2026-09-01 |
 | 2 | Primera capa en eval (ICCF o Consensus) + golden |
 | 3 | Resolver completo + search hooks + ResultBias |
 | 4 | CI + runbooks builders |

@@ -1,0 +1,7 @@
+# Stockfish upstream pin (certus-sf vendored fork)
+# Update on merge; see docs/runbooks/stockfish-merge.md
+
+repo=https://github.com/official-stockfish/Stockfish.git
+tag=sf_18
+commit=cb3d4ee9b47d0c5aae855b12379378ea1439675c
+describe=Stockfish 18

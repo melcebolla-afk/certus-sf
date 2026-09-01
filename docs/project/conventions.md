@@ -9,9 +9,10 @@
 
 ## Código C++ (Stockfish fork)
 
-- Upstream en submodule `stockfish/`; tag documentado en `docs/project/inventory.md`.
-- Cambios Certus: nuevo directorio `stockfish/src/evidence/` (stores + resolver).
-- Hooks en archivos SF existentes: `evaluate.cpp`, `uci.cpp` / `ucioption.cpp`, `search.cpp`.
+- Upstream vendored en `stockfish/`; pin en `stockfish/UPSTREAM`.
+- **Overlay Certus:** `stockfish/src/certus/` (`certus.mk`, hooks) + `stockfish/src/evidence/` (producto).
+- Tocar upstream solo donde indica `stockfish/src/certus/TOUCHED_UPSTREAM.md` (4 ficheros).
+- Merge nueva versión SF: `scripts/merge-stockfish.sh` + runbook.
 - Estilo: seguir el del árbol SF tocado (C++17, sin excepciones).
 - GPL-3.0; atribución SF + diseño Certus en NOTICE.
 - Prior-art: documentar deltas en `docs/prior-art/`.
@@ -20,7 +21,7 @@
 
 ```bash
 make -j -C stockfish/src build ARCH=x86-64-sse41-popcnt
-# Binario: stockfish/src/stockfish
+# Binario: stockfish/src/certus-sf
 ```
 
 ARCH `x86-64-modern` sigue funcionando (alias deprecado → sse41-popcnt).

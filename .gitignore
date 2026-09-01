@@ -6,5 +6,7 @@
 
 # Stockfish build artifacts (submodule working tree)
 stockfish/src/*.o
-stockfish/src/stockfish
+stockfish/src/certus-sf
+stockfish/src/certus-sf.exe
+stockfish/src/evidence_probe
 stockfish/src/*.nnue

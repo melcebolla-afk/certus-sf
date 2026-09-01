@@ -12,9 +12,10 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 
 | Ruta | Rol |
 |------|-----|
-| `stockfish/` | Submodule upstream SF — código motor C++ |
-| `stockfish/src/` | Fuentes SF; futuro `evidence/` para capas Certus |
-| `stockfish/src/stockfish` | Binario release (build local, no versionado) |
+| `stockfish/` | Stockfish vendored (baseline en `UPSTREAM`); merge vía runbook |
+| `stockfish/src/evidence/` | Stores evidencia Certus (código producto) |
+| `stockfish/src/certus/` | Integración mínima + `certus.mk` (overlay build) |
+| `stockfish/src/certus-sf` | Binario release (build local, no versionado) |
 | `methodology/` | Submodule método (no editar) |
 | `docs/bootstrap/` | Export Certus: port, resolver spec, golden fixtures |
 | `docs/project/` | Inventario, guardrails, convenciones |
@@ -32,7 +33,8 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 | Upstream | `https://github.com/official-stockfish/Stockfish.git` |
 | Tag | `sf_18` (Stockfish 18) |
 | Commit | `cb3d4ee9` |
-| Layout | Submodule en `stockfish/` |
+| Layout | Vendored en `stockfish/` + overlay `src/certus/` |
+| Merge | `docs/runbooks/stockfish-merge.md`, `scripts/merge-stockfish.sh` |
 | Build | `make -j -C stockfish/src build ARCH=x86-64-sse41-popcnt` (o `x86-64-modern`, alias deprecado) |
 
 ## Stack
@@ -58,7 +60,8 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 |----|--------|
 | Bootstrap export | **hecho** 2026-09-01 |
 | Fase 0 Stockfish baseline | **hecho** 2026-09-01 (`sf_18`) |
-| FEAT-0001 evidence layers SF | **en curso** — spec; Fases 1–4 pendientes |
+| Fase 1 UCI + evidence stores | **hecho** 2026-09-01 |
+| FEAT-0001 evidence layers SF | **en curso** — Fase 1 hecha; Fases 2–4 pendientes |
 
 ## Fuera de alcance
 

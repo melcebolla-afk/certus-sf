@@ -6,14 +6,18 @@ Fork de **Stockfish** (GPL-3) con las **capas de evidencia** de [Certus](https:/
 
 - Bootstrap Certus copiado (`docs/bootstrap/`, `builders/`, `testdata/`).
 - **Stockfish 18** (`sf_18`) en submodule `stockfish/` — Fase 0 hecha.
-- Capas evidencia: spec [FEAT-0001](docs/specs/FEAT-0001-evidence-layers-sf.md); implementación Fases 1–4 pendiente.
+- Capas evidencia: spec [FEAT-0001](docs/specs/FEAT-0001-evidence-layers-sf.md); **Fase 1** (stores + UCI) hecha; Fases 2–4 pendiente.
 - Sin train NNUE propio; red SF de serie.
 
 ## Build
 
 ```bash
 make -j -C stockfish/src build ARCH=x86-64-sse41-popcnt
-./stockfish/src/stockfish
+./stockfish/src/certus-sf
+
+# Tests Fase 1
+make -C stockfish/src evidence_probe ARCH=x86-64-sse41-popcnt
+./tests/evidence_probe.sh
 ```
 
 ## Arranque Cursor
