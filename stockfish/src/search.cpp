@@ -212,7 +212,10 @@ void Search::Worker::start_searching() {
     else
     {
 #ifdef CERTUS_SF
-        if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager(), evaluate(rootPos)))
+        const int displayDepth = limits.depth > 0 ? limits.depth : 1;
+        const bool showWdl     = bool(options["UCI_ShowWDL"]);
+        if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager(),
+                                        [this] { return evaluate(rootPos); }, displayDepth, showWdl))
             return;
 #endif
         threads.start_searching();  // start non-main threads

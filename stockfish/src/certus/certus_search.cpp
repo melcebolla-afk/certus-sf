@@ -128,7 +128,8 @@ EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const S
 }
 
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
-                         Search::SearchManager& manager, Value nnueEval) {
+                         Search::SearchManager& manager, std::function<Value()> getNnueEval,
+                         int displayDepth, bool showWdl) {
     const Evidence::Manager* mgr = evidence_manager();
     if (!mgr)
         return false;
@@ -172,17 +173,29 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
 
     const std::string bestmove = UCIEngine::move(marked[0], rootPos.is_chess960());
 
+    const Value nnueEval = getNnueEval();
+    const int   depth    = std::max(1, displayDepth);
+    const Score score(nnueEval, rootPos);
+
+    manager.updates.onUpdateNoMoves({depth, score});
+
+    std::string wdlStr;
+    if (showWdl)
+        wdlStr = UCIEngine::wdl(nnueEval, rootPos);
+
     Search::InfoFull info{};
-    info.depth    = 1;
-    info.selDepth = 1;
+    info.depth    = depth;
+    info.selDepth = depth;
     info.multiPV  = 1;
-    info.score    = Score(nnueEval, rootPos);
-    info.timeMs   = 0;
-    info.nodes    = 0;
-    info.nps      = 0;
+    info.score    = score;
+    info.timeMs   = 1;
+    info.nodes    = 1;
+    info.nps      = 1;
     info.tbHits   = 0;
     info.hashfull = 0;
     info.pv       = bestmove;
+    if (showWdl)
+        info.wdl = wdlStr;
     manager.updates.onUpdateFull(info);
 
     manager.updates.onBestmove(bestmove, "");

@@ -5,6 +5,8 @@
 
 #include "../types.h"
 
+#include <functional>
+
 namespace Stockfish {
 
 class Position;
@@ -23,7 +25,8 @@ void record_evidence_hit(Evidence::EvidenceClass c);
 
 // Returns true when root STRONG_CONSENSUS forces bestmove (search skipped).
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
-                         Search::SearchManager& manager, Value nnueEval);
+                         Search::SearchManager& manager, std::function<Value()> getNnueEval,
+                         int displayDepth, bool showWdl);
 void finish_search_evidence();
 
 // FEAT-0002: marked-only movegen in main search (not qsearch).

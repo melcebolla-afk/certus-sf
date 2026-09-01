@@ -23,6 +23,10 @@ echo "$out" | grep -q 'bestmove b1c3'
 echo "$out" | grep -q 'info depth 1 score cp'
 echo "$out" | grep -qv 'info depth 1 score cp 0 '
 
+out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nposition fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\ngo depth 20\nquit\n' "$ROOT" | "$BIN" 2>&1)"
+echo "$out" | grep -q 'info depth 20 score cp'
+echo "$out" | grep -qv 'info depth 20 score cp 0 '
+
 out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
