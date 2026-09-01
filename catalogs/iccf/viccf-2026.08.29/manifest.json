@@ -1,0 +1,13 @@
+{
+  "layer": "EMPIRICAL_ICCF",
+  "schema_version": 1,
+  "content_version": "iccf-2026.08.29",
+  "checksum": "sha256:4937ccc187cdc66169cd3002d8329ec30ef5b96c5db10c2414fecf919146a49d",
+  "coverage": {
+    "positions": 15239
+  },
+  "sources": [
+    "iccf-pgn-stats"
+  ],
+  "built_at": "2026-08-29T12:50:37Z"
+}

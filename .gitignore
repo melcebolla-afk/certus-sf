@@ -4,9 +4,7 @@
 .env.*
 !.env.example
 
-# certus-sf — ignore local catalog blobs and builder temp (see catalogs/README.md)
-catalogs/**/*
-!catalogs/README.md
+# certus-sf — builder temp (catalogs/ is versioned; see catalogs/README.md)
 train/out/*
 !train/out/.gitkeep
 

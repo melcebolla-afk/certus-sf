@@ -65,7 +65,13 @@ Teoría usa `testdata/theoretical/seed.json` como semilla curada en cada run.
 
 ## Git
 
-El contenido de `catalogs/**` está en `.gitignore` (catálogos grandes). Solo este README se versiona.
+Los catálogos en `catalogs/*/v*/` se versionan en este repo (~pocos MB). Tras clone:
+
+```text
+setoption name EvidencePath value /path/to/certus-sf/catalogs
+```
+
+Regeneración / ampliación: cron y builders (§ Actualización automática).
 
 ## Guardrails
 

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "layer": "PROVEN_MATE",
+  "content_version": "2026.09.01",
+  "checksum": "sha256:6899781b867f5b1d0a02eb9f4baf77e25063c8ee688f59461c761208ec2ddf0d",
+  "n_entries": 3,
+  "max_plies": 5,
+  "source": "mate_build",
+  "updated": "2026-09-01",
+  "merged": false,
+  "added": 3
+}
