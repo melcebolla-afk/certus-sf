@@ -48,6 +48,9 @@
 #include "tt.h"
 #include "types.h"
 #include "uci.h"
+#ifdef CERTUS_SF
+#include "certus/certus_eval.h"
+#endif
 #include "ucioption.h"
 
 namespace Stockfish {
@@ -1752,8 +1755,13 @@ TimePoint Search::Worker::elapsed() const {
 TimePoint Search::Worker::elapsed_time() const { return main_manager()->tm.elapsed_time(); }
 
 Value Search::Worker::evaluate(const Position& pos) {
+#ifdef CERTUS_SF
+    return Certus::evaluate(pos, networks[numaAccessToken], accumulatorStack, refreshTable,
+                            optimism[pos.side_to_move()]);
+#else
     return Eval::evaluate(networks[numaAccessToken], pos, accumulatorStack, refreshTable,
                           optimism[pos.side_to_move()]);
+#endif
 }
 
 namespace {

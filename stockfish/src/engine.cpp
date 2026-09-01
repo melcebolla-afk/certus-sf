@@ -44,6 +44,9 @@
 #include "uci.h"
 #include "ucioption.h"
 #include "certus/certus_engine.h"
+#ifdef CERTUS_SF
+#include "certus/certus_eval.h"
+#endif
 
 namespace Stockfish {
 
@@ -164,6 +167,9 @@ void Engine::go(Search::LimitsType& limits) {
     assert(limits.perft == 0);
     verify_networks();
 
+#ifdef CERTUS_SF
+    Certus::bind_evidence(certus_.evidence());
+#endif
     threads.start_thinking(options, pos, states, limits);
 }
 void Engine::stop() { threads.stop = true; }

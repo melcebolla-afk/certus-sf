@@ -37,6 +37,9 @@
 #include "types.h"
 #include "uci.h"
 #include "ucioption.h"
+#ifdef CERTUS_SF
+#include "certus/certus_eval.h"
+#endif
 
 namespace Stockfish {
 
@@ -335,6 +338,9 @@ void ThreadPool::start_thinking(const OptionsMap&  options,
             th->worker->rootPos.set(pos.fen(), pos.is_chess960(), &th->worker->rootState);
             th->worker->rootState = setupStates->back();
             th->worker->tbConfig  = tbConfig;
+#ifdef CERTUS_SF
+            Certus::bind_tb_config(tbConfig);
+#endif
         });
     }
 

@@ -37,9 +37,24 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `#ifdef CERTUS_SF` / `#include "certus/certus_engine.h"`
 - `engine_info()`: call `Certus::engine_identity(to_uci)` when `CERTUS_SF` defined
 
-## Do not modify for certus
+### `src/search.cpp`
 
-- `evaluate.cpp`, `search.cpp`, `uci.cpp` (until planned Fase 2/3 hooks)
+- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
+- `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
+
+### `src/thread.cpp`
+
+- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
+- In `ThreadPool::start_thinking` per-thread job: `Certus::bind_tb_config(tbConfig)`
+
+### `src/engine.cpp`
+
+- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
+- In `Engine::go`: `Certus::bind_evidence(certus_.evidence())`
+
+## Do not modify for certus (yet)
+
+- `evaluate.cpp`, `uci.cpp` (eval hook via certus_eval; UCI root consensus Fase 3)
 - NNUE, Syzygy, thread pool
 
 ## Merge procedure

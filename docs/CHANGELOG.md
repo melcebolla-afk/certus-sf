@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Fase 2:** `evidence/resolver.cpp` (TB > Mate > Theory > Consensus > ICCF > NNUE); hook en `Search::Worker::evaluate`; `golden_probe` vs `GOLDEN-FIXTURES.jsonl`.
 - **Fase 1:** evidence stores + UCI; binario `certus-sf`; layout merge-friendly (`certus/` overlay).
 - **Fase 0:** Stockfish 18 submodule (`sf_18` @ `cb3d4ee9`); build release verde.
 - Spec `FEAT-0001-evidence-layers-sf.md`; inventario/guardrails/convenciones actualizados.

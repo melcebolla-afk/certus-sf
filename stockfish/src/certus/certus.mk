@@ -10,28 +10,42 @@ endif
 
 VPATH := $(VPATH):evidence:certus
 
-CERTUS_SRCS = certus_engine.cpp \
+CERTUS_SRCS = certus_engine.cpp certus_eval.cpp \
 	certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
-	evidence_manager.cpp
+	evidence_manager.cpp resolver.cpp
 
 SRCS += $(CERTUS_SRCS)
 
 CXXFLAGS += -DCERTUS_SF
 
-CERTUS_CLEAN = certus-sf certus-sf.exe evidence_probe
+CERTUS_CLEAN = certus-sf certus-sf.exe evidence_probe golden_probe
 
 EVIDENCE_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
 	evidence/evidence_probe.cpp
 
+GOLDEN_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
+	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
+	evidence_manager.cpp resolver.cpp \
+	evidence/golden_probe.cpp
+
 EVIDENCE_PROBE_OBJS = $(EVIDENCE_PROBE_SRCS:.cpp=.o) \
 	bitboard.o movegen.o position.o misc.o memory.o tune.o
 
-.PHONY: evidence_probe
+GOLDEN_PROBE_OBJS = $(GOLDEN_PROBE_SRCS:.cpp=.o) \
+	bitboard.o movegen.o position.o misc.o memory.o tune.o tbprobe.o
+
+.PHONY: evidence_probe golden_probe
 
 evidence_probe: $(EVIDENCE_PROBE_OBJS)
 	+$(CXX) -o $@ $(EVIDENCE_PROBE_OBJS) $(LDFLAGS)
 
+golden_probe: $(GOLDEN_PROBE_OBJS)
+	+$(CXX) -o $@ $(GOLDEN_PROBE_OBJS) $(LDFLAGS)
+
 evidence/evidence_probe.o: evidence/evidence_probe.cpp
+	+$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+evidence/golden_probe.o: evidence/golden_probe.cpp
 	+$(CXX) $(CXXFLAGS) -c -o $@ $<
