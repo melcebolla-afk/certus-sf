@@ -4,6 +4,15 @@
 .env.*
 !.env.example
 
+# certus-sf — ignore local catalog blobs and builder temp (see catalogs/README.md)
+catalogs/**/*
+!catalogs/README.md
+train/out/*
+!train/out/.gitkeep
+
+# Python
+builders/__pycache__/
+
 # Stockfish build artifacts (submodule working tree)
 stockfish/src/*.o
 stockfish/src/certus-sf

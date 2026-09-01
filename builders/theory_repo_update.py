@@ -14,14 +14,17 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from catalog_paths import CATALOGS, TRAIN_OUT
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EPD_URL = (
     "https://raw.githubusercontent.com/ChrisWhittington/Chess-EPDs/master/fortresses.epd"
 )
-DEFAULT_EPD = ROOT / "train/out/fortresses.epd"
+DEFAULT_EPD = TRAIN_OUT / "fortresses.epd"
 DEFAULT_SEED = ROOT / "testdata/theoretical/seed.json"
-DEFAULT_LAB = ROOT / "evidence/theoretical"
-DEFAULT_OUT = ROOT / "train/out/theory_catalog_build"
+DEFAULT_LAB = CATALOGS / "theoretical"
+DEFAULT_OUT = TRAIN_OUT / "theory_catalog_build"
 DEFAULT_VERSION = "2026.08.29"
 
 
@@ -54,7 +57,7 @@ def main() -> int:
     ap.add_argument("--min-pieces", type=int, default=7)
     ap.add_argument("--skip-download", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--work-dir", type=Path, default=ROOT / "train/out")
+    ap.add_argument("--work-dir", type=Path, default=TRAIN_OUT)
     args = ap.parse_args()
 
     args.work_dir.mkdir(parents=True, exist_ok=True)

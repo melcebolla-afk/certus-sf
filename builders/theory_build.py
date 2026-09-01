@@ -8,7 +8,7 @@ Usage:
     --version 2026.08.29 \\
     --expand-insufficient
 
-Also copies to evidence/theoretical/v{version}/ when --lab is set.
+Also copies to catalogs/theoretical/v{version}/ when --lab is set.
 """
 
 from __future__ import annotations
@@ -200,7 +200,7 @@ def main() -> None:
         "--lab",
         type=Path,
         default=None,
-        help="Also write evidence/theoretical/v{version}/ (e.g. evidence/theoretical)",
+        help="Also write catalogs/theoretical/v{version}/ (e.g. catalogs/theoretical)",
     )
     ap.add_argument(
         "--min-pieces",

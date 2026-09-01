@@ -1,20 +1,14 @@
 #!/usr/bin/env python3
-"""E-05/E-06: promote Bárbol Sunday drop → EvidenceRoot active layers.
+"""DEPRECATED — Bárbol exporta directo a catalogs/{consensus,iccf}/.
 
-Reads staging:
+Legacy E-05/E-06: promote staging → active EvidenceRoot.
 
-  evidence/from_barbol/{consensus,iccf}/vYYYY.MM.DD/{catalog.json,manifest.json}
+  evidence/from_barbol/{consensus,iccf}/vYYYY.MM.DD/
+    → catalogs/{consensus,iccf}/vYYYY.MM.DD/
 
-Copies each complete version into:
+No está en el cron de certus-sf. Conservado solo por migración one-off.
 
-  evidence/{consensus,iccf}/vYYYY.MM.DD/
-
-Never deletes older versions. Skips `.partial` dirs and incomplete drops.
-Idempotent: if dest already has catalog.json, skip unless --force.
-
-  python3 builders/barbol_layers_promote.py --dry-run
-  python3 builders/barbol_layers_promote.py
-  python3 builders/barbol_layers_promote.py --force
+  python3 builders/barbol_layers_promote.py --dry-run --staging /path/from_barbol
 """
 
 from __future__ import annotations
@@ -25,9 +19,12 @@ import shutil
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from catalog_paths import CATALOGS
+
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_STAGING = ROOT / "evidence" / "from_barbol"
-DEFAULT_EVIDENCE = ROOT / "evidence"
+DEFAULT_STAGING = CATALOGS / "from_barbol"
+DEFAULT_EVIDENCE = CATALOGS
 LAYERS = ("consensus", "iccf")
 VERSION_RE = re.compile(r"^v(\d{4}\.\d{2}\.\d{2})$")
 

@@ -10,10 +10,10 @@ endif
 
 VPATH := $(VPATH):evidence:certus
 
-CERTUS_SRCS = certus_engine.cpp certus_eval.cpp \
+CERTUS_SRCS = certus_engine.cpp certus_eval.cpp certus_search.cpp \
 	certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
-	evidence_manager.cpp resolver.cpp
+	evidence_manager.cpp resolver.cpp result_bias.cpp
 
 SRCS += $(CERTUS_SRCS)
 
@@ -27,14 +27,14 @@ EVIDENCE_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_
 
 GOLDEN_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
-	evidence_manager.cpp resolver.cpp \
+	evidence_manager.cpp resolver.cpp result_bias.cpp \
 	evidence/golden_probe.cpp
 
 EVIDENCE_PROBE_OBJS = $(EVIDENCE_PROBE_SRCS:.cpp=.o) \
 	bitboard.o movegen.o position.o misc.o memory.o tune.o
 
 GOLDEN_PROBE_OBJS = $(GOLDEN_PROBE_SRCS:.cpp=.o) \
-	bitboard.o movegen.o position.o misc.o memory.o tune.o tbprobe.o
+	bitboard.o movegen.o position.o misc.o memory.o tune.o tbprobe.o uci.o
 
 .PHONY: evidence_probe golden_probe
 

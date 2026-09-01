@@ -4,9 +4,9 @@
 
 | Regla | Detalle |
 |-------|---------|
-| No borrar versiones `evidence/*/v*` | Promote añade; no wipe sin OK humano |
-| Staging Bárbol | `evidence/from_barbol/` — solo promote con `barbol_layers_promote.py` |
-| Paths producción | Configurar vía UCI `*Path`; no hardcodear paths de lab en C++ |
+| No borrar versiones `catalogs/*/v*` | Cada export añade; no wipe sin OK humano |
+| Bárbol consensus/iccf | Export directo a `catalogs/consensus/`, `catalogs/iccf/` (atómico) |
+| Paths producción | UCI `EvidencePath` o `*Path`; no hardcodear en C++ |
 | Fixtures CI | No borrar `testdata/` sin OK humano |
 | Schema catalog | Cambio breaking solo con sync repo evidence + bump `schema_version` |
 
@@ -43,4 +43,4 @@
 - Force-push main
 - Borrar `testdata/` fixtures o catálogos versionados
 - Cambio breaking `catalog.json` schema sin sync evidence
-- `git clean` / wipe de directorios `evidence/*/v*` en producción
+- `git clean` / wipe de directorios `catalogs/*/v*` en producción

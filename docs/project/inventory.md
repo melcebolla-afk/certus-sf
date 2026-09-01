@@ -22,7 +22,9 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 | `docs/specs/` | Specs (`FEAT-0001-evidence-layers-sf.md`) |
 | `docs/interop/` | Contratos Bárbol → catalog |
 | `docs/plans|analysis|…/` | Unidades de trabajo |
-| `builders/` | Ingest/promote capas (Python, desde evidence) |
+| `catalogs/` | EvidenceRoot — catálogos versionados (lab/prod local; ver README) |
+| `train/out/` | Logs cron + artefactos temporales builders |
+| `builders/` | Ingest/actualización capas (Python); ver `docs/project/builders.md` |
 | `testdata/` | Fixtures CI consensus/iccf/theory/mate/syzygy3 |
 | `.cursor/rules/` | Reglas Cursor |
 
@@ -62,7 +64,8 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | Fase 0 Stockfish baseline | **hecho** 2026-09-01 (`sf_18`) |
 | Fase 1 UCI + evidence stores | **hecho** 2026-09-01 |
 | Fase 2 resolver + eval hook + golden | **hecho** 2026-09-01 |
-| FEAT-0001 evidence layers SF | **en curso** — Fases 0–2 hechas; Fases 3–4 pendientes |
+| Fase 3 search hooks + ResultBias + info strings | **hecho** 2026-09-01 |
+| FEAT-0001 evidence layers SF | **en curso** — Fases 0–3 hechas; Fase 4 pendiente |
 
 ## Fuera de alcance
 

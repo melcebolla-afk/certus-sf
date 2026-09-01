@@ -19,7 +19,8 @@ Fork de **Stockfish** (GPL-3) + **capas de evidencia Certus** (sin reentrenar NN
 | Methodology submodule | `methodology/` — leer `INDEX.md`, `rhythm.md`, `prompts.md` |
 | Cursor rules | `.cursor/rules/` |
 | Bootstrap Certus | `docs/bootstrap/` (EVIDENCE-PORT, RESOLVER-SPEC, STORE-FORMATS, UCI-OPTIONS, GOLDEN-FIXTURES.jsonl) |
-| Builders capas | `builders/` (consensus, iccf, theory, mate, barbol promote) |
+| Builders capas | `builders/` → salida en `catalogs/` (ver `docs/project/builders.md`) |
+| EvidenceRoot lab | `catalogs/` — Bárbol export directo consensus/iccf; cron mate/theory |
 | Fixtures CI | `testdata/{consensus,iccf,theoretical,mate,syzygy3}/` |
 | Interop Bárbol | `docs/interop/` |
 | Inventario borrador | `docs/project/inventory.md` |
@@ -36,7 +37,7 @@ Portar diseño desde:
 - `consensus.rs`, `iccf.rs`, `theoretical.rs`, `mate_index.rs` — load/probe
 - `uci.rs` — opciones + info strings
 
-Datos lab compartidos (opcional): `/home/mcebolla/evidence/evidence/`
+Datos lab: **`/home/mcebolla/certus-sf/catalogs/`** (EvidenceRoot UCI). Oráculo Rust: `/home/mcebolla/evidence` (solo referencia de paridad).
 
 ## Capas
 

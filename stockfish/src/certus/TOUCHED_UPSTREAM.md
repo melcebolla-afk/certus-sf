@@ -39,8 +39,11 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 ### `src/search.cpp`
 
-- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
+- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
+- `CERTUS_SET_EVAL_NEED` before static eval (HardOnly en NonPV quiet >6 piezas)
+- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut)
+- Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 
 ### `src/thread.cpp`
 

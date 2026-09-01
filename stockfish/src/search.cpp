@@ -50,6 +50,11 @@
 #include "uci.h"
 #ifdef CERTUS_SF
 #include "certus/certus_eval.h"
+#include "certus/certus_search.h"
+#define CERTUS_SET_EVAL_NEED(rootNode, pvNode, pos, ss) \
+    Certus::set_eval_need(Certus::pick_eval_need((rootNode), (pvNode), (pos), (ss)))
+#else
+#define CERTUS_SET_EVAL_NEED(rootNode, pvNode, pos, ss) ((void) 0)
 #endif
 #include "ucioption.h"
 
@@ -206,6 +211,10 @@ void Search::Worker::start_searching() {
     }
     else
     {
+#ifdef CERTUS_SF
+        if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager()))
+            return;
+#endif
         threads.start_searching();  // start non-main threads
         iterative_deepening();      // main thread start searching
     }
@@ -253,6 +262,9 @@ void Search::Worker::start_searching() {
         ponder = UCIEngine::move(bestThread->rootMoves[0].pv[1], rootPos.is_chess960());
 
     auto bestmove = UCIEngine::move(bestThread->rootMoves[0].pv[0], rootPos.is_chess960());
+#ifdef CERTUS_SF
+    Certus::finish_search_evidence();
+#endif
     main_manager()->updates.onBestmove(bestmove, ponder);
 }
 
@@ -678,7 +690,9 @@ Value Search::Worker::search(
         // Step 2. Check for aborted search and immediate draw
         if (threads.stop.load(std::memory_order_relaxed) || pos.is_draw(ss->ply)
             || ss->ply >= MAX_PLY)
-            return (ss->ply >= MAX_PLY && !ss->inCheck) ? evaluate(pos) : value_draw(nodes);
+            return (ss->ply >= MAX_PLY && !ss->inCheck) ? (CERTUS_SET_EVAL_NEED(rootNode, PvNode, pos, ss),
+                                                             evaluate(pos))
+                                                        : value_draw(nodes);
 
         // Step 3. Mate distance pruning. Even if we mate at the next move our score
         // would be at best mate_in(ss->ply + 1), but if alpha is already bigger because
@@ -725,7 +739,10 @@ Value Search::Worker::search(
         // Never assume anything about values stored in TT
         unadjustedStaticEval = ttData.eval;
         if (!is_valid(unadjustedStaticEval))
+        {
+            CERTUS_SET_EVAL_NEED(rootNode, PvNode, pos, ss);
             unadjustedStaticEval = evaluate(pos);
+        }
 
         ss->staticEval = eval = to_corrected_static_eval(unadjustedStaticEval, correctionValue);
 
@@ -736,6 +753,7 @@ Value Search::Worker::search(
     }
     else
     {
+        CERTUS_SET_EVAL_NEED(rootNode, PvNode, pos, ss);
         unadjustedStaticEval = evaluate(pos);
         ss->staticEval = eval = to_corrected_static_eval(unadjustedStaticEval, correctionValue);
 
@@ -1538,7 +1556,9 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
 
     // Step 2. Check for an immediate draw or maximum ply reached
     if (pos.is_draw(ss->ply) || ss->ply >= MAX_PLY)
-        return (ss->ply >= MAX_PLY && !ss->inCheck) ? evaluate(pos) : VALUE_DRAW;
+        return (ss->ply >= MAX_PLY && !ss->inCheck)
+                 ? (CERTUS_SET_EVAL_NEED(false, true, pos, ss), evaluate(pos))
+                 : VALUE_DRAW;
 
     assert(0 <= ss->ply && ss->ply < MAX_PLY);
 
@@ -1571,7 +1591,10 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
             unadjustedStaticEval = ttData.eval;
 
             if (!is_valid(unadjustedStaticEval))
+            {
+                CERTUS_SET_EVAL_NEED(false, true, pos, ss);
                 unadjustedStaticEval = evaluate(pos);
+            }
 
             ss->staticEval = bestValue =
               to_corrected_static_eval(unadjustedStaticEval, correctionValue);
@@ -1583,6 +1606,7 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
         }
         else
         {
+            CERTUS_SET_EVAL_NEED(false, true, pos, ss);
             unadjustedStaticEval = evaluate(pos);
             ss->staticEval       = bestValue =
               to_corrected_static_eval(unadjustedStaticEval, correctionValue);

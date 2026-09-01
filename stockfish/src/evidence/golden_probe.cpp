@@ -5,8 +5,10 @@
 */
 
 #include "../bitboard.h"
+#include "../movegen.h"
 #include "../position.h"
 #include "../syzygy/tbprobe.h"
+#include "../uci.h"
 
 #include "consensus_store.h"
 #include "evidence_manager.h"
@@ -118,7 +120,29 @@ void run_fixture(const std::string& root, const std::string& line) {
 
     if (*probe == "root_only")
     {
-        skip(*id + " (root_only — Fase 3)");
+        Tablebases::init("");
+        FixtureStores fs = load_layers(root, line);
+        StateListPtr states(new std::deque<StateInfo>(1));
+        Position       pos;
+        pos.set(*fen, false, &states->back());
+
+        const ConsensusEntry* entry = fs.manager.probe_consensus(pos);
+        check(entry != nullptr, *id + " consensus hit");
+        MoveList<LEGAL> legal(pos);
+        Move            first = Move::none();
+        for (const auto& uci : entry->marked_moves)
+        {
+            const Move m = UCIEngine::to_move(pos, uci);
+            if (m != Move::none() && std::find(legal.begin(), legal.end(), m) != legal.end())
+            {
+                first = m;
+                break;
+            }
+        }
+        check(first != Move::none(), *id + " legal marked move");
+        if (auto prefix = extract_quoted(line, "expected_bestmove_prefix"))
+            check(UCIEngine::move(first, false).rfind(*prefix, 0) == 0,
+                  *id + " bestmove prefix " + *prefix);
         return;
     }
 

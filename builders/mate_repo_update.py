@@ -18,12 +18,17 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from catalog_paths import CATALOGS, TRAIN_OUT, newest_catalog
+
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_DUMP = ROOT / "train/out/lichess_db_puzzle.csv.zst"
+DEFAULT_DUMP = TRAIN_OUT / "lichess_db_puzzle.csv.zst"
 DEFAULT_DUMP_URL = "https://database.lichess.org/lichess_db_puzzle.csv.zst"
-DEFAULT_CATALOG = ROOT / "evidence/mate/v2026.08.29/catalog.json"
-DEFAULT_LAB = ROOT / "evidence/mate"
-DEFAULT_OUT = ROOT / "train/out/mate_catalog_build"
+DEFAULT_CATALOG = newest_catalog(
+    "mate", fallback=ROOT / "testdata/mate/catalog.json"
+)
+DEFAULT_LAB = CATALOGS / "mate"
+DEFAULT_OUT = TRAIN_OUT / "mate_catalog_build"
 DEFAULT_VERSION = "2026.08.29"
 
 
@@ -37,11 +42,11 @@ def download_dump(url: str, dest: Path) -> None:
         expected.replace(dest)
 
 
-def run(cmd: list[str], dry: bool) -> None:
-    print(f"+ {' '.join(cmd)}", flush=True)
+def run(cmd: list[str], dry: bool, *, cwd: Path | None = None) -> None:
+    print(f"+ {' '.join(cmd)}" + (f"  (cwd={cwd})" if cwd else ""), flush=True)
     if dry:
         return
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, cwd=str(cwd) if cwd else None)
 
 
 def count_fens(path: Path) -> int:
@@ -73,7 +78,7 @@ def main() -> int:
         action="store_true",
         help="Full rebuild (no --merge / no exclude). Destructive vs incremental.",
     )
-    ap.add_argument("--work-dir", type=Path, default=ROOT / "train/out")
+    ap.add_argument("--work-dir", type=Path, default=TRAIN_OUT)
     args = ap.parse_args()
 
     args.work_dir.mkdir(parents=True, exist_ok=True)
@@ -119,7 +124,7 @@ def main() -> int:
     run(filter_cmd, args.dry_run)
 
     if args.dry_run:
-        print(f"+ mate_build --merge … seed={delta}", flush=True)
+        print(f"+ python3 builders/mate_build.py --seed {delta} --merge …", flush=True)
         return 0
 
     n_new = count_fens(delta)
@@ -130,15 +135,8 @@ def main() -> int:
         return 0
 
     build_cmd = [
-        "cargo",
-        "run",
-        "-q",
-        "-p",
-        "evidence-engine",
-        "--example",
-        "mate_build",
-        "--release",
-        "--",
+        sys.executable,
+        str(ROOT / "builders/mate_build.py"),
         "--seed",
         str(delta),
         "--out",
