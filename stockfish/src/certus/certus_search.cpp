@@ -65,17 +65,23 @@ Evidence::EvalContext make_root_context(const Evidence::Manager& mgr,
 }
 
 std::vector<Move> legal_marked_moves(const Position& pos, const std::vector<std::string>& marked) {
-    MoveList<LEGAL> legal(pos);
+    // One MoveList: UCIEngine::to_move rebuilds LEGAL per string (redundant with the
+    // outer legality pass). Lookup key is placement+STM — keep legality vs current pos.
+    MoveList<LEGAL>   legal(pos);
+    const bool        chess960 = pos.is_chess960();
     std::vector<Move> out;
-    for (const auto& uci : marked)
+    out.reserve(marked.size());
+    for (const auto& uciRaw : marked)
     {
-        const Move m = UCIEngine::to_move(pos, uci);
-        if (m == Move::none())
-            continue;
-        if (std::find(legal.begin(), legal.end(), m) == legal.end())
-            continue;
-        if (std::find(out.begin(), out.end(), m) == out.end())
-            out.push_back(m);
+        const std::string uci = UCIEngine::to_lower(uciRaw);
+        for (const auto& m : legal)
+        {
+            if (uci != UCIEngine::move(m, chess960))
+                continue;
+            if (std::find(out.begin(), out.end(), m) == out.end())
+                out.push_back(m);
+            break;
+        }
     }
     return out;
 }
