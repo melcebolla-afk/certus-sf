@@ -181,7 +181,7 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
                 }));
 
     options.add("IccfSearch",
-                Option("Off FreqOnly", "Off", [this](const Option& o) -> std::optional<std::string> {
+                Option("Off FreqOnly", "FreqOnly", [this](const Option& o) -> std::optional<std::string> {
                     iccf_search_ = parse_iccf_search(std::string(o));
                     return std::nullopt;
                 }));

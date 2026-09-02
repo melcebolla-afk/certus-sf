@@ -59,7 +59,7 @@ class Manager {
     std::string           evidence_root_;
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
     ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
-    IccfSearchMode        iccf_search_      = IccfSearchMode::Off;
+    IccfSearchMode        iccf_search_      = IccfSearchMode::FreqOnly;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

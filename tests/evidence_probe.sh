@@ -31,7 +31,7 @@ out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nis
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
 echo "$out" | grep -q 'option name ConsensusSearch type combo default MarkedOnly'
-echo "$out" | grep -q 'option name IccfSearch type combo default Off'
+echo "$out" | grep -q 'option name IccfSearch type combo default FreqOnly'
 echo "$out" | grep -q 'ConsensusPath ready version='
 
 echo "tests/evidence_probe.sh: OK"

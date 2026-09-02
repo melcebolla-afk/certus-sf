@@ -23,8 +23,8 @@ Campo **`frequent_moves`** (UCI frecuentes ICCF), misma idea que `marked_moves` 
 ## Semántica motor (certus-sf)
 
 - Eval: ICCF **no** sustituye NNUE.
-- `IccfSearch=Off` (default): no filtra.
-- `IccfSearch=FreqOnly`: candidatas = `frequent_moves ∩ legal`; vacío → todas; no jaque; no qsearch; MultiPV `pvIdx>0` sin filtro.
+- `IccfSearch=Off`: no filtra.
+- `IccfSearch=FreqOnly` (**default**): candidatas = `frequent_moves ∩ legal`; vacío → todas; no jaque; no qsearch; MultiPV `pvIdx>0` sin filtro.
 - Si también hay consenso+marked activo → **consenso manda**.
 
 Ver export Bárbol FEAT-0123.
