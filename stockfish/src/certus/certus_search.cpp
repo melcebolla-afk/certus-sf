@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <atomic>
 #include <sstream>
+#include <vector>
 
 namespace Stockfish::Certus {
 
@@ -274,29 +275,39 @@ std::vector<Move> iccf_frequent_legal_moves(const Position& pos) {
     return legal_marked_moves(pos, entry->frequent_moves);
 }
 
-bool allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx) {
+SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int pvIdx) {
+    SearchMoveFilter out;
     const Evidence::Manager* mgr = evidence_manager();
-    if (!mgr)
-        return true;
-    if (inCheck || pvIdx > 0)
-        return true;
+    if (!mgr || inCheck || pvIdx > 0)
+        return out;
 
-    // Consensus marked filter takes precedence over ICCF when both apply.
     if (mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly)
     {
-        const std::vector<Move> marked = consensus_marked_legal_moves(pos);
+        std::vector<Move> marked = consensus_marked_legal_moves(pos);
         if (!marked.empty())
-            return std::find(marked.begin(), marked.end(), move) != marked.end();
+        {
+            out.restrict_moves = true;
+            out.allowed        = std::move(marked);
+            return out;
+        }
     }
 
     if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly)
     {
-        const std::vector<Move> freq = iccf_frequent_legal_moves(pos);
+        std::vector<Move> freq = iccf_frequent_legal_moves(pos);
         if (!freq.empty())
-            return std::find(freq.begin(), freq.end(), move) != freq.end();
+        {
+            out.restrict_moves = true;
+            out.allowed        = std::move(freq);
+            return out;
+        }
     }
 
-    return true;
+    return out;
+}
+
+bool allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx) {
+    return make_search_move_filter(pos, inCheck, pvIdx).allows(move);
 }
 
 }  // namespace Stockfish::Certus

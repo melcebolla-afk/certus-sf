@@ -5,7 +5,9 @@
 
 #include "../types.h"
 
+#include <algorithm>
 #include <functional>
+#include <vector>
 
 namespace Stockfish {
 
@@ -30,6 +32,19 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
 void finish_search_evidence();
 
 // FEAT-0002 / FEAT-0003: marked / frequent movegen in main search (not qsearch).
+// Build once per node — do not probe catalogs per candidate move.
+struct SearchMoveFilter {
+    bool              restrict_moves = false;
+    std::vector<Move> allowed;
+
+    bool allows(Move m) const {
+        if (!restrict_moves)
+            return true;
+        return std::find(allowed.begin(), allowed.end(), m) != allowed.end();
+    }
+};
+
+SearchMoveFilter  make_search_move_filter(const Position& pos, bool inCheck, int pvIdx);
 std::vector<Move> consensus_marked_legal_moves(const Position& pos);
 std::vector<Move> iccf_frequent_legal_moves(const Position& pos);
 bool              allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx);

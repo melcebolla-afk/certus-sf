@@ -46,7 +46,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
-- `Certus::allow_search_move` in main search move loop (FEAT-0002 MarkedOnly; FEAT-0003 Iccf FreqOnly)
+- `Certus::make_search_move_filter` once per node in main search move loop (FEAT-0002/0003; avoid per-move catalog probes)
 - `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut; ICCF singleton frequent; NNUE display score)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 

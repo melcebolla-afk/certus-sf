@@ -1024,6 +1024,12 @@ moves_loop:  // When in check, search starts here
 
     int moveCount = 0;
 
+#ifdef CERTUS_SF
+    // Probe catalogs once per node (not once per candidate — was killing nps / clock).
+    const Certus::SearchMoveFilter certusMoves =
+      Certus::make_search_move_filter(pos, ss->inCheck, int(pvIdx));
+#endif
+
     // Step 13. Loop through all pseudo-legal moves until no moves remain
     // or a beta cutoff occurs.
     while ((move = mp.next_move()) != Move::none())
@@ -1038,7 +1044,7 @@ moves_loop:  // When in check, search starts here
             continue;
 
 #ifdef CERTUS_SF
-        if (!Certus::allow_search_move(pos, move, ss->inCheck, int(pvIdx)))
+        if (!certusMoves.allows(move))
             continue;
 #endif
 
