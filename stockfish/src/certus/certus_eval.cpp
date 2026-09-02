@@ -58,7 +58,7 @@ Evidence::EvalResult evaluate_layers(const Position& pos, EvalNeed need) {
     Position&                   mutable_pos = const_cast<Position&>(pos);
     const Evidence::EvalContext ctx         = make_context();
     const auto [hard, soft]                 = layer_flags(need);
-    Evidence::EvalResult ev = Evidence::evaluate_layers(mutable_pos, ctx, hard, soft);
+    Evidence::EvalResult ev = Evidence::evaluate_layers(mutable_pos, ctx, hard, soft, true);
     return ev;
 }
 
@@ -74,15 +74,16 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
     if (need == EvalNeed::SoftOnly)
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
 
-    const Evidence::EvalResult ev = evaluate_layers(pos, need);
+    // Score path: TB/mate/theory only. Do not probe consensus/ICCF here — FEAT-0002
+    // always falls through to NNUE for those, and PV/qsearch were paying that cost.
+    Position&                   mutable_pos = const_cast<Position&>(pos);
+    const Evidence::EvalResult  ev =
+      Evidence::evaluate_score_layers(mutable_pos, make_context());
 
     if (tracking_hits())
         record_evidence_hit(ev.evidence_class);
 
-    // FEAT-0002: consensus/ICCF inform telemetry only; numeric eval stays NNUE.
-    if (ev.evidence_class == Evidence::EvidenceClass::Inference
-        || ev.evidence_class == Evidence::EvidenceClass::StrongConsensus
-        || ev.evidence_class == Evidence::EvidenceClass::EmpiricalIccf)
+    if (ev.evidence_class == Evidence::EvidenceClass::Inference)
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
 
     return ev.to_value();

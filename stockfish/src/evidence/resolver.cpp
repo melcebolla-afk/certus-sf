@@ -182,7 +182,7 @@ EvidenceClass evidence_class_from_name(const std::string& s) {
 }
 
 EvalResult evaluate_layers(Position& pos, const EvalContext& ctx, bool hard_layers,
-                           bool soft_layers) {
+                           bool soft_layers, bool catalog_layers) {
     if (!ctx.manager)
         return inference_zero();
 
@@ -218,7 +218,7 @@ EvalResult evaluate_layers(Position& pos, const EvalContext& ctx, bool hard_laye
                 return th;
         }
 
-        if (mgr.consensus().ready())
+        if (catalog_layers && mgr.consensus().ready())
         {
             EvalResult cons = layer_consensus(pos, mgr.consensus());
             if (cons.evidence_class == EvidenceClass::StrongConsensus)
@@ -234,7 +234,7 @@ EvalResult evaluate_layers(Position& pos, const EvalContext& ctx, bool hard_laye
         if (!hard_layers)
             return inference_zero();
 
-        if (mgr.iccf().ready())
+        if (catalog_layers && mgr.iccf().ready())
         {
             EvalResult iccf = layer_iccf(pos, mgr.iccf());
             if (iccf.evidence_class == EvidenceClass::EmpiricalIccf)
@@ -248,11 +248,16 @@ EvalResult evaluate_layers(Position& pos, const EvalContext& ctx, bool hard_laye
 }
 
 EvalResult evaluate_full(Position& pos, const EvalContext& ctx) {
-    return evaluate_layers(pos, ctx, true, true);
+    return evaluate_layers(pos, ctx, true, true, true);
 }
 
 EvalResult evaluate_hard_only(Position& pos, const EvalContext& ctx) {
-    return evaluate_layers(pos, ctx, true, false);
+    return evaluate_layers(pos, ctx, true, false, true);
+}
+
+EvalResult evaluate_score_layers(Position& pos, const EvalContext& ctx) {
+    // TB / mate / theory only — consensus+ICCF never replace NNUE score (FEAT-0002).
+    return evaluate_layers(pos, ctx, true, true, false);
 }
 
 }  // namespace Stockfish::Evidence

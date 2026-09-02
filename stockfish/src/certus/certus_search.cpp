@@ -287,7 +287,14 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
     if (!mgr || inCheck || pvIdx > 0)
         return out;
 
-    if (mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly)
+    const bool wantMarked =
+      mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly && mgr->consensus().ready();
+    const bool wantFreq =
+      mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && mgr->iccf().ready();
+    if (!wantMarked && !wantFreq)
+        return out;
+
+    if (wantMarked)
     {
         std::vector<Move> marked = consensus_marked_legal_moves(pos);
         if (!marked.empty())
@@ -298,7 +305,7 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
         }
     }
 
-    if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly)
+    if (wantFreq)
     {
         std::vector<Move> freq = iccf_frequent_legal_moves(pos);
         if (!freq.empty())

@@ -66,15 +66,30 @@ std::string fen_with_defaults(const std::string& fen) {
 }  // namespace
 
 CertusKey hash_placement_stm(const Position& pos) {
-    CertusKey h = 0;
-    for (Square s = SQ_A1; s <= SQ_H8; ++s)
-    {
-        const Piece pc = pos.piece_on(s);
-        if (pc != NO_PIECE)
-            h ^= keys().piece(pc, s);
-    }
+    // Cache by Stockfish key: same node often probes consensus then ICCF (and mate/theory).
+    thread_local Key      tls_sf_key = 0;
+    thread_local CertusKey tls_certus = 0;
+    const Key sfKey                   = pos.key();
+    if (sfKey == tls_sf_key)
+        return tls_certus;
+
+    const CertusZobrist& z = keys();
+    CertusKey            h = 0;
+    for (Color c : {WHITE, BLACK})
+        for (PieceType pt = PAWN; pt <= KING; ++pt)
+        {
+            Bitboard b = pos.pieces(c, pt);
+            while (b)
+            {
+                const Square s = pop_lsb(b);
+                h ^= z.piece(make_piece(c, pt), s);
+            }
+        }
     if (pos.side_to_move() == BLACK)
-        h ^= keys().side;
+        h ^= z.side;
+
+    tls_sf_key = sfKey;
+    tls_certus = h;
     return h;
 }
 

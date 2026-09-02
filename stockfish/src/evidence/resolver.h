@@ -42,11 +42,14 @@ struct EvalContext {
 const char* evidence_class_name(EvidenceClass c);
 EvidenceClass evidence_class_from_name(const std::string& s);
 
+// catalog_layers: consensus + ICCF. Search score skips them (FEAT-0002 → NNUE);
+// keep true for root evidence / golden probes.
 EvalResult evaluate_layers(Position& pos, const EvalContext& ctx, bool hard_layers,
-                           bool soft_layers);
+                           bool soft_layers, bool catalog_layers = true);
 
 EvalResult evaluate_full(Position& pos, const EvalContext& ctx);
 EvalResult evaluate_hard_only(Position& pos, const EvalContext& ctx);
+EvalResult evaluate_score_layers(Position& pos, const EvalContext& ctx);
 
 }  // namespace Stockfish::Evidence
 
