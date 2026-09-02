@@ -141,6 +141,14 @@ void emit_forced_root_bestmove(Search::SearchManager& manager, const Position& r
     const int   depth    = std::max(1, displayDepth);
     const Score score(nnueEval, rootPos);
 
+    // Keep Stockfish time management coherent across forced root moves.
+    // Without this, bestPreviousScore stays stale → fallingEval maxes out and
+    // the next real search burns tm.maximum() every move (flag on short TC).
+    manager.bestPreviousScore        = nnueEval;
+    manager.bestPreviousAverageScore = nnueEval;
+    manager.previousTimeReduction    = 0.85;
+    manager.iterValue.fill(nnueEval);
+
     manager.updates.onUpdateNoMoves({depth, score});
 
     std::string wdlStr;

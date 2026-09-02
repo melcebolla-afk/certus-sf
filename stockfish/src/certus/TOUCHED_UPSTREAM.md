@@ -47,7 +47,8 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
 - `Certus::make_search_move_filter` once per node in main search move loop (FEAT-0002/0003; avoid per-move catalog probes)
-- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut; ICCF singleton frequent; NNUE display score)
+- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut; ICCF singleton frequent; NNUE display score); emergency `bestmove` if already past `tm.maximum()`
+- `SearchManager::check_time`: allow stop before `completedDepth>=1` when over maximum + tighter `callsCnt` on low clock
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 
 ### `src/thread.cpp`

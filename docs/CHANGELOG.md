@@ -3,6 +3,7 @@
 ## Unreleased
 
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
+- **Time safety:** atajos raíz actualizan `bestPreviousScore` (evita fallingEval máximo); `check_time` puede cortar depth-1; con `wtime≤2s` hard-stop ≈ `1.15×optimum` (no sentarse en `maximum`); checks más frecuentes con poco reloj.
 - **Search perf:** filtro marked/frequent una vez por nodo; match UCI con una `MoveList`; eval de search **no** probea consenso/ICCF (solo TB/mate/theory → NNUE); hash Certus por bitboards + cache TLS.
 - **ICCF singleton root:** con `IccfSearch=FreqOnly` y exactamente 1 `frequent_moves` legal → atajo `bestmove` (como consenso trivial).
 - **EvidencePath version pick:** elige carpeta por fecha parseada del nombre /

@@ -217,6 +217,21 @@ void Search::Worker::start_searching() {
         if (Certus::prepare_root_search(rootPos, tbConfig, *main_manager(),
                                         [this] { return evaluate(rootPos); }, displayDepth, showWdl))
             return;
+
+        // Setup/evidence already ate the budget: play a legal root move, do not search.
+        if (limits.use_time_management()
+            && main_manager()->tm.elapsed_time() >= main_manager()->tm.maximum()
+            && rootMoves[0].pv[0] != Move::none())
+        {
+            const Value     v = evaluate(rootPos);
+            Search::SearchManager& mgr = *main_manager();
+            mgr.bestPreviousScore        = v;
+            mgr.bestPreviousAverageScore = v;
+            mgr.previousTimeReduction    = 0.85;
+            mgr.iterValue.fill(v);
+            mgr.updates.onBestmove(UCIEngine::move(rootMoves[0].pv[0], rootPos.is_chess960()), "");
+            return;
+        }
 #endif
         threads.start_searching();  // start non-main threads
         iterative_deepening();      // main thread start searching
@@ -532,7 +547,17 @@ void Search::Worker::iterative_deepening() {
             auto elapsedTime = elapsed();
 
             // Stop the search if we have exceeded the totalTime or maximum
+#ifdef CERTUS_SF
+            // Short bank (blitz/bullet): do not sit on tm.maximum() — that leaves ~1s
+            // and the next overhead flags. Prefer ~optimum so +inc recovers (SF-like).
+            double hardCap = double(mainThread->tm.maximum());
+            if (limits.time[rootPos.side_to_move()] > 0
+                && limits.time[rootPos.side_to_move()] <= 2000)
+                hardCap = std::min(hardCap, std::max(40.0, double(mainThread->tm.optimum()) * 1.15));
+            if (elapsedTime > std::min(totalTime, hardCap))
+#else
             if (elapsedTime > std::min(totalTime, double(mainThread->tm.maximum())))
+#endif
             {
                 // If we are allowed to ponder do not stop the search now but
                 // keep pondering until the GUI sends "ponderhit" or "stop".
@@ -1992,6 +2017,20 @@ void SearchManager::check_time(Search::Worker& worker) {
 
     // When using nodes, ensure checking rate is not lower than 0.1% of nodes
     callsCnt = worker.limits.nodes ? std::min(512, int(worker.limits.nodes / 1024)) : 512;
+#ifdef CERTUS_SF
+    // Low clock: check more often so a slow first depth cannot burn the flag.
+    // (Vanilla SF assumes depth-1 is near-instant; Certus nodes can be heavier.)
+    if (worker.limits.use_time_management() && !worker.limits.nodes)
+    {
+        const TimePoint mx = tm.maximum();
+        if (mx <= 100)
+            callsCnt = 16;
+        else if (mx <= 500)
+            callsCnt = 64;
+        else if (mx <= 2000)
+            callsCnt = 128;
+    }
+#endif
 
     static TimePoint lastInfoTime = now();
 
@@ -2008,11 +2047,32 @@ void SearchManager::check_time(Search::Worker& worker) {
     if (ponder)
         return;
 
+#ifdef CERTUS_SF
+    // Vanilla SF only stops after completedDepth >= 1. Allow aborting depth-1
+    // when past the hard limit if we already have a legal root move (movegen).
+    const bool haveRootMove = !worker.rootMoves.empty()
+                           && worker.rootMoves[0].pv[0] != Move::none();
+    const bool depthOk = worker.completedDepth >= 1
+                      || (worker.limits.use_time_management() && haveRootMove);
+
+    TimePoint hardLimit = tm.maximum();
+    if (worker.limits.use_time_management())
+    {
+        const Color us = worker.rootPos.side_to_move();
+        if (worker.limits.time[us] > 0 && worker.limits.time[us] <= 2000)
+            hardLimit =
+              std::min(hardLimit, std::max(TimePoint(40), TimePoint(tm.optimum() * 12 / 10)));
+    }
+#else
+    const bool depthOk = worker.completedDepth >= 1;
+    const TimePoint hardLimit = tm.maximum();
+#endif
+
     if (
       // Later we rely on the fact that we can at least use the mainthread previous
       // root-search score and PV in a multithreaded environment to prove mated-in scores.
-      worker.completedDepth >= 1
-      && ((worker.limits.use_time_management() && (elapsed > tm.maximum() || stopOnPonderhit))
+      depthOk
+      && ((worker.limits.use_time_management() && (elapsed > hardLimit || stopOnPonderhit))
           || (worker.limits.movetime && elapsed >= worker.limits.movetime)
           || (worker.limits.nodes && worker.threads.nodes_searched() >= worker.limits.nodes)))
         worker.threads.stop = worker.threads.abortedSearch = true;
