@@ -31,7 +31,10 @@ position fen ...
 go depth 20
 ```
 
-El motor elige la versión más reciente por capa (mtime de `catalog.json`).
+El motor elige la versión más reciente por capa según la **fecha en el nombre**
+de carpeta (`vYYYY.MM.DD`, también legado `viccf-YYYY.MM.DD`, etc.) o, si no hay
+fecha parseable, según `content_version` del `catalog.json`. **No** usa mtime
+como criterio principal (git clone/pull reescribe timestamps).
 
 Capas individuales:
 

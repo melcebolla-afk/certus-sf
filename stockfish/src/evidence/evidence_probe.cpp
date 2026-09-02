@@ -11,6 +11,8 @@
 #include "iccf_store.h"
 #include "mate_store.h"
 #include "theoretical_store.h"
+#include "catalog_path.h"
+#include "evidence_root.h"
 
 #include <cstdlib>
 #include <deque>
@@ -50,6 +52,21 @@ int main(int argc, char** argv) {
     Position::init();
 
     const std::string root = (argc > 1) ? argv[1] : "../..";
+
+    {
+        // EvidencePath pick: calendar version beats mtime / legacy folder names.
+        const std::string iccf_root = root + "/catalogs/iccf";
+        const bool        has_new =
+          is_directory(iccf_root + "/v2026.09.02")
+          || is_regular_file(iccf_root + "/v2026.09.02/catalog.json");
+        const bool has_legacy = is_directory(iccf_root + "/viccf-2026.08.29");
+        if (has_new && has_legacy)
+        {
+            const auto iccf_dir = newest_version_dir(iccf_root);
+            check(iccf_dir && iccf_dir->find("v2026.09.02") != std::string::npos,
+                  "newest iccf is v2026.09.02 not legacy viccf");
+        }
+    }
 
     {
         StateListPtr states(new std::deque<StateInfo>(1));

@@ -9,7 +9,9 @@
 
 UCI path = directorio `v…/` **o** ruta directa a `catalog.json`.
 
-`EvidencePath` (opcional): raíz; auto-pick versión más reciente por mtime por subcapa.
+`EvidencePath` (opcional): raíz; auto-pick versión más reciente por subcapa según
+fecha en el nombre de carpeta (`vYYYY.MM.DD` / legados con fecha embebida) o
+`content_version` del catalog; mtime solo como desempate final (git no preserva mtime).
 
 ## STRONG_CONSENSUS — `catalog.json`
 

@@ -11,7 +11,7 @@ Implementar además de opciones SF estándar. Referencia: `crates/evidence-engin
 | `ConsensusPath` | empty | sí + TT age | dir o catalog.json |
 | `IccfPath` | empty | sí + TT age | dir o catalog.json |
 | `MatePath` | empty | sí + TT age | dir; prefer `catalog.idx` |
-| `EvidencePath` | empty | sí | raíz auto-version (mtime max) |
+| `EvidencePath` | empty | sí | raíz; auto-pick versión más reciente por fecha en nombre de carpeta / `content_version` (no mtime) |
 
 Vacío → clear capa; inválido → `info string warning …` sin crash.
 
