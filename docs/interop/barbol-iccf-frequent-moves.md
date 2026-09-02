@@ -25,6 +25,7 @@ Campo **`frequent_moves`** (UCI frecuentes ICCF), misma idea que `marked_moves` 
 - Eval: ICCF **no** sustituye NNUE.
 - `IccfSearch=Off`: no filtra.
 - `IccfSearch=FreqOnly` (**default**): candidatas = `frequent_moves ∩ legal`; vacío → todas; no jaque; no qsearch; MultiPV `pvIdx>0` sin filtro.
+- **Raíz + FreqOnly + exactamente 1 frequent legal:** forzar `bestmove` (singleton trivial); emitir `info string frequent=uci` + score NNUE. Con 2+ no forzar.
 - Si también hay consenso+marked activo → **consenso manda**.
 
 Ver export Bárbol FEAT-0123.

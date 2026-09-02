@@ -3,6 +3,7 @@
 ## Unreleased
 
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
+- **ICCF singleton root:** con `IccfSearch=FreqOnly` y exactamente 1 `frequent_moves` legal → atajo `bestmove` (como consenso trivial).
 - **EvidencePath version pick:** elige carpeta por fecha parseada del nombre /
   `content_version` (no mtime), para que `git pull` no deje cargada una capa vieja.
 - **FEAT-0003:** ICCF schema v2 `frequent_moves`; UCI `IccfSearch` default `FreqOnly` — filtra ramas, nunca fuerza bestmove; consenso manda si ambos aplican.

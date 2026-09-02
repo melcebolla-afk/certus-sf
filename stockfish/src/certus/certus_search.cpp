@@ -127,52 +127,9 @@ EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const S
     return EvalNeed::Full;
 }
 
-bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
-                         Search::SearchManager& manager, std::function<Value()> getNnueEval,
-                         int displayDepth, bool showWdl) {
-    const Evidence::Manager* mgr = evidence_manager();
-    if (!mgr)
-        return false;
-
-    reset_search_evidence();
-    set_track_hits_impl(track_search_hits(*mgr));
-
-    Evidence::EvalResult root_ev =
-      Evidence::evaluate_full(const_cast<Position&>(rootPos), make_root_context(*mgr, tbConfig));
-
-    if (show_root_evidence(*mgr))
-        print_info(format_root_evidence(root_ev));
-
-    if (root_ev.evidence_class != Evidence::EvidenceClass::StrongConsensus)
-        return false;
-
-    const Evidence::ConsensusEntry* entry = mgr->probe_consensus(rootPos);
-    if (!entry)
-        return false;
-
-    const std::vector<Move> marked = legal_marked_moves(rootPos, entry->marked_moves);
-    if (marked.empty())
-    {
-        if (show_root_evidence(*mgr) && !entry->marked_moves.empty())
-            print_info("info string marked-miss (no legal marked; search fallback)");
-        return false;
-    }
-
-    if (show_root_evidence(*mgr))
-    {
-        std::ostringstream ss;
-        ss << "info string marked=";
-        for (std::size_t i = 0; i < marked.size(); ++i)
-        {
-            if (i)
-                ss << ',';
-            ss << UCIEngine::move(marked[i], rootPos.is_chess960());
-        }
-        print_info(ss.str());
-    }
-
-    const std::string bestmove = UCIEngine::move(marked[0], rootPos.is_chess960());
-
+void emit_forced_root_bestmove(Search::SearchManager& manager, const Position& rootPos,
+                               const std::string& bestmove, std::function<Value()> getNnueEval,
+                               int displayDepth, bool showWdl) {
     const Value nnueEval = getNnueEval();
     const int   depth    = std::max(1, displayDepth);
     const Score score(nnueEval, rootPos);
@@ -199,7 +156,74 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
     manager.updates.onUpdateFull(info);
 
     manager.updates.onBestmove(bestmove, "");
-    return true;
+}
+
+bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
+                         Search::SearchManager& manager, std::function<Value()> getNnueEval,
+                         int displayDepth, bool showWdl) {
+    const Evidence::Manager* mgr = evidence_manager();
+    if (!mgr)
+        return false;
+
+    reset_search_evidence();
+    set_track_hits_impl(track_search_hits(*mgr));
+
+    Evidence::EvalResult root_ev =
+      Evidence::evaluate_full(const_cast<Position&>(rootPos), make_root_context(*mgr, tbConfig));
+
+    if (show_root_evidence(*mgr))
+        print_info(format_root_evidence(root_ev));
+
+    // 1) Consensus: always may force first legal marked (independent of ConsensusSearch).
+    if (root_ev.evidence_class == Evidence::EvidenceClass::StrongConsensus)
+    {
+        const Evidence::ConsensusEntry* entry = mgr->probe_consensus(rootPos);
+        if (entry)
+        {
+            const std::vector<Move> marked = legal_marked_moves(rootPos, entry->marked_moves);
+            if (marked.empty())
+            {
+                if (show_root_evidence(*mgr) && !entry->marked_moves.empty())
+                    print_info("info string marked-miss (no legal marked; search fallback)");
+            }
+            else
+            {
+                if (show_root_evidence(*mgr))
+                {
+                    std::ostringstream ss;
+                    ss << "info string marked=";
+                    for (std::size_t i = 0; i < marked.size(); ++i)
+                    {
+                        if (i)
+                            ss << ',';
+                        ss << UCIEngine::move(marked[i], rootPos.is_chess960());
+                    }
+                    print_info(ss.str());
+                }
+                emit_forced_root_bestmove(manager, rootPos,
+                                          UCIEngine::move(marked[0], rootPos.is_chess960()),
+                                          getNnueEval, displayDepth, showWdl);
+                return true;
+            }
+        }
+    }
+
+    // 2) ICCF: only when FreqOnly and exactly one legal frequent move (trivial singleton).
+    if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && !rootPos.checkers())
+    {
+        const std::vector<Move> freq = iccf_frequent_legal_moves(rootPos);
+        if (freq.size() == 1)
+        {
+            const std::string bestmove = UCIEngine::move(freq[0], rootPos.is_chess960());
+            if (show_root_evidence(*mgr))
+                print_info("info string frequent=" + bestmove);
+            emit_forced_root_bestmove(manager, rootPos, bestmove, getNnueEval, displayDepth,
+                                      showWdl);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void finish_search_evidence() {

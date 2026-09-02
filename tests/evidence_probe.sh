@@ -34,4 +34,12 @@ echo "$out" | grep -q 'option name ConsensusSearch type combo default MarkedOnly
 echo "$out" | grep -q 'option name IccfSearch type combo default FreqOnly'
 echo "$out" | grep -q 'ConsensusPath ready version='
 
+# ICCF singleton root shortcut (exactly one frequent legal → force, no deep search)
+out="$(printf 'uci\nsetoption name IccfPath value %s/testdata/iccf\nsetoption name IccfSearch value FreqOnly\nsetoption name EvidenceInfo value Root\nisready\nposition startpos\ngo depth 12\nquit\n' "$ROOT" | "$BIN" 2>&1)"
+echo "$out" | grep -q 'info string evidence=EMPIRICAL_ICCF'
+echo "$out" | grep -q 'info string frequent=e2e4'
+echo "$out" | grep -q 'bestmove e2e4'
+echo "$out" | grep -q 'info depth 12 score cp'
+echo "$out" | grep -qv 'info depth 2 '
+
 echo "tests/evidence_probe.sh: OK"

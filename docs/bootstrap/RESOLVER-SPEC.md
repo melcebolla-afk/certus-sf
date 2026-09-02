@@ -81,9 +81,9 @@ Salvaguardas: en jaque → todas legales; `MultiPV` línea `pvIdx>0` → sin fil
 | Valor | Movegen (search principal) | Eval | Raíz |
 |-------|---------------------------|------|------|
 | `Off` | Todas legales | NNUE | Sin atajo ICCF |
-| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | **Nunca** fuerza bestmove |
+| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | Atajo raíz solo si **exactamente 1** frequent legal |
 
-Precedencia: si `ConsensusSearch=MarkedOnly` y hay marked legales en el nodo → filtro consenso; ICCF no mezcla.
+Precedencia: si `ConsensusSearch=MarkedOnly` y hay marked legales en el nodo → filtro consenso; ICCF no mezcla. Atajo raíz consenso (cualquier nº de marked) gana sobre atajo ICCF singleton.
 
 ## EvidenceInfo
 

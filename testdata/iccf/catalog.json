@@ -11,6 +11,17 @@
   "max_frequent_moves": 8,
   "entries": [
     {
+      "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "wdl": "d",
+      "n": 200,
+      "elo": 2400,
+      "date": "2020-01-01",
+      "confidence": 0.7,
+      "frequent_moves": ["e2e4"],
+      "move_stats": [{"uci": "e2e4", "n": 180, "share": 0.9}],
+      "sources": ["iccf"]
+    },
+    {
       "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
       "wdl": "d",
       "n": 42,
