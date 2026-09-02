@@ -29,6 +29,15 @@ ConsensusSearchMode parse_consensus_search(const std::string& s) {
     return ConsensusSearchMode::Off;
 }
 
+IccfSearchMode parse_iccf_search(const std::string& s) {
+    std::string t;
+    for (char c : s)
+        t += char(std::tolower(static_cast<unsigned char>(c)));
+    if (t == "freqonly" || t == "freq_only" || t == "frequentonly")
+        return IccfSearchMode::FreqOnly;
+    return IccfSearchMode::Off;
+}
+
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -168,6 +177,12 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
     options.add("ConsensusSearch",
                 Option("Off MarkedOnly", "MarkedOnly", [this](const Option& o) -> std::optional<std::string> {
                     consensus_search_ = parse_consensus_search(std::string(o));
+                    return std::nullopt;
+                }));
+
+    options.add("IccfSearch",
+                Option("Off FreqOnly", "Off", [this](const Option& o) -> std::optional<std::string> {
+                    iccf_search_ = parse_iccf_search(std::string(o));
                     return std::nullopt;
                 }));
 }

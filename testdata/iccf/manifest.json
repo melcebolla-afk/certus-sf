@@ -1,13 +1,17 @@
 {
   "layer": "EMPIRICAL_ICCF",
-  "schema_version": 1,
-  "content_version": "iccf-fixture-2026.08.29",
-  "checksum": "sha256:117a215a597d5107ebe1e37e314bd1403e9a6c0b03b5e1c6beb6a196cd2725bd",
+  "schema_version": 2,
+  "content_version": "iccf-fixture-2026.09.02",
+  "checksum": "sha256:fixture",
   "coverage": {
     "positions": 4,
-    "skipped_rows": 0
+    "positions_with_frequent_moves": 2
   },
-  "sources": [
-    "iccf-export"
-  ]
+  "export_params": {
+    "min_n_move": 3,
+    "min_share": 0.05,
+    "max_frequent_moves": 8
+  },
+  "sources": ["iccf-fixture"],
+  "built_at": "2026-09-02T00:00:00Z"
 }

@@ -1,0 +1,19 @@
+{
+  "layer": "EMPIRICAL_ICCF",
+  "schema_version": 2,
+  "content_version": "2026.09.02",
+  "checksum": "sha256:2824326291ee81e8400db713b5024ddad80e90b58cb2577cba2a956ce92db49b",
+  "coverage": {
+    "positions": 18007,
+    "positions_with_frequent_moves": 18007
+  },
+  "export_params": {
+    "min_n_move": 3,
+    "min_share": 0.05,
+    "max_frequent_moves": 8
+  },
+  "sources": [
+    "iccf-pgn-stats"
+  ],
+  "built_at": "2026-09-02T11:24:56Z"
+}

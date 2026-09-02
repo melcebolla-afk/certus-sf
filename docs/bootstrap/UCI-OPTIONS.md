@@ -21,9 +21,12 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 |--------|------|---------|--------|
 | `EvidenceInfo` | combo | Root | Off, Root, All |
 | `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly |
+| `IccfSearch` | combo | Off | Off, FreqOnly |
 | `UCI_ShowWDL` | check | true | (SF puede tener ya) |
 
-`ConsensusSearch=MarkedOnly` (default): en nodos con consenso + `marked_moves`, el search principal solo expande marked ∩ legal (eval NNUE). Raíz: atajo FEAT-0010 independiente; emite `info depth 1 score cp <NNUE>` antes del `bestmove`.
+`ConsensusSearch=MarkedOnly` (default): en nodos con consenso + `marked_moves`, el search principal solo expande marked ∩ legal (eval NNUE). Raíz: atajo FEAT-0010 independiente; emite `info depth N score cp <NNUE>` antes del `bestmove`.
+
+`IccfSearch=FreqOnly`: en nodos con hit ICCF + `frequent_moves` (catalog schema v2), filtra a frequent ∩ legal. **Nunca** fuerza `bestmove`. Si consenso MarkedOnly aplica en el mismo nodo, el consenso tiene prioridad.
 
 ## No implementar en fork (v1)
 

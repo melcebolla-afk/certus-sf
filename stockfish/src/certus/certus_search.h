@@ -29,8 +29,9 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
                          int displayDepth, bool showWdl);
 void finish_search_evidence();
 
-// FEAT-0002: marked-only movegen in main search (not qsearch).
+// FEAT-0002 / FEAT-0003: marked / frequent movegen in main search (not qsearch).
 std::vector<Move> consensus_marked_legal_moves(const Position& pos);
+std::vector<Move> iccf_frequent_legal_moves(const Position& pos);
 bool              allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx);
 
 }  // namespace Certus

@@ -9,10 +9,10 @@ namespace Stockfish::Evidence {
 void IccfStore::clear() {
     map_.clear();
     content_version_.clear();
-    min_n_           = 10;
-    min_elo_         = 2000;
-    min_date_        = "2000-01-01";
-    min_confidence_  = 0.5f;
+    min_n_          = 10;
+    min_elo_        = 2000;
+    min_date_       = "2000-01-01";
+    min_confidence_ = 0.5f;
 }
 
 std::string IccfStore::load(const std::string& path) {
@@ -28,7 +28,8 @@ std::string IccfStore::load(const std::string& path) {
         return "IccfPath not a file: " + file;
 
     const auto schema = Json::u32_field(*json, "schema_version");
-    if (!schema || *schema != 1)
+    // v1: WDL only; v2: optional frequent_moves per entry.
+    if (!schema || (*schema != 1 && *schema != 2))
         return "unsupported iccf schema_version";
 
     const auto layer = Json::string_field(*json, "layer");
@@ -50,10 +51,10 @@ std::string IccfStore::load(const std::string& path) {
 
     std::unordered_map<CertusKey, IccfEntry> map;
     Json::for_each_object_in_array(*json, "entries", [&](const std::string& obj) {
-        auto fen = Json::string_field_obj(obj, "fen");
-        auto wdl = Json::string_field_obj(obj, "wdl");
+        auto fen  = Json::string_field_obj(obj, "fen");
+        auto wdl  = Json::string_field_obj(obj, "wdl");
         auto conf = Json::number_field_obj(obj, "confidence");
-        auto n = Json::u32_field_obj(obj, "n");
+        auto n    = Json::u32_field_obj(obj, "n");
         if (!fen || !wdl || !conf || !n)
             return;
         auto parsed = try_parse_wdl(*wdl);
@@ -69,7 +70,8 @@ std::string IccfStore::load(const std::string& path) {
             e.date = date->empty() ? "1970-01-01" : *date;
         else
             e.date = "1970-01-01";
-        e.sources = Json::string_array_field_obj(obj, "sources");
+        e.sources         = Json::string_array_field_obj(obj, "sources");
+        e.frequent_moves  = Json::string_array_field_obj(obj, "frequent_moves");
         map[key_from_fen(*fen)] = std::move(e);
     });
 

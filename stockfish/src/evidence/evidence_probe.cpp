@@ -72,9 +72,14 @@ int main(int argc, char** argv) {
         pos.set("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", false,
                 &states->back());
         check(store.probe(pos) != nullptr, "iccf hit");
+        check(store.probe(pos)->frequent_moves.size() == 2, "iccf frequent_moves e4e5");
         pos.set("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1", false,
                 &states->back());
         check(store.probe(pos) == nullptr, "iccf gate miss low n");
+        pos.set("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", false,
+                &states->back());
+        check(store.probe(pos) != nullptr, "iccf italian hit");
+        check(store.probe(pos)->frequent_moves.size() == 3, "iccf frequent_moves italian");
     }
 
     {

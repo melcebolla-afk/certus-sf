@@ -106,7 +106,7 @@ setoption name IccfPath value /ruta/…/v{content_version}
 
 `{BARBOL_EXPORT_ROOT}` configurable (env/flag); no hardcodear path de lab del operador.
 
-**Comando lab Bárbol (EMPIRICAL_ICCF → staging Certus):** desde la raíz del repo Bárbol:
+**Comando lab Bárbol (EMPIRICAL_ICCF → staging Certus legacy):** desde la raíz del repo Bárbol:
 
 ```bash
 ./venv/bin/python tools/iccf_pgn_stats_load.py \
@@ -122,7 +122,18 @@ Con `--certus-export` la salida por defecto es:
   manifest.json
 ```
 
-(Ajustar PGN/gates al dump del operador.) Flujo completo: `docs/runbooks/layers-and-train.md` §1.5.
+**Comando lab Bárbol (EMPIRICAL_ICCF → certus-sf `catalogs/`, schema v2 + `frequent_moves`):**
+
+```bash
+./venv/bin/python tools/iccf_pgn_stats_load.py \
+  --pgn-file … --min-date … --min-elo … \
+  --certus-sf-export \
+  --certus-min-n-move 3 \
+  --certus-min-share 0.05 \
+  --certus-max-frequent-moves 8
+```
+
+(Ajustar PGN/gates al dump del operador.) Flujo completo: `docs/runbooks/layers-and-train.md` §1.5 / `docs/runbooks/catalogs-layers.md`.
 
 ### Schema `catalog.json`
 

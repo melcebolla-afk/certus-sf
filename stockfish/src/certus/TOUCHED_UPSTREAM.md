@@ -39,14 +39,14 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 ### `src/ucioption.cpp`
 
-- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch).
+- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch).
 
 ### `src/search.cpp`
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
-- `Certus::allow_search_move` in main search move loop (FEAT-0002 MarkedOnly)
+- `Certus::allow_search_move` in main search move loop (FEAT-0002 MarkedOnly; FEAT-0003 Iccf FreqOnly)
 - `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut + NNUE display score)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 

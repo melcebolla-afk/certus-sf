@@ -1,11 +1,14 @@
 {
-  "schema_version": 1,
-  "content_version": "iccf-fixture-2026.08.29",
+  "schema_version": 2,
+  "content_version": "iccf-fixture-2026.09.02",
   "layer": "EMPIRICAL_ICCF",
   "min_n": 10,
   "min_elo": 2000,
   "min_date": "2000-01-01",
   "min_confidence": 0.5,
+  "min_n_move": 3,
+  "min_share": 0.05,
+  "max_frequent_moves": 8,
   "entries": [
     {
       "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
@@ -14,9 +17,12 @@
       "elo": 2280,
       "date": "2018-06-01",
       "confidence": 0.5935,
-      "sources": [
-        "iccf"
-      ]
+      "frequent_moves": ["g1f3", "b1c3"],
+      "move_stats": [
+        {"uci": "g1f3", "n": 22, "share": 0.5238},
+        {"uci": "b1c3", "n": 15, "share": 0.3571}
+      ],
+      "sources": ["iccf"]
     },
     {
       "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
@@ -25,9 +31,7 @@
       "elo": 2300,
       "date": "2019-01-01",
       "confidence": 0.4216,
-      "sources": [
-        "iccf"
-      ]
+      "sources": ["iccf"]
     },
     {
       "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
@@ -36,9 +40,13 @@
       "elo": 2400,
       "date": "2020-03-15",
       "confidence": 0.6619,
-      "sources": [
-        "iccf"
-      ]
+      "frequent_moves": ["f1c4", "d2d4", "b1c3"],
+      "move_stats": [
+        {"uci": "f1c4", "n": 48, "share": 0.4},
+        {"uci": "d2d4", "n": 30, "share": 0.25},
+        {"uci": "b1c3", "n": 24, "share": 0.2}
+      ],
+      "sources": ["iccf"]
     },
     {
       "fen": "8/8/8/8/8/8/4Q3/4K1k1 w - - 0 1",
@@ -47,9 +55,7 @@
       "elo": 2100,
       "date": "2015-01-01",
       "confidence": 0.6048,
-      "sources": [
-        "iccf"
-      ]
+      "sources": ["iccf"]
     }
   ]
 }

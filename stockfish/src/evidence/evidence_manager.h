@@ -18,6 +18,8 @@ enum class EvidenceInfoMode { Off, Root, All };
 
 enum class ConsensusSearchMode { Off, MarkedOnly };
 
+enum class IccfSearchMode { Off, FreqOnly };
+
 class Manager {
    public:
     Manager() = default;
@@ -38,6 +40,8 @@ class Manager {
     EvidenceInfoMode evidence_info() const { return evidence_info_; }
     ConsensusSearchMode consensus_search() const { return consensus_search_; }
     void                  set_consensus_search(ConsensusSearchMode mode) { consensus_search_ = mode; }
+    IccfSearchMode        iccf_search() const { return iccf_search_; }
+    void                  set_iccf_search(IccfSearchMode mode) { iccf_search_ = mode; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -55,6 +59,7 @@ class Manager {
     std::string           evidence_root_;
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
     ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
+    IccfSearchMode        iccf_search_      = IccfSearchMode::Off;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

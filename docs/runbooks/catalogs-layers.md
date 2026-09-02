@@ -44,6 +44,18 @@ cd /home/mcebolla/certus-sf
 python3 builders/mate_repo_update.py --dry-run --max-new 100
 python3 builders/theory_repo_update.py --dry-run
 
+# Bulk bootstrap MatePath (una vez; cron semanal sigue en --max-new 5000)
+# python3 builders/mate_repo_update.py --skip-download --max-new 2000000 --jobs 32
+
+# EMPIRICAL_ICCF → catalogs/iccf/v…/ (schema v2 + frequent_moves) — desde Bárbol
+# cd /home/mcebolla/chess_idea && \
+# ./venv/bin/python tools/iccf_pgn_stats_load.py \
+#   --pgn-file … --min-date … --min-elo … \
+#   --certus-sf-export \
+#   --certus-min-n-move 3 \
+#   --certus-min-share 0.05 \
+#   --certus-max-frequent-moves 8
+
 # Tras actualizar catálogos — smoke motor
 make -j -C stockfish/src build ARCH=x86-64-sse41-popcnt
 printf 'setoption name EvidencePath value %s/catalogs\nisready\nposition startpos\ngo depth 1\nquit\n' "$PWD" \

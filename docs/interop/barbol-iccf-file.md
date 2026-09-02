@@ -106,7 +106,7 @@ setoption name IccfPath value /ruta/…/v{content_version}
 
 `{BARBOL_EXPORT_ROOT}` configurable (env/flag); no hardcodear path de lab del operador.
 
-**Comando lab Bárbol (EMPIRICAL_ICCF → staging Certus):** desde la raíz del repo Bárbol:
+**Comando lab Bárbol (EMPIRICAL_ICCF → staging Certus legacy):** desde la raíz del repo Bárbol:
 
 ```bash
 ./venv/bin/python tools/iccf_pgn_stats_load.py \
@@ -122,7 +122,21 @@ Con `--certus-export` la salida por defecto es:
   manifest.json
 ```
 
-(Ajustar PGN/gates al dump del operador.) Flujo completo: `docs/runbooks/layers-and-train.md` §1.5.
+**Comando lab Bárbol (EMPIRICAL_ICCF → certus-sf `catalogs/`, schema v2 + `frequent_moves`):**
+
+```bash
+./venv/bin/python tools/iccf_pgn_stats_load.py \
+  --pgn-file … --min-date … --min-elo … \
+  --certus-sf-export \
+  --certus-min-n-move 3 \
+  --certus-min-share 0.05 \
+  --certus-max-frequent-moves 8
+```
+
+- Destino por defecto: `{CERTUS_SF_CATALOGS_ROOT:-/home/mcebolla/certus-sf/catalogs}/iccf/v{content_version}/`.
+- Umbrales de jugada (`min_n_move` / `min_share` / `max_frequent_moves`): ver `docs/interop/barbol-iccf-frequent-moves.md`.
+
+(Ajustar PGN/gates al dump del operador.) Flujo completo: `docs/runbooks/layers-and-train.md` §1.5 / `docs/runbooks/catalogs-layers.md`.
 
 ### Schema `catalog.json`
 
@@ -226,3 +240,7 @@ Si Bárbol prefiere un JSON propio, debe mapear 1:1 a §4. Certus tiene `builder
 ## 8) Contacto de schema
 
 Bump de `schema_version` o cambio de semántica STM/WDL → acordar en ambos repos.
+
+## Addendum 2026-09-02 — `frequent_moves` (schema 2)
+
+Ver `docs/interop/barbol-iccf-frequent-moves.md`. Resumen: array UCI frecuentes; motor filtra con `IccfSearch=FreqOnly`; nunca fuerza bestmove.

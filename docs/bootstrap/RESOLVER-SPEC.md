@@ -76,6 +76,15 @@ Si en raíz:
 
 Salvaguardas: en jaque → todas legales; `MultiPV` línea `pvIdx>0` → sin filtro; qsearch sin filtro.
 
+## IccfSearch (FEAT-0003)
+
+| Valor | Movegen (search principal) | Eval | Raíz |
+|-------|---------------------------|------|------|
+| `Off` (default) | Todas legales | NNUE | Sin atajo ICCF |
+| `FreqOnly` | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | **Nunca** fuerza bestmove |
+
+Precedencia: si `ConsensusSearch=MarkedOnly` y hay marked legales en el nodo → filtro consenso; ICCF no mezcla.
+
 ## EvidenceInfo
 
 | Valor | Comportamiento |
