@@ -62,6 +62,16 @@ int main(int argc, char** argv) {
         check(hit != nullptr, "consensus hit");
         check(hit && hit->wdl == Wdl::Draw, "consensus wdl draw");
         check(hit && !hit->marked_moves.empty(), "consensus marked_moves");
+
+        // Entry without wdl must still load (optional field; default draw).
+        Position pos;
+        pos.set("r1bq1rk1/ppp2ppp/2n1pn2/3p4/1bPP4/2N1PN2/PPQ2PPP/R1B1KB1R b KQ - 0 1",
+                false, &states->back());
+        hit = store.probe(pos);
+        check(hit != nullptr, "consensus hit without wdl field");
+        check(hit && hit->marked_moves.size() == 1 && hit->marked_moves[0] == "f8e8",
+              "consensus no-wdl marked f8e8");
+        check(store.size() >= 5, "consensus loaded no-wdl entry");
     }
 
     {

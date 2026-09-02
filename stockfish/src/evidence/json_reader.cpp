@@ -11,7 +11,10 @@ namespace {
 
 std::optional<std::size_t> find_key(const std::string& json, const char* key, std::size_t from = 0) {
     const std::string needle = std::string("\"") + key + "\"";
-    return json.find(needle, from);
+    const auto        pos    = json.find(needle, from);
+    if (pos == std::string::npos)
+        return std::nullopt;
+    return pos;
 }
 
 std::optional<std::size_t> skip_ws(const std::string& json, std::size_t i) {

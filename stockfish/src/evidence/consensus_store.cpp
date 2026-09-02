@@ -61,19 +61,24 @@ std::string ConsensusStore::load(const std::string& path) {
 
     std::unordered_map<CertusKey, ConsensusEntry> map;
     Json::for_each_object_in_array(*json, "entries", [&](const std::string& obj) {
-        auto fen = Json::string_field_obj(obj, "fen");
-        auto wdl = Json::string_field_obj(obj, "wdl");
+        auto fen  = Json::string_field_obj(obj, "fen");
         auto conf = Json::number_field_obj(obj, "confidence");
-        if (!fen || !wdl || !conf)
+        if (!fen || !conf)
             return;
-        auto parsed = try_parse_wdl(*wdl);
-        if (!parsed)
-            return;
+        // wdl optional (FEAT-0002+: unused for search score; default draw if absent).
+        Wdl wdl = Wdl::Draw;
+        if (auto wdl_s = Json::string_field_obj(obj, "wdl"))
+        {
+            auto parsed = try_parse_wdl(*wdl_s);
+            if (!parsed)
+                return;
+            wdl = *parsed;
+        }
         ConsensusEntry e;
-        e.wdl         = *parsed;
-        e.confidence  = static_cast<float>(*conf);
+        e.wdl          = wdl;
+        e.confidence   = static_cast<float>(*conf);
         e.marked_moves = Json::string_array_field_obj(obj, "marked_moves");
-        e.sources     = Json::string_array_field_obj(obj, "sources");
+        e.sources      = Json::string_array_field_obj(obj, "sources");
         map[key_from_fen(*fen)] = std::move(e);
     });
 

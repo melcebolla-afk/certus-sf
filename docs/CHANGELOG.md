@@ -3,6 +3,7 @@
 ## Unreleased
 
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
+- **FEAT-0003b:** Consensus `entries[].wdl` opcional al cargar (default `d`); entradas solo con fen/confidence/marked_moves ya no se descartan.
 - **FEAT-0003:** ICCF schema v2 `frequent_moves`; UCI `IccfSearch` default `FreqOnly` — filtra ramas, nunca fuerza bestmove; consenso manda si ambos aplican.
 - **FEAT-0002:** `ConsensusSearch` default `MarkedOnly`; filtro `marked_moves` en search; consenso/ICCF no sustituyen eval (NNUE); atajo raíz emite score NNUE.
 - **`catalogs/`** EvidenceRoot: layout versionado, builders retarget, cron mate/theory, runbook `docs/runbooks/catalogs-layers.md`. Bárbol → export directo (sin promote).

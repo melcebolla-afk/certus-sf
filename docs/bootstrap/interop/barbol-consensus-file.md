@@ -208,7 +208,7 @@ Flujo completo Certus: `docs/runbooks/layers-and-train.md` §1.
 | `layer` | sí | exactamente `STRONG_CONSENSUS` |
 | `min_confidence` | no (default 0.8) | Certus ignora entradas con `confidence` &lt; este umbral |
 | `entries[].fen` | sí | FEN legal; clave de lookup = **placement + STM** (castling/ep/reloj no distinguen hit) |
-| `entries[].wdl` | sí | `w` \| `d` \| `l` (también acepta win/draw/loss) |
+| `entries[].wdl` | **opcional** (2026-09-02) | `w` \| `d` \| `l`; si falta → default `d`. No se usa como eval de search |
 | `entries[].confidence` | sí | float ∈ [0,1] |
 | `entries[].marked_moves` | sí (producción) | array UCI, **≥ 1**; orden = preferencia opcional (primero = sugerido), todos válidos |
 | `entries[].sources` | recomendado | trazabilidad familias/oráculos |
