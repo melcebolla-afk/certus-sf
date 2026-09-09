@@ -68,6 +68,10 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
     if (!g_manager)
         return Eval::evaluate(networks, pos, accumulators, caches, optimism);
 
+    // CertusStyle=Off: Stockfish-pure numeric eval (no evidence layers).
+    if (g_manager->certus_style() == Evidence::CertusStyleMode::Off)
+        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+
     const EvalNeed need = tls_eval_need;
 
     // SoftOnly: skip evidence resolver — Stockfish NNUE (interior quiet midgame).
@@ -76,8 +80,8 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
 
     // Score path: TB/mate/theory only. Do not probe consensus/ICCF here — FEAT-0002
     // always falls through to NNUE for those, and PV/qsearch were paying that cost.
-    Position&                   mutable_pos = const_cast<Position&>(pos);
-    const Evidence::EvalResult  ev =
+    Position&                  mutable_pos = const_cast<Position&>(pos);
+    const Evidence::EvalResult ev =
       Evidence::evaluate_score_layers(mutable_pos, make_context());
 
     if (tracking_hits())

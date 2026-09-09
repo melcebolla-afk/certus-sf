@@ -16,26 +16,27 @@ python3 "$ROOT/builders/test_mate_build.py"
 "$PROBE" "$ROOT"
 "$GOLDEN" "$ROOT"
 
-out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nposition fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\ngo depth 1\nquit\n' "$ROOT" | "$BIN" 2>&1)"
+out="$(printf 'uci\nsetoption name CertusStyle value Strict\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nposition fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\ngo depth 1\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'info string evidence=STRONG_CONSENSUS'
 echo "$out" | grep -q 'info string marked=b1c3'
 echo "$out" | grep -q 'bestmove b1c3'
 echo "$out" | grep -q 'info depth 1 score cp'
 echo "$out" | grep -qv 'info depth 1 score cp 0 '
 
-out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nposition fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\ngo depth 20\nquit\n' "$ROOT" | "$BIN" 2>&1)"
+out="$(printf 'uci\nsetoption name CertusStyle value Strict\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nposition fen rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2\ngo depth 20\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'info depth 20 score cp'
 echo "$out" | grep -qv 'info depth 20 score cp 0 '
 
 out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
+echo "$out" | grep -q 'option name CertusStyle type combo default Mixed'
 echo "$out" | grep -q 'option name ConsensusSearch type combo default MarkedOnly'
 echo "$out" | grep -q 'option name IccfSearch type combo default FreqOnly'
 echo "$out" | grep -q 'ConsensusPath ready version='
 
 # ICCF singleton root shortcut (exactly one frequent legal → force, no deep search)
-out="$(printf 'uci\nsetoption name IccfPath value %s/testdata/iccf\nsetoption name IccfSearch value FreqOnly\nsetoption name EvidenceInfo value Root\nisready\nposition startpos\ngo depth 12\nquit\n' "$ROOT" | "$BIN" 2>&1)"
+out="$(printf 'uci\nsetoption name CertusStyle value Strict\nsetoption name IccfPath value %s/testdata/iccf\nsetoption name IccfSearch value FreqOnly\nsetoption name EvidenceInfo value Root\nisready\nposition startpos\ngo depth 12\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'info string evidence=EMPIRICAL_ICCF'
 echo "$out" | grep -q 'info string frequent=e2e4'
 echo "$out" | grep -q 'bestmove e2e4'

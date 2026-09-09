@@ -20,6 +20,9 @@ enum class ConsensusSearchMode { Off, MarkedOnly };
 
 enum class IccfSearchMode { Off, FreqOnly };
 
+// Master search style (FEAT-0004). Default Mixed.
+enum class CertusStyleMode { Off, Mixed, Strict };
+
 class Manager {
    public:
     Manager() = default;
@@ -42,6 +45,8 @@ class Manager {
     void                  set_consensus_search(ConsensusSearchMode mode) { consensus_search_ = mode; }
     IccfSearchMode        iccf_search() const { return iccf_search_; }
     void                  set_iccf_search(IccfSearchMode mode) { iccf_search_ = mode; }
+    CertusStyleMode       certus_style() const { return certus_style_; }
+    void                  set_certus_style(CertusStyleMode mode) { certus_style_ = mode; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -60,6 +65,7 @@ class Manager {
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
     ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
     IccfSearchMode        iccf_search_      = IccfSearchMode::FreqOnly;
+    CertusStyleMode       certus_style_     = CertusStyleMode::Mixed;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

@@ -67,7 +67,15 @@ Si en raíz:
 - `bestmove` = primer marked legal (orden catalog)
 - `info string marked=uci,uci,...`
 
-## ConsensusSearch (FEAT-0002)
+## CertusStyle (FEAT-0004)
+
+| Valor | Search | Atajos force | Eval capas |
+|-------|--------|--------------|------------|
+| `Off` | SF puro | No | No (NNUE directo) |
+| `Mixed` (**default**) | orden+effort raíz; sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
+| `Strict` | filtro ConsensusSearch/IccfSearch + LMR/ext preferred | Sí | Sí |
+
+## ConsensusSearch (FEAT-0002) — solo aplica filtro si `CertusStyle=Strict`
 
 | Valor | Movegen (search principal) | Eval estática |
 |-------|---------------------------|---------------|
@@ -76,14 +84,14 @@ Si en raíz:
 
 Salvaguardas: en jaque → todas legales; `MultiPV` línea `pvIdx>0` → sin filtro; qsearch sin filtro.
 
-## IccfSearch (FEAT-0003)
+## IccfSearch (FEAT-0003) — solo aplica filtro si `CertusStyle=Strict`
 
 | Valor | Movegen (search principal) | Eval | Raíz |
 |-------|---------------------------|------|------|
 | `Off` | Todas legales | NNUE | Sin atajo ICCF |
-| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | Atajo raíz solo si **exactamente 1** frequent legal |
+| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | Atajo raíz solo si **exactamente 1** frequent legal (**Strict**) |
 
-Precedencia: si `ConsensusSearch=MarkedOnly` y hay marked legales en el nodo → filtro consenso; ICCF no mezcla. Atajo raíz consenso (cualquier nº de marked) gana sobre atajo ICCF singleton.
+Precedencia Strict: marked > frequent. Atajo raíz consenso gana sobre ICCF singleton.
 
 ## EvidenceInfo
 

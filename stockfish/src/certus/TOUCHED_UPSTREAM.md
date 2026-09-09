@@ -39,16 +39,17 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 ### `src/ucioption.cpp`
 
-- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch).
+- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle).
 
 ### `src/search.cpp`
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
-- `Certus::make_search_move_filter` once per node in main search move loop (FEAT-0002/0003; avoid per-move catalog probes)
-- `start_searching`: `Certus::prepare_root_search` (consensus marked shortcut; ICCF singleton frequent; NNUE display score); emergency `bestmove` if already past `tm.maximum()`
-- `SearchManager::check_time`: allow stop before `completedDepth>=1` when over maximum + tighter `callsCnt` on low clock
+- `Certus::make_search_move_filter` once per node; `apply_style_depth_bias` (FEAT-0004 CertusStyle)
+- `start_searching`: `Certus::prepare_root_search` (Strict force only); emergency `bestmove` if past `tm.maximum()`
+- `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict order)
+- `SearchManager::check_time`: allow stop before `completedDepth>=1` when over hard limit + tighter `callsCnt` on low clock
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 
 ### `src/thread.cpp`

@@ -351,6 +351,17 @@ void Search::Worker::iterative_deepening() {
             mainHistory[c][i] =
               (mainHistory[c][i] - mainHistoryDefault) * 3 / 4 + mainHistoryDefault;
 
+#ifdef CERTUS_SF
+    // Mixed/Strict: search preferred (marked/frequent) root moves first (order + effort).
+    {
+        const Certus::SearchMoveFilter rootPref =
+          Certus::make_search_move_filter(rootPos, bool(rootPos.checkers()), 0);
+        if (rootPref.boost_preferred && !rootPref.preferred.empty())
+            std::stable_partition(rootMoves.begin(), rootMoves.end(),
+                                  [&](const RootMove& rm) { return rootPref.is_preferred(rm.pv[0]); });
+    }
+#endif
+
     // Iterative deepening loop until requested to stop or the target depth is reached
     while (++rootDepth < MAX_PLY && !threads.stop
            && !(limits.depth && mainThread && rootDepth > limits.depth))
@@ -1286,6 +1297,16 @@ moves_loop:  // When in check, search starts here
         // Scale up reductions for expected ALL nodes
         if (allNode)
             r += r / (depth + 1);
+
+#ifdef CERTUS_SF
+        // After SF reduction tweaks: Mixed root effort / Strict interior depth bias.
+        {
+            Depth extBias = 0;
+            Certus::apply_style_depth_bias(certusMoves, move, rootNode, extBias, r);
+            if (extBias)
+                newDepth += extBias;
+        }
+#endif
 
         // Step 17. Late moves reduction / extension (LMR)
         if (depth >= 2 && moveCount > 1)

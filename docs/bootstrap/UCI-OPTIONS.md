@@ -19,14 +19,23 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 
 | Option | Type | Default | Values |
 |--------|------|---------|--------|
+| `CertusStyle` | combo | **Mixed** | Off, Mixed, Strict |
 | `EvidenceInfo` | combo | Root | Off, Root, All |
-| `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly |
-| `IccfSearch` | combo | FreqOnly | Off, FreqOnly |
+| `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly — filtro solo si `CertusStyle=Strict` |
+| `IccfSearch` | combo | FreqOnly | Off, FreqOnly — filtro solo si `CertusStyle=Strict` |
 | `UCI_ShowWDL` | check | true | (SF puede tener ya) |
 
-`ConsensusSearch=MarkedOnly` (default): en nodos con consenso + `marked_moves`, el search principal solo expande marked ∩ legal (eval NNUE). Raíz: atajo FEAT-0010 independiente; emite `info depth N score cp <NNUE>` antes del `bestmove`.
+`CertusStyle` (FEAT-0004):
 
-`IccfSearch=FreqOnly` (default): en nodos con hit ICCF + `frequent_moves` (catalog schema v2), filtra a frequent ∩ legal. En **raíz**, si queda **exactamente 1** frequent legal → atajo `bestmove` (sin search; `info string frequent=` + score NNUE). Con 2+ → search entre ellas. Si consenso aplica, el consenso tiene prioridad.
+| Valor | Comportamiento |
+|-------|----------------|
+| `Off` | SF puro: sin filtro, sin bias, sin atajos, eval sin capas evidencia |
+| `Mixed` (**default**) | Sin filtro ni force; orden + effort en raíz hacia marked/frequent |
+| `Strict` | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR/ext en preferred |
+
+`ConsensusSearch=MarkedOnly`: en **Strict**, nodos con consenso + `marked_moves` → solo marked ∩ legal. Raíz Strict: atajo FEAT-0010 + score NNUE.
+
+`IccfSearch=FreqOnly`: en **Strict**, filtra frequent ∩ legal; raíz Strict + 1 frequent → atajo.
 
 ## No implementar en fork (v1)
 

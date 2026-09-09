@@ -38,6 +38,17 @@ IccfSearchMode parse_iccf_search(const std::string& s) {
     return IccfSearchMode::Off;
 }
 
+CertusStyleMode parse_certus_style(const std::string& s) {
+    std::string t;
+    for (char c : s)
+        t += char(std::tolower(static_cast<unsigned char>(c)));
+    if (t == "off")
+        return CertusStyleMode::Off;
+    if (t == "strict" || t == "stricted")
+        return CertusStyleMode::Strict;
+    return CertusStyleMode::Mixed;
+}
+
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -167,6 +178,12 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
 
         return out.str();
     }));
+
+    options.add("CertusStyle",
+                Option("Off Mixed Strict", "Mixed", [this](const Option& o) -> std::optional<std::string> {
+                    certus_style_ = parse_certus_style(std::string(o));
+                    return std::nullopt;
+                }));
 
     options.add("EvidenceInfo",
                 Option("Off Root All", "Root", [this](const Option& o) -> std::optional<std::string> {

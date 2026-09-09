@@ -69,6 +69,7 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | FEAT-0001 evidence layers SF | **cerrado** 2026-09-01 |
 | FEAT-0002 consensus marked search | **hecho** 2026-09-02 |
 | FEAT-0003 ICCF frequent_moves filter | **hecho** 2026-09-02 |
+| FEAT-0004 CertusStyle Off/Mixed/Strict | **hecho** 2026-09-09 |
 
 ## Fuera de alcance
 

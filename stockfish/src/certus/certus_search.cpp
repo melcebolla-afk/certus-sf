@@ -177,7 +177,7 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
                          Search::SearchManager& manager, std::function<Value()> getNnueEval,
                          int displayDepth, bool showWdl) {
     const Evidence::Manager* mgr = evidence_manager();
-    if (!mgr)
+    if (!mgr || mgr->certus_style() == Evidence::CertusStyleMode::Off)
         return false;
 
     reset_search_evidence();
@@ -189,7 +189,11 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
     if (show_root_evidence(*mgr))
         print_info(format_root_evidence(root_ev));
 
-    // 1) Consensus: always may force first legal marked (independent of ConsensusSearch).
+    // Mixed/Off: never force. Strict: consensus / ICCF singleton shortcuts.
+    if (mgr->certus_style() != Evidence::CertusStyleMode::Strict)
+        return false;
+
+    // 1) Consensus: force first legal marked.
     if (root_ev.evidence_class == Evidence::EvidenceClass::StrongConsensus)
     {
         const Evidence::ConsensusEntry* entry = mgr->probe_consensus(rootPos);
@@ -223,7 +227,7 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
         }
     }
 
-    // 2) ICCF: only when FreqOnly and exactly one legal frequent move (trivial singleton).
+    // 2) ICCF: FreqOnly + exactly one legal frequent move.
     if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && !rootPos.checkers())
     {
         const std::vector<Move> freq = iccf_frequent_legal_moves(rootPos);
@@ -295,36 +299,62 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
     if (!mgr || inCheck || pvIdx > 0)
         return out;
 
-    const bool wantMarked =
-      mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly && mgr->consensus().ready();
-    const bool wantFreq =
-      mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && mgr->iccf().ready();
-    if (!wantMarked && !wantFreq)
+    const auto style = mgr->certus_style();
+    if (style == Evidence::CertusStyleMode::Off)
         return out;
 
-    if (wantMarked)
-    {
-        std::vector<Move> marked = consensus_marked_legal_moves(pos);
-        if (!marked.empty())
-        {
-            out.restrict_moves = true;
-            out.allowed        = std::move(marked);
-            return out;
-        }
-    }
+    // Preferred: consensus marked first, else ICCF frequent (same precedence as Strict filter).
+    std::vector<Move> preferred;
+    if (mgr->consensus().ready())
+        preferred = consensus_marked_legal_moves(pos);
+    if (preferred.empty() && mgr->iccf().ready())
+        preferred = iccf_frequent_legal_moves(pos);
+    if (preferred.empty())
+        return out;
 
-    if (wantFreq)
+    out.preferred       = std::move(preferred);
+    out.boost_preferred = true;
+
+    if (style == Evidence::CertusStyleMode::Strict)
     {
-        std::vector<Move> freq = iccf_frequent_legal_moves(pos);
-        if (!freq.empty())
+        out.interior_depth = true;
+        // Hard filter when fine-grained options request it (FEAT-0002/0003).
+        if (mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly
+            && mgr->consensus().ready())
         {
-            out.restrict_moves = true;
-            out.allowed        = std::move(freq);
-            return out;
+            const std::vector<Move> marked = consensus_marked_legal_moves(pos);
+            if (!marked.empty())
+            {
+                out.restrict_moves = true;
+                out.preferred      = marked;
+                return out;
+            }
+        }
+        if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && mgr->iccf().ready())
+        {
+            const std::vector<Move> freq = iccf_frequent_legal_moves(pos);
+            if (!freq.empty())
+            {
+                out.restrict_moves = true;
+                out.preferred      = freq;
+            }
         }
     }
 
     return out;
+}
+
+void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNode, Depth& extension,
+                            Depth& reductionUnits) {
+    if (!filt.is_preferred(move))
+        return;
+
+    // Mixed: root effort only (less LMR at root). Strict: also interiors + mild extension.
+    if (rootNode || filt.interior_depth)
+        reductionUnits = std::max(Depth(0), reductionUnits - 1024);
+
+    if (filt.interior_depth && !rootNode && extension < 2)
+        extension += 1;
 }
 
 bool allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx) {
