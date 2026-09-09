@@ -72,8 +72,8 @@ Si en raíz:
 | Valor | Search | Atajos force | Eval capas |
 |-------|--------|--------------|------------|
 | `Off` | SF puro | No | No (NNUE directo) |
-| `Mixed` (**default**) | orden+effort raíz; sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
-| `Strict` | filtro ConsensusSearch/IccfSearch + LMR/ext preferred | Sí | Sí |
+| `Mixed` (**default**) | orden raíz + LMR↓ preferred (raíz e interiores); sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
+| `Strict` | filtro ConsensusSearch/IccfSearch + LMR↓ + ext preferred | Sí | Sí |
 
 ## ConsensusSearch (FEAT-0002) — solo aplica filtro si `CertusStyle=Strict`
 

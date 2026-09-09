@@ -72,7 +72,29 @@ int main(int argc, char** argv) {
     {
         const auto f = Certus::make_search_move_filter(pos, false, 0);
         check(f.boost_preferred && f.is_preferred(nc3) && !f.restrict_moves, "Mixed boosts marked");
+        check(!f.interior_depth, "Mixed has no interior extension flag");
+        Depth ext = 0;
+        Depth red = 2048;
+        Certus::apply_style_depth_bias(f, nc3, false, ext, red);
+        check(red == 1024 && ext == 0, "Mixed interior: LMR-1 no extension");
+        ext = 0;
+        red = 2048;
+        Certus::apply_style_depth_bias(f, a3, false, ext, red);
+        check(red == 2048 && ext == 0, "Mixed non-preferred untouched");
     }
+
+    mgr.set_certus_style(CertusStyleMode::Strict);
+    mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
+    {
+        const auto f = Certus::make_search_move_filter(pos, false, 0);
+        check(f.interior_depth && f.restrict_moves, "Strict filters + interior depth");
+        Depth ext = 0;
+        Depth red = 2048;
+        Certus::apply_style_depth_bias(f, nc3, false, ext, red);
+        check(red == 1024 && ext == 1, "Strict interior: LMR-1 + extension");
+    }
+    mgr.set_certus_style(CertusStyleMode::Mixed);
+    mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
 
     mgr.set_certus_style(CertusStyleMode::Off);
     check(Certus::allow_search_move(pos, a3, false, 0), "Style Off allows a3");

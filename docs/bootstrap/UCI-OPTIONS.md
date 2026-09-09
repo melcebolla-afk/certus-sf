@@ -30,8 +30,8 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 | Valor | Comportamiento |
 |-------|----------------|
 | `Off` | SF puro: sin filtro, sin bias, sin atajos, eval sin capas evidencia |
-| `Mixed` (**default**) | Sin filtro ni force; orden + effort en raíz hacia marked/frequent |
-| `Strict` | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR/ext en preferred |
+| `Mixed` (**default**) | Sin filtro ni force; orden en raíz + menos LMR en preferred (raíz e interiores) |
+| `Strict` | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR↓ + extensión en preferred |
 
 `ConsensusSearch=MarkedOnly`: en **Strict**, nodos con consenso + `marked_moves` → solo marked ∩ legal. Raíz Strict: atajo FEAT-0010 + score NNUE.
 

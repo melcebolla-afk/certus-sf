@@ -349,10 +349,10 @@ void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNo
     if (!filt.is_preferred(move))
         return;
 
-    // Mixed: root effort only (less LMR at root). Strict: also interiors + mild extension.
-    if (rootNode || filt.interior_depth)
-        reductionUnits = std::max(Depth(0), reductionUnits - 1024);
+    // Mixed + Strict: less LMR on preferred at root and interiors (priority, not force).
+    reductionUnits = std::max(Depth(0), reductionUnits - 1024);
 
+    // Strict only: mild extension in interiors (harder dig on the corridor).
     if (filt.interior_depth && !rootNode && extension < 2)
         extension += 1;
 }

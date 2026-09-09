@@ -12,8 +12,8 @@ UCI `CertusStyle`: `Off` | `Mixed` | `Strict`. **Default: `Mixed`.**
 | Modo | Search | Atajos raíz force | Eval evidencia (TB/mate/theory) |
 |------|--------|-------------------|----------------------------------|
 | **Off** | SF puro | No | No (NNUE SF directo) |
-| **Mixed** | Todas legales; **orden + effort en raíz** hacia marked/frequent; sin profundidad Certus en interiores | No | Sí (como ahora, SoftOnly thinning) |
-| **Strict** | Filtro MarkedOnly/FreqOnly (como hoy vía `ConsensusSearch`/`IccfSearch`) + orden/effort raíz + **menos LMR / +extensión** en preferred | Sí (consenso / ICCF singleton) | Sí |
+| **Mixed** | Sin filtro ni force; **orden en raíz** + **menos LMR en preferred (raíz e interiores)** | No | Sí (como ahora, SoftOnly thinning) |
+| **Strict** | Filtro MarkedOnly/FreqOnly + orden/effort + **menos LMR / +extensión** en preferred | Sí (consenso / ICCF singleton) | Sí |
 
 `ConsensusSearch` / `IccfSearch` solo aplican filtro cuando `CertusStyle=Strict`.
 
