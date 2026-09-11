@@ -1,0 +1,2 @@
+catalogs/mate/**/catalog.json filter=lfs diff=lfs merge=lfs -text
+catalogs/mate/**/catalog.idx filter=lfs diff=lfs merge=lfs -text

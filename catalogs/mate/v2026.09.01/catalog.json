@@ -1,22 +1,3 @@
-{
-  "schema_version": 1,
-  "content_version": "2026.09.01",
-  "layer": "PROVEN_MATE",
-  "entries": [
-    {
-      "fen": "6k1/8/6K1/8/8/8/8/7Q w - - 0 1",
-      "plies": 1,
-      "stm_wins": true
-    },
-    {
-      "fen": "7k/6Q1/6K1/8/8/8/8/8 w - - 0 1",
-      "plies": 1,
-      "stm_wins": true
-    },
-    {
-      "fen": "8/8/8/8/8/5K2/6Q1/5k2 w - - 0 1",
-      "plies": 1,
-      "stm_wins": true
-    }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6899781b867f5b1d0a02eb9f4baf77e25063c8ee688f59461c761208ec2ddf0d
+size 410

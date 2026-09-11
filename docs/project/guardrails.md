@@ -5,6 +5,7 @@
 | Regla | Detalle |
 |-------|---------|
 | No borrar versiones `catalogs/*/v*` | Cada export añade; no wipe sin OK humano |
+| Subir siempre `catalogs/` | Tras export/cron: commit + push de `catalogs/*/v*` (mate JSON/idx vía Git LFS) |
 | Bárbol consensus/iccf | Export directo a `catalogs/consensus/`, `catalogs/iccf/` (atómico) |
 | Paths producción | UCI `EvidencePath` o `*Path`; no hardcodear en C++ |
 | Fixtures CI | No borrar `testdata/` sin OK humano |

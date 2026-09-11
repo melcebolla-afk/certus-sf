@@ -68,7 +68,19 @@ Teoría usa `testdata/theoretical/seed.json` como semilla curada en cada run.
 
 ## Git
 
-Los catálogos en `catalogs/*/v*/` se versionan en este repo (~pocos MB). Tras clone:
+Los catálogos en `catalogs/*/v*/` **siempre se versionan y se suben** a este repo
+(tras un export/cron local: `git add catalogs/ && commit && push`).
+
+- `iccf/` / `consensus/` / `theoretical/`: JSON normales (pocos MB).
+- `mate/**/catalog.json` y `catalog.idx`: **Git LFS** (pueden superar 100 MB).
+
+Tras clone hace falta Git LFS instalado (`git lfs install`) para materializar mate:
+
+```bash
+git lfs pull
+```
+
+UCI lab:
 
 ```text
 setoption name EvidencePath value /path/to/certus-sf/catalogs
