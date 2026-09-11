@@ -33,6 +33,7 @@ chmod +x scripts/merge-stockfish.sh
 ```
 
 3. Re-aplicar parches de `TOUCHED_UPSTREAM.md` si el merge los pisó (el script **no** los re-aplica automáticamente).
+   - SF19+: `certus_eval` usa `Eval::NNUE::Network` (no `Networks`); probes llaman `Attacks::init()`.
 4. Validar:
 
 ```bash

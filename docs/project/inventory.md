@@ -33,8 +33,8 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 | Campo | Valor |
 |-------|-------|
 | Upstream | `https://github.com/official-stockfish/Stockfish.git` |
-| Tag | `sf_18` (Stockfish 18) |
-| Commit | `cb3d4ee9` |
+| Tag | `sf_19` (Stockfish 19) |
+| Commit | `edb0d9db` |
 | Layout | Vendored en `stockfish/` + overlay `src/certus/` |
 | Merge | `docs/runbooks/stockfish-merge.md`, `scripts/merge-stockfish.sh` |
 | Build | `make -j -C stockfish/src build ARCH=x86-64-sse41-popcnt` (o `x86-64-modern`, alias deprecado) |
@@ -62,6 +62,7 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 |----|--------|
 | Bootstrap export | **hecho** 2026-09-01 |
 | Fase 0 Stockfish baseline | **hecho** 2026-09-01 (`sf_18`) |
+| FEAT-0005 Stockfish 19 merge | **hecho** 2026-09-11 (`sf_19` @ `edb0d9db`) |
 | Fase 1 UCI + evidence stores | **hecho** 2026-09-01 |
 | Fase 2 resolver + eval hook + golden | **hecho** 2026-09-01 |
 | Fase 3 search hooks + info strings | **hecho** 2026-09-01 |

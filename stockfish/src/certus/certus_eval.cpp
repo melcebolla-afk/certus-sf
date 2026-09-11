@@ -62,21 +62,21 @@ Evidence::EvalResult evaluate_layers(const Position& pos, EvalNeed need) {
     return ev;
 }
 
-Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
+Value evaluate(const Position& pos, const Eval::NNUE::Network& network,
                Eval::NNUE::AccumulatorStack& accumulators, Eval::NNUE::AccumulatorCaches& caches,
                int optimism) {
     if (!g_manager)
-        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+        return Eval::evaluate(network, pos, accumulators, caches, optimism);
 
     // CertusStyle=Off: Stockfish-pure numeric eval (no evidence layers).
     if (g_manager->certus_style() == Evidence::CertusStyleMode::Off)
-        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+        return Eval::evaluate(network, pos, accumulators, caches, optimism);
 
     const EvalNeed need = tls_eval_need;
 
     // SoftOnly: skip evidence resolver — Stockfish NNUE (interior quiet midgame).
     if (need == EvalNeed::SoftOnly)
-        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+        return Eval::evaluate(network, pos, accumulators, caches, optimism);
 
     // Score path: TB/mate/theory only. Do not probe consensus/ICCF here — FEAT-0002
     // always falls through to NNUE for those, and PV/qsearch were paying that cost.
@@ -88,7 +88,7 @@ Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
         record_evidence_hit(ev.evidence_class);
 
     if (ev.evidence_class == Evidence::EvidenceClass::Inference)
-        return Eval::evaluate(networks, pos, accumulators, caches, optimism);
+        return Eval::evaluate(network, pos, accumulators, caches, optimism);
 
     return ev.to_value();
 }

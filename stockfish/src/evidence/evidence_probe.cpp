@@ -5,6 +5,7 @@
 */
 
 #include "../position.h"
+#include "../attacks.h"
 #include "../bitboard.h"
 
 #include "consensus_store.h"
@@ -48,7 +49,7 @@ std::string td(const std::string& root, const char* layer) {
 }  // namespace
 
 int main(int argc, char** argv) {
-    Bitboards::init();
+    Attacks::init();
     Position::init();
 
     const std::string root = (argc > 1) ? argv[1] : "../..";
@@ -63,8 +64,10 @@ int main(int argc, char** argv) {
         if (has_new && has_legacy)
         {
             const auto iccf_dir = newest_version_dir(iccf_root);
-            check(iccf_dir && iccf_dir->find("v2026.09.02") != std::string::npos,
-                  "newest iccf is v2026.09.02 not legacy viccf");
+            check(iccf_dir && iccf_dir->find("viccf-") == std::string::npos,
+                  "newest iccf is calendar version not legacy viccf");
+            check(iccf_dir && iccf_dir->find("/v20") != std::string::npos,
+                  "newest iccf path contains /v20YY… calendar folder");
         }
     }
 

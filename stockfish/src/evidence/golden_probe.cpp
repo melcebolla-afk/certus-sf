@@ -4,6 +4,7 @@
   Run:   ./stockfish/src/golden_probe [repo_root]
 */
 
+#include "../attacks.h"
 #include "../bitboard.h"
 #include "../movegen.h"
 #include "../position.h"
@@ -191,7 +192,7 @@ void run_fixture(const std::string& root, const std::string& line) {
 }  // namespace
 
 int main(int argc, char** argv) {
-    Bitboards::init();
+    Attacks::init();
     Position::init();
 
     const std::string root = (argc > 1) ? argv[1] : "../..";

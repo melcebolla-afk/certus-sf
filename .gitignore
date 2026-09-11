@@ -17,4 +17,5 @@ stockfish/src/certus-sf
 stockfish/src/certus-sf.exe
 stockfish/src/evidence_probe
 stockfish/src/golden_probe
+stockfish/src/consensus_search_probe
 stockfish/src/*.nnue

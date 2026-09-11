@@ -30,7 +30,9 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 ### `src/engine.cpp`
 
 - `#include "certus/certus_engine.h"` (not evidence headers directly)
-- After `EvalFileSmall` option: `certus_.register_options(options, [this] { search_clear(); });`
+- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
+- After `EvalFile` option: `certus_.register_options(options, [this] { search_clear(); });`
+- In `Engine::go`: `Certus::bind_evidence(certus_.evidence())`
 
 ### `src/misc.cpp`
 
@@ -44,12 +46,12 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 ### `src/search.cpp`
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
-- `Search::Worker::evaluate`: delegate to `Certus::evaluate` (evidence resolver → NNUE fallback)
+- `Search::Worker::evaluate`: delegate to `Certus::evaluate` with **single** `network[numaAccessToken]` (SF19; no `Networks`)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
 - `Certus::make_search_move_filter` once per node; `apply_style_depth_bias` (FEAT-0004 CertusStyle)
 - `start_searching`: `Certus::prepare_root_search` (Strict force only); emergency `bestmove` if past `tm.maximum()`
 - `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict order)
-- `SearchManager::check_time`: allow stop before `completedDepth>=1` when over hard limit + tighter `callsCnt` on low clock
+- `SearchManager::check_time`: tighter `callsCnt` + short-clock hard cap (SF19 already allows stop before depth≥1)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 
 ### `src/thread.cpp`
@@ -57,15 +59,15 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
 - In `ThreadPool::start_thinking` per-thread job: `Certus::bind_tb_config(tbConfig)`
 
-### `src/engine.cpp`
+### Probes (`evidence_*`, `consensus_search_probe`)
 
-- `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"`
-- In `Engine::go`: `Certus::bind_evidence(certus_.evidence())`
+- Call `Attacks::init()` (SF19; replaces `Bitboards::init()`).
+- Link `attacks.o` (+ `pp_3wide.o` for consensus probe NNUE).
 
 ## Do not modify for certus (yet)
 
 - `evaluate.cpp`, `uci.cpp` (eval hook via certus_eval; UCI root consensus Fase 3)
-- NNUE, Syzygy, thread pool
+- NNUE weights / architecture upstream, Syzygy, thread pool
 
 ## Merge procedure
 

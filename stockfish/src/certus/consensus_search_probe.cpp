@@ -3,6 +3,7 @@
   Build: make -C stockfish/src consensus_search_probe
 */
 
+#include "../attacks.h"
 #include "../bitboard.h"
 #include "../movegen.h"
 #include "../position.h"
@@ -36,7 +37,7 @@ void check(bool ok, const char* msg) {
 }  // namespace
 
 int main(int argc, char** argv) {
-    Bitboards::init();
+    Attacks::init();
     Position::init();
 
     const std::string root = (argc > 1) ? argv[1] : "../..";

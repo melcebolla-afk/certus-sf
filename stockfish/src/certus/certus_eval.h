@@ -24,7 +24,7 @@ bool                     tracking_hits();
 void set_track_hits_impl(bool track);
 bool tracking_hits_impl();
 
-Value evaluate(const Position& pos, const Eval::NNUE::Networks& networks,
+Value evaluate(const Position& pos, const Eval::NNUE::Network& network,
                Eval::NNUE::AccumulatorStack& accumulators, Eval::NNUE::AccumulatorCaches& caches,
                int optimism);
 

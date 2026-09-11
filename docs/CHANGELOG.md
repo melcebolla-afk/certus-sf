@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **FEAT-0005:** merge Stockfish **19** (`sf_19` @ `edb0d9db`). Overlay Certus re-aplicado; API NNUE única (`Network`, sin `EvalFileSmall`); probes usan `Attacks::init()`.
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
 - **FEAT-0004 `CertusStyle`:** `Off` \| `Mixed` (**default**) \| `Strict`. Mixed = orden raíz + LMR↓ preferred en raíz e interiores (sin force); Strict = filtro+atajos+LMR/ext; Off = SF puro.
 - **Time safety:** atajos raíz actualizan `bestPreviousScore` (evita fallingEval máximo); `check_time` puede cortar depth-1; con `wtime≤2s` hard-stop ≈ `1.15×optimum` (no sentarse en `maximum`); checks más frecuentes con poco reloj.

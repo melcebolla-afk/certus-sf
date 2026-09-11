@@ -28,7 +28,8 @@ CONSENSUS_SEARCH_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp e
 
 CONSENSUS_SEARCH_PROBE_OBJS = $(CONSENSUS_SEARCH_PROBE_SRCS:.cpp=.o) \
 	bitboard.o movegen.o position.o misc.o memory.o tune.o uci.o \
-	evaluate.o score.o nnue_accumulator.o nnue_misc.o network.o half_ka_v2_hm.o full_threats.o
+	evaluate.o score.o nnue_accumulator.o nnue_misc.o network.o \
+	half_ka_v2_hm.o full_threats.o pp_3wide.o attacks.o
 
 EVIDENCE_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_root.cpp \
 	consensus_store.cpp iccf_store.cpp theoretical_store.cpp mate_store.cpp \
@@ -40,10 +41,10 @@ GOLDEN_PROBE_SRCS = certus_hash.cpp json_reader.cpp catalog_path.cpp evidence_ro
 	evidence/golden_probe.cpp
 
 EVIDENCE_PROBE_OBJS = $(EVIDENCE_PROBE_SRCS:.cpp=.o) \
-	bitboard.o movegen.o position.o misc.o memory.o tune.o
+	bitboard.o movegen.o position.o misc.o memory.o tune.o attacks.o
 
 GOLDEN_PROBE_OBJS = $(GOLDEN_PROBE_SRCS:.cpp=.o) \
-	bitboard.o movegen.o position.o misc.o memory.o tune.o tbprobe.o uci.o
+	bitboard.o movegen.o position.o misc.o memory.o tune.o tbprobe.o uci.o attacks.o
 
 .PHONY: evidence_probe golden_probe consensus_search_probe
 
