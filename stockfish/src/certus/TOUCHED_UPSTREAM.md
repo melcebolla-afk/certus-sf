@@ -63,6 +63,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 - Call `Attacks::init()` (SF19; replaces `Bitboards::init()`).
 - Link `attacks.o` (+ `pp_3wide.o` for consensus probe NNUE).
+- `certus.mk` lists sources as `certus/…` and `evidence/…` (required for `ARCH=*-universal` TRACKED_TOP symlinks).
 
 ## Do not modify for certus (yet)
 

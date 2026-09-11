@@ -1211,7 +1211,7 @@ clean: objclean profileclean universalclean
 # clean binaries and objects
 objclean:
 	@rm -f stockfish stockfish.exe *.o ./syzygy/*.o ./nnue/*.o ./nnue/features/*.o $(BUILD_SHA_FILE) $(BUILD_DATE_FILE) $(BUILD_DIFFINDEX_FILE)
-	@rm -f $(CERTUS_CLEAN) ./evidence/*.o
+	@rm -f $(CERTUS_CLEAN) ./evidence/*.o ./certus/*.o
 
 # clean auxiliary profiling files
 profileclean:
