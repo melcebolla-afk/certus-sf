@@ -1,4 +1,10 @@
-"""Exhaustive forced-mate probe (paridad evidence-engine/src/mate.rs)."""
+"""Exhaustive forced-mate probe (paridad evidence-engine/src/mate.rs).
+
+Optimizations that preserve min-plies semantics:
+- return immediately on mate-in-1 (nothing shorter);
+- try checking moves first so mate-in-1 is found before quiet branches;
+- abandon a candidate line once its forced length cannot beat `best`.
+"""
 
 from __future__ import annotations
 
@@ -32,10 +38,16 @@ def probe_mate_ungated(board: chess.Board, max_plies: int) -> MateResult | None:
     return None
 
 
+def _ordered_moves(board: chess.Board) -> list[chess.Move]:
+    moves = list(board.legal_moves)
+    moves.sort(key=lambda m: board.gives_check(m), reverse=True)
+    return moves
+
+
 def _forced_win(board: chess.Board, max_depth: int) -> int | None:
     if max_depth <= 0:
         return None
-    legal = list(board.legal_moves)
+    legal = _ordered_moves(board)
     if not legal:
         return None
 
@@ -44,8 +56,8 @@ def _forced_win(board: chess.Board, max_depth: int) -> int | None:
         board.push(move)
         if board.is_checkmate():
             board.pop()
-            best = 1 if best is None else min(best, 1)
-            continue
+            # Mate in 1 ply — minimum possible positive win length.
+            return 1
 
         opp = list(board.legal_moves)
         if not opp:
@@ -66,6 +78,9 @@ def _forced_win(board: chess.Board, max_depth: int) -> int | None:
                 ok = False
                 break
             worst = max(worst, 2 + rest)
+            if best is not None and worst >= best:
+                ok = False
+                break
 
         board.pop()
         if ok:

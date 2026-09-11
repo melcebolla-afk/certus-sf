@@ -126,12 +126,40 @@ def test_mate_build_merge() -> None:
         check((out / "catalog.idx").is_file(), "merge build wrote idx")
 
 
+def test_mate_build_jobs() -> None:
+    seed = ROOT / "testdata/mate/seed.fens"
+    with tempfile.TemporaryDirectory() as td:
+        out = Path(td) / "out"
+        cmd = [
+            sys.executable,
+            str(BUILDERS / "mate_build.py"),
+            "--seed",
+            str(seed),
+            "--out",
+            str(out),
+            "--version",
+            "2026.08.29",
+            "--max-plies",
+            "5",
+            "--jobs",
+            "2",
+            "--progress-every",
+            "0",
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        check(proc.returncode == 0, f"jobs=2 exit 0 ({proc.stderr.strip()})")
+        built = json.loads((out / "catalog.json").read_text(encoding="utf-8"))
+        ref = json.loads((ROOT / "testdata/mate/catalog.json").read_text(encoding="utf-8"))
+        check(len(built["entries"]) == len(ref["entries"]), "jobs=2 entry count")
+
+
 def main() -> int:
     print("test_mate_build.py", flush=True)
     test_probe_mate()
     test_idx_hash_parity()
     test_mate_build_seed()
     test_mate_build_merge()
+    test_mate_build_jobs()
     if FAILURES:
         print(f"\n{FAILURES} failure(s)", file=sys.stderr)
         return 1

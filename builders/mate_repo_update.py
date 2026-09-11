@@ -71,6 +71,12 @@ def main() -> int:
     ap.add_argument("--max-mate-in", type=int, default=2)
     ap.add_argument("--max-plies", type=int, default=3)
     ap.add_argument("--min-pieces", type=int, default=7)
+    ap.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        help="Parallel probe workers for mate_build (use cores for bulk bootstrap)",
+    )
     ap.add_argument("--skip-download", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument(
@@ -145,6 +151,8 @@ def main() -> int:
         args.version,
         "--max-plies",
         str(args.max_plies),
+        "--jobs",
+        str(args.jobs),
         "--lab",
         str(args.lab),
     ]
