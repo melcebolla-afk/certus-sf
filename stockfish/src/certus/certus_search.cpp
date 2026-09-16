@@ -86,6 +86,45 @@ std::vector<Move> legal_marked_moves(const Position& pos, const std::vector<std:
     return out;
 }
 
+void emit_forced_root_bestmove(Search::SearchManager& manager, const Position& rootPos,
+                               const std::string& bestmove, std::function<Value()> getNnueEval,
+                               int displayDepth, bool showWdl) {
+    const Value nnueEval = getNnueEval();
+    const int   depth    = std::max(1, displayDepth);
+    const Score score(nnueEval, rootPos);
+
+    // Keep Stockfish time management coherent across forced root moves.
+    // Without this, bestPreviousScore stays stale → fallingEval maxes out and
+    // the next real search burns tm.maximum() every move (flag on short TC).
+    manager.bestPreviousScore        = nnueEval;
+    manager.bestPreviousAverageScore = nnueEval;
+    manager.previousTimeReduction    = 0.85;
+    manager.iterValue.fill(nnueEval);
+
+    manager.updates.onUpdateNoMoves({depth, score});
+
+    std::string wdlStr;
+    if (showWdl)
+        wdlStr = UCIEngine::wdl(nnueEval, rootPos);
+
+    Search::InfoFull info{};
+    info.depth    = depth;
+    info.selDepth = depth;
+    info.multiPV  = 1;
+    info.score    = score;
+    info.timeMs   = 1;
+    info.nodes    = 1;
+    info.nps      = 1;
+    info.tbHits   = 0;
+    info.hashfull = 0;
+    info.pv       = bestmove;
+    if (showWdl)
+        info.wdl = wdlStr;
+    manager.updates.onUpdateFull(info);
+
+    manager.updates.onBestmove(bestmove, "");
+}
+
 }  // namespace
 
 void set_track_hits_impl(bool track) { g_track_hits = track; }
@@ -132,45 +171,6 @@ EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const S
     if (ss && !ss->inCheck && pos.count<ALL_PIECES>() > 6)
         return EvalNeed::SoftOnly;
     return EvalNeed::Full;
-}
-
-void emit_forced_root_bestmove(Search::SearchManager& manager, const Position& rootPos,
-                               const std::string& bestmove, std::function<Value()> getNnueEval,
-                               int displayDepth, bool showWdl) {
-    const Value nnueEval = getNnueEval();
-    const int   depth    = std::max(1, displayDepth);
-    const Score score(nnueEval, rootPos);
-
-    // Keep Stockfish time management coherent across forced root moves.
-    // Without this, bestPreviousScore stays stale → fallingEval maxes out and
-    // the next real search burns tm.maximum() every move (flag on short TC).
-    manager.bestPreviousScore        = nnueEval;
-    manager.bestPreviousAverageScore = nnueEval;
-    manager.previousTimeReduction    = 0.85;
-    manager.iterValue.fill(nnueEval);
-
-    manager.updates.onUpdateNoMoves({depth, score});
-
-    std::string wdlStr;
-    if (showWdl)
-        wdlStr = UCIEngine::wdl(nnueEval, rootPos);
-
-    Search::InfoFull info{};
-    info.depth    = depth;
-    info.selDepth = depth;
-    info.multiPV  = 1;
-    info.score    = score;
-    info.timeMs   = 1;
-    info.nodes    = 1;
-    info.nps      = 1;
-    info.tbHits   = 0;
-    info.hashfull = 0;
-    info.pv       = bestmove;
-    if (showWdl)
-        info.wdl = wdlStr;
-    manager.updates.onUpdateFull(info);
-
-    manager.updates.onBestmove(bestmove, "");
 }
 
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
