@@ -47,7 +47,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` with **single** `network[numaAccessToken]` (SF19; no `Networks`)
-- `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly en NonPV quiet >6 piezas → NNUE)
+- `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly flag en NonPV quiet >6 piezas; score path siempre TB/mate/theory)
 - `Certus::make_search_move_filter` once per node; `apply_style_depth_bias` (FEAT-0004 CertusStyle)
 - `start_searching`: `Certus::prepare_root_search` (Strict force only); emergency `bestmove` if past `tm.maximum()`
 - `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict order)

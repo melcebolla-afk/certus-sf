@@ -26,7 +26,7 @@ Bloque `# certus-sf` en crontab. Bárbol lo gestiona el operador en `chess_idea`
 # MatePath — 04:00 (wget Lichess si cambió + merge hasta 5000)
 0 4 * * 0 cd /home/mcebolla/certus-sf && /usr/bin/python3 builders/mate_repo_update.py --max-new 5000 >> train/out/mate_update.log 2>&1
 
-# THEORETICAL — 04:45 (fortresses.epd + seed)
+# THEORETICAL — 04:45 (fortresses.epd + seed + steingrimsson.json estático)
 45 4 * * 0 cd /home/mcebolla/certus-sf && /usr/bin/python3 builders/theory_repo_update.py >> train/out/theory_update.log 2>&1
 
 # Bárbol → catalogs/consensus + catalogs/iccf — ~04:15 (configurado en chess_idea)

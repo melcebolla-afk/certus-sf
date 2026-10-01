@@ -50,9 +50,11 @@ Ver test: `hard_only_thin_midgame_skips_consensus`.
 
 ### SoftOnly fast path
 
-Certus interior: solo NNUE (sin capas). SF ya optimiza eval NNUE — equivalente: skip evidence probe en nodos interiores **salvo** hard cutoffs.
+Histórico Certus Rust: interiores quiet sin capas blandas.
 
-**Decisión certus-sf (fork SF):** interiores quiet midgame → `SoftOnly` (NNUE directo). `HardOnly` queda en el resolver para tests; no se usa en search.
+**Decisión certus-sf (actualizada):** en search, `SoftOnly` en quiet midgame **ya no** salta TB/mate/theory. El score path siempre aplica capas hard (`evaluate_score_layers`). Consensus/ICCF siguen sin sustituir cp (FEAT-0002). `HardOnly` queda en el resolver para tests.
+
+Si la **raíz** es TB/mate/theory, el score UCI del PV se fuerza al valor hard (el bestmove sigue saliendo del search salvo atajos Strict).
 
 ## Root STRONG_CONSENSUS (FEAT-0010)
 

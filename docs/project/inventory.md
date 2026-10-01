@@ -26,6 +26,7 @@ Referencia Rust: `/home/mcebolla/evidence` (Certus).
 | `train/out/` | Logs cron + artefactos temporales builders |
 | `builders/` | Ingest/actualización capas (Python); ver `docs/project/builders.md` |
 | `testdata/` | Fixtures CI consensus/iccf/theory/mate/syzygy3 |
+| `testdata/theoretical/steingrimsson.json` | THEORETICAL estático: 18 fortress-entry (Steingrimsson 2021) |
 | `.cursor/rules/` | Reglas Cursor |
 
 ## Stockfish baseline

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Periodic THEORETICAL update from Chess-EPDs fortresses.epd (FEAT-0016).
 
-Download EPD if changed → import draw/fortress ≥7 → merge with curated seed → lab.
+Download EPD if changed → import draw/fortress ≥7 → merge curated seed +
+static Steingrimsson fortresses → lab.
 
   python3 builders/theory_repo_update.py --dry-run
   python3 builders/theory_repo_update.py --skip-download
@@ -23,6 +24,7 @@ DEFAULT_EPD_URL = (
 )
 DEFAULT_EPD = TRAIN_OUT / "fortresses.epd"
 DEFAULT_SEED = ROOT / "testdata/theoretical/seed.json"
+DEFAULT_STEINGRIMSSON = ROOT / "testdata/theoretical/steingrimsson.json"
 DEFAULT_LAB = CATALOGS / "theoretical"
 DEFAULT_OUT = TRAIN_OUT / "theory_catalog_build"
 DEFAULT_VERSION = "2026.08.29"
@@ -51,6 +53,12 @@ def main() -> int:
     ap.add_argument("--epd", type=Path, default=DEFAULT_EPD)
     ap.add_argument("--epd-url", default=DEFAULT_EPD_URL)
     ap.add_argument("--seed", type=Path, default=DEFAULT_SEED)
+    ap.add_argument(
+        "--steingrimsson",
+        type=Path,
+        default=DEFAULT_STEINGRIMSSON,
+        help="Static Steingrimsson fortress-entry fragment (no download)",
+    )
     ap.add_argument("--lab", type=Path, default=DEFAULT_LAB)
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
     ap.add_argument("--version", default=DEFAULT_VERSION)
@@ -81,6 +89,10 @@ def main() -> int:
         print(f"missing epd: {args.epd}", file=sys.stderr)
         return 2
 
+    if not args.steingrimsson.is_file():
+        print(f"missing steingrimsson fragment: {args.steingrimsson}", file=sys.stderr)
+        return 2
+
     import_cmd = [
         sys.executable,
         str(ROOT / "builders/fortresses_import.py"),
@@ -91,7 +103,7 @@ def main() -> int:
         "--min-pieces",
         str(args.min_pieces),
     ]
-    # Full rebuild from seed+epd each time (EPD is tiny); exclude unused
+    # Full rebuild from seed+epd+steingrimsson each time (EPD is tiny)
     run(import_cmd, args.dry_run)
 
     build_cmd = [
@@ -101,6 +113,8 @@ def main() -> int:
         str(args.seed),
         "--extra",
         str(fragment),
+        "--extra",
+        str(args.steingrimsson),
         "--out",
         str(args.out),
         "--version",
@@ -114,7 +128,8 @@ def main() -> int:
 
     if not args.dry_run:
         stamp.write_text(
-            f"epd={args.epd} catalog={catalog} version={args.version}\n",
+            f"epd={args.epd} steingrimsson={args.steingrimsson} "
+            f"catalog={catalog} version={args.version}\n",
             encoding="utf-8",
         )
     return 0

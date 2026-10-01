@@ -4,6 +4,66 @@
   "layer": "THEORETICAL",
   "entries": [
     {
+      "fen": "3B4/1r1kp3/r2p1p2/b1pPP1p1/1pP2PPp/pP2K2P/P7/8 w - - 0 5",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=e5e6 (e6+); Rudolph 1912"
+    },
+    {
+      "fen": "3B4/1r2p3/r1kp1p2/b1p1P1p1/1pPP1PPp/pP2K2P/P7/8 w - - 0 4",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=d4d5 (d5+); Rudolph 1912"
+    },
+    {
+      "fen": "3B4/1r2p3/r2p1p2/b1p1P1p1/kp1P1PPp/p1P1K2P/PP6/8 w - - 0 2",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=b2b3 (b3+); Rudolph 1912"
+    },
+    {
+      "fen": "3B4/1r2p3/r2p1p2/bkp1P1p1/1p1P1PPp/p1P1K2P/PPB5/8 w - - 0 1",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=c2a4 (Ba4+); Rudolph 1912"
+    },
+    {
+      "fen": "3B4/1r2p3/r2p1p2/bkp1P1p1/1p1P1PPp/pPP1K2P/P7/8 w - - 0 3",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=c3c4 (c4+); Rudolph 1912"
+    },
+    {
+      "fen": "3k4/1r2p3/r2pPp2/b1pP2p1/1pP2PPp/pP2K2P/P7/8 w - - 0 6",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=f4f5 (f5); Rudolph 1912"
+    },
+    {
+      "fen": "4K3/2k2p1N/5PpB/6P1/8/8/b7/7q w - - 0 8",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=e8f8 (Kf8); Simkhovich 1926"
+    },
+    {
+      "fen": "4K3/4Bp1N/2k2Pp1/6P1/8/8/b6p/8 w - - 0 6",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=e7f8 (Bf8); Simkhovich 1926"
+    },
+    {
+      "fen": "4K3/4Bp1N/2k3p1/5PP1/8/7p/b7/8 w - - 0 5",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=f5f6 (f6); Simkhovich 1926"
+    },
+    {
+      "fen": "4KB2/5p1N/2k2Pp1/6P1/8/8/b7/7q w - - 0 7",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=f8h6 (Bh6); Simkhovich 1926"
+    },
+    {
+      "fen": "4knQ1/7r/3p2p1/2bP1pP1/5P1N/6K1/8/8 b - - 0 59",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=h7h4 (Rxh4); Ree-Hort 1986"
+    },
+    {
+      "fen": "4knQ1/8/3p2p1/2bP1pP1/5P1K/8/8/8 b - - 0 60",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=c5d4 (Bd4); Ree-Hort 1986"
+    },
+    {
       "fen": "5rkq/3r1p1p/5RpP/2p3P1/2B2Q2/p7/P4PK1/8 w - - 0 1",
       "result": "D",
       "note": "fortress/draw from EPD"
@@ -19,6 +79,21 @@
       "note": "fortress/draw from EPD"
     },
     {
+      "fen": "7k/4p3/5p2/1p1p1p2/1PpP1PpB/1pP3P1/7P/6NK w - - 0 1",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=h4f6 (Bxf6+); Simkhovich 1923"
+    },
+    {
+      "fen": "7k/8/5p2/1p1p1p2/1PpP1Pp1/1pP3P1/7P/6NK w - - 0 2",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=h2h4 (h4); Simkhovich 1923"
+    },
+    {
+      "fen": "7r/p3k3/2p5/1pPp4/3P4/PP4P1/3P1PB1/2K5 w - - 0 1",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=c1d1 (Kd1); Chekhover 1947"
+    },
+    {
       "fen": "8/1p2b3/6k1/5p2/p2NbP1p/P1B1P1p1/1P5P/6K1 w - - 0 1",
       "result": "D",
       "note": "fortress From Smirin-HIARCS"
@@ -27,6 +102,16 @@
       "fen": "8/1p6/1p6/kPp2P1K/2P5/N1Pp4/q2P4/1N6 w - - 0 1",
       "result": "D",
       "note": "eval = draw, c1 diff=9"
+    },
+    {
+      "fen": "8/6B1/5N2/3p1k2/1bb3p1/6Pp/5K1P/8 w - - 0 1",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=f6d5 (Nxd5); Maiwald-Bischoff 1997"
+    },
+    {
+      "fen": "8/6B1/8/3b1k2/1b4p1/6Pp/5K1P/8 w - - 0 2",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=g7d4 (Bd4); Maiwald-Bischoff 1997"
     },
     {
       "fen": "8/8/5k2/8/2B4p/5RbP/5pP1/7K b - - 0 1",
@@ -57,6 +142,11 @@
       "fen": "k7/1p1p1p1p/pPpPpPpP/P1P1P1P1/2RRRR2/BRBRBRBR/KBRBRBRB/B1BRBRBR w - - 0 1",
       "result": "D",
       "note": "fortress/draw from EPD"
+    },
+    {
+      "fen": "q4K2/2k2p1N/5PpB/6P1/8/8/b7/8 w - - 0 9",
+      "result": "D",
+      "note": "Steingrimsson fortress entry bm=f8g7 (Kg7); Simkhovich 1926"
     }
   ]
 }

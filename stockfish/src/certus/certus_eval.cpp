@@ -72,14 +72,12 @@ Value evaluate(const Position& pos, const Eval::NNUE::Network& network,
     if (g_manager->certus_style() == Evidence::CertusStyleMode::Off)
         return Eval::evaluate(network, pos, accumulators, caches, optimism);
 
-    const EvalNeed need = tls_eval_need;
+    // Score path (Full and SoftOnly): always apply TB / mate / theory.
+    // SoftOnly used to skip straight to NNUE in quiet interiors; that hid hard
+    // evidence mid-search. Consensus/ICCF never replace score (FEAT-0002) —
+    // evaluate_score_layers already omits them. `need` kept for EvidenceInfo/tests.
+    (void) tls_eval_need;
 
-    // SoftOnly: skip evidence resolver — Stockfish NNUE (interior quiet midgame).
-    if (need == EvalNeed::SoftOnly)
-        return Eval::evaluate(network, pos, accumulators, caches, optimism);
-
-    // Score path: TB/mate/theory only. Do not probe consensus/ICCF here — FEAT-0002
-    // always falls through to NNUE for those, and PV/qsearch were paying that cost.
     Position&                  mutable_pos = const_cast<Position&>(pos);
     const Evidence::EvalResult ev =
       Evidence::evaluate_score_layers(mutable_pos, make_context());

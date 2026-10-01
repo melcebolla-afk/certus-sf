@@ -277,6 +277,15 @@ void Search::Worker::start_searching() {
     if (!limits.depth && !skill.enabled())
         bestThread = threads.get_best_thread()->worker.get();
 
+#ifdef CERTUS_SF
+    if (auto hard = Certus::root_hard_score())
+    {
+        bestThread->rootMoves[0].score = bestThread->rootMoves[0].uciScore = *hard;
+        bestThread->rootMoves[0].unset_inexact();
+        uciPvSent = false;  // re-emit PV with hard score
+    }
+#endif
+
     main_manager()->bestPreviousScore        = bestThread->rootMoves[0].score;
     main_manager()->bestPreviousAverageScore = bestThread->rootMoves[0].averageScore;
 
@@ -538,6 +547,15 @@ bool Search::Worker::iterative_deepening() {
 
             // Sort the PV lines searched so far and update the GUI
             std::stable_sort(rootMoves.begin() + pvFirst, rootMoves.begin() + pvIdx + 1);
+
+#ifdef CERTUS_SF
+            // Hard evidence at root (TB/mate/theory): report that score, keep PV from search.
+            if (auto hard = Certus::root_hard_score())
+            {
+                rootMoves[0].score = rootMoves[0].uciScore = *hard;
+                rootMoves[0].unset_inexact();
+            }
+#endif
 
             if (mainThread && !threads.stop && (pvIdx + 1 == multiPV || nodes > NODES_LIMIT_OUTPUT))
             {

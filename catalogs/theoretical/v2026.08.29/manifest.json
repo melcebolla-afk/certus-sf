@@ -2,7 +2,7 @@
   "schema_version": 1,
   "layer": "THEORETICAL",
   "content_version": "2026.08.29",
-  "checksum": "sha256:742e96487ee49884ead3438cbf1020ee76902a344edd9e102e0fd0da5271b341",
-  "n_entries": 11,
+  "checksum": "sha256:0096b890e5e7acbc5302daef2a7127fbc05c0bc6a72b674c077d377e0f945fb3",
+  "n_entries": 29,
   "source": "theory_build.py"
 }

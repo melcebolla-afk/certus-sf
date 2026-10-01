@@ -21,7 +21,8 @@ CI local/remoto: `docs/runbooks/ci.md`
 | `consensus_ingest.py` | STRONG_CONSENSUS |
 | `iccf_ingest.py` | EMPIRICAL_ICCF |
 | `theory_build.py` | THEORETICAL |
-| `fortresses_import.py` | THEORETICAL (EPD → JSON) |
+| `fortresses_import.py` | THEORETICAL (Chess-EPDs EPD → JSON) |
+| `testdata/theoretical/steingrimsson.json` | THEORETICAL estático (18 fortress-entry; sin download) |
 | `lichess_mate_filter.py` | mate (filtro previo a mate_build) |
 | `mate_build.py` | PROVEN_MATE (probe + catalog.json + catalog.idx) |
 | `mate_repo_update.py` | cron mate (wget + filter + mate_build --merge) |

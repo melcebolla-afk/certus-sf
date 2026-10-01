@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Hard score path:** SoftOnly ya no salta TB/mate/theory en eval de search; si la raíz es hard evidence, el `score` UCI del PV se fija a ese valor (bestmove sigue del search).
+- **THEORETICAL:** fragmento estático Steingrimsson (18 fortress-entry, IEEE CoG 2021) en `testdata/theoretical/steingrimsson.json`; `theory_repo_update` lo mergea junto a fortresses.epd (sin descarga).
 - **FEAT-0005:** merge Stockfish **19** (`sf_19` @ `edb0d9db`). Overlay Certus re-aplicado; API NNUE única (`Network`, sin `EvalFileSmall`); probes usan `Attacks::init()`.
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
 - **FEAT-0004 `CertusStyle`:** `Off` \| `Mixed` (**default**) \| `Strict`. Mixed = orden raíz + LMR↓ preferred en raíz e interiores (sin force); Strict = filtro+atajos+LMR/ext; Off = SF puro.

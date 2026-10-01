@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <optional>
 #include <vector>
 
 namespace Stockfish {
@@ -24,6 +25,11 @@ namespace Certus {
 void reset_search_evidence();
 EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const Search::Stack* ss);
 void record_evidence_hit(Evidence::EvidenceClass c);
+
+// When root hits TB/mate/theory, UCI PV score must match hard evidence (not child NNUE).
+void                 clear_root_hard_score();
+void                 set_root_hard_score(Value v);
+std::optional<Value> root_hard_score();
 
 // Returns true when root forces bestmove (Strict only: consensus / ICCF singleton).
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,

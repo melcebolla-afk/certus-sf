@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <optional>
 #include <sstream>
 #include <vector>
 
@@ -27,6 +28,7 @@ struct EvidenceHits {
 
 EvidenceHits g_hits;
 bool          g_track_hits = false;
+std::optional<Value> g_root_hard_score;
 
 bool show_root_evidence(const Evidence::Manager& mgr) {
     return mgr.evidence_info() != Evidence::EvidenceInfoMode::Off;
@@ -138,8 +140,15 @@ void reset_search_evidence() {
     g_hits.consensus.store(0);
     g_hits.iccf.store(0);
     g_track_hits = false;
+    g_root_hard_score.reset();
     set_eval_need(EvalNeed::Full);
 }
+
+void clear_root_hard_score() { g_root_hard_score.reset(); }
+
+void set_root_hard_score(Value v) { g_root_hard_score = v; }
+
+std::optional<Value> root_hard_score() { return g_root_hard_score; }
 
 void record_evidence_hit(Evidence::EvidenceClass c) {
     switch (c)
@@ -167,7 +176,8 @@ void record_evidence_hit(Evidence::EvidenceClass c) {
 EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const Search::Stack* ss) {
     if (rootNode || pvNode)
         return EvalNeed::Full;
-    // Interior quiet midgame: NNUE only (skip catalog probes — SF-native eval, better nps).
+    // Interior quiet midgame: SoftOnly flag (legacy). Score path still applies TB/mate/theory;
+    // SoftOnly no longer skips hard evidence (see certus_eval.cpp).
     if (ss && !ss->inCheck && pos.count<ALL_PIECES>() > 6)
         return EvalNeed::SoftOnly;
     return EvalNeed::Full;
@@ -176,6 +186,8 @@ EvalNeed pick_eval_need(bool rootNode, bool pvNode, const Position& pos, const S
 bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbConfig,
                          Search::SearchManager& manager, std::function<Value()> getNnueEval,
                          int displayDepth, bool showWdl) {
+    clear_root_hard_score();
+
     const Evidence::Manager* mgr = evidence_manager();
     if (!mgr || mgr->certus_style() == Evidence::CertusStyleMode::Off)
         return false;
@@ -183,13 +195,25 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
     reset_search_evidence();
     set_track_hits_impl(track_search_hits(*mgr));
 
+    const Evidence::EvalContext rootCtx = make_root_context(*mgr, tbConfig);
+
     Evidence::EvalResult root_ev =
-      Evidence::evaluate_full(const_cast<Position&>(rootPos), make_root_context(*mgr, tbConfig));
+      Evidence::evaluate_full(const_cast<Position&>(rootPos), rootCtx);
 
     if (show_root_evidence(*mgr))
         print_info(format_root_evidence(root_ev));
 
-    // Mixed/Off: never force. Strict: consensus / ICCF singleton shortcuts.
+    // Hard score layers only (TB/mate/theory) — never consensus/ICCF (FEAT-0002).
+    {
+        Evidence::EvalResult score_ev =
+          Evidence::evaluate_score_layers(const_cast<Position&>(rootPos), rootCtx);
+        using EC = Evidence::EvidenceClass;
+        if (score_ev.evidence_class == EC::ProvenTb || score_ev.evidence_class == EC::ProvenMate
+            || score_ev.evidence_class == EC::Theoretical)
+            set_root_hard_score(score_ev.to_value());
+    }
+
+    // Mixed/Off: never force move. Strict: consensus / ICCF singleton shortcuts.
     if (mgr->certus_style() != Evidence::CertusStyleMode::Strict)
         return false;
 
