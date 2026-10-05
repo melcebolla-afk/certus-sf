@@ -1,5 +1,5 @@
 /*
-  certus-sf — FEAT-0002/0003/0004 consensus + ICCF + CertusStyle probe.
+  certus-sf — FEAT-0002/0003/0004/0006 consensus + ICCF + CertusStyle + MixedEffort probe.
   Build: make -C stockfish/src consensus_search_probe
 */
 
@@ -66,35 +66,64 @@ int main(int argc, char** argv) {
     check(std::find(marked.begin(), marked.end(), nc3) != marked.end(), "marked nc3");
     check(std::find(marked.begin(), marked.end(), nf3) != marked.end(), "marked nf3");
 
-    // FEAT-0004: Mixed (default) never hard-filters.
+    // FEAT-0006: Mixed High (default) never hard-filters; stronger effort.
     mgr.set_certus_style(CertusStyleMode::Mixed);
+    mgr.set_mixed_effort(MixedEffortMode::High);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
-    check(Certus::allow_search_move(pos, a3, false, 0), "Mixed allows a3");
+    check(Certus::allow_search_move(pos, a3, false, 0), "Mixed High allows a3");
     {
         const auto f = Certus::make_search_move_filter(pos, false, 0);
-        check(f.boost_preferred && f.is_preferred(nc3) && !f.restrict_moves, "Mixed boosts marked");
-        check(!f.interior_depth, "Mixed has no interior extension flag");
+        check(f.boost_preferred && f.is_preferred(nc3) && !f.restrict_moves, "Mixed High boosts marked");
+        check(f.interior_depth && f.lmr_relief == 2048, "Mixed High interior + LMR-2");
         Depth ext = 0;
         Depth red = 2048;
         Certus::apply_style_depth_bias(f, nc3, false, ext, red);
-        check(red == 1024 && ext == 0, "Mixed interior: LMR-1 no extension");
+        check(red == 0 && ext == 1, "Mixed High interior: LMR-2 + extension");
         ext = 0;
         red = 2048;
         Certus::apply_style_depth_bias(f, a3, false, ext, red);
-        check(red == 2048 && ext == 0, "Mixed non-preferred untouched");
+        check(red == 2048 && ext == 0, "Mixed High non-preferred untouched");
+        const auto f1 = Certus::make_search_move_filter(pos, false, 1);
+        check(f1.boost_preferred && f1.is_preferred(nc3) && !f1.restrict_moves,
+              "Mixed High boosts pvIdx>0");
+        check(Certus::allow_search_move(pos, a3, false, 1), "Mixed High pvIdx>0 still allows a3");
+    }
+
+    // FEAT-0006: Mixed Low = FEAT-0004 (LMR-1, no ext, no MultiPV boost).
+    mgr.set_mixed_effort(MixedEffortMode::Low);
+    check(Certus::allow_search_move(pos, a3, false, 0), "Mixed Low allows a3");
+    {
+        const auto f = Certus::make_search_move_filter(pos, false, 0);
+        check(f.boost_preferred && f.is_preferred(nc3) && !f.restrict_moves, "Mixed Low boosts marked");
+        check(!f.interior_depth && f.lmr_relief == 1024, "Mixed Low has no interior extension flag");
+        Depth ext = 0;
+        Depth red = 2048;
+        Certus::apply_style_depth_bias(f, nc3, false, ext, red);
+        check(red == 1024 && ext == 0, "Mixed Low interior: LMR-1 no extension");
+        ext = 0;
+        red = 2048;
+        Certus::apply_style_depth_bias(f, a3, false, ext, red);
+        check(red == 2048 && ext == 0, "Mixed Low non-preferred untouched");
+        check(!Certus::make_search_move_filter(pos, false, 1).boost_preferred,
+              "Mixed Low no boost pvIdx>0");
     }
 
     mgr.set_certus_style(CertusStyleMode::Strict);
+    mgr.set_mixed_effort(MixedEffortMode::High);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
     {
         const auto f = Certus::make_search_move_filter(pos, false, 0);
         check(f.interior_depth && f.restrict_moves, "Strict filters + interior depth");
+        check(f.lmr_relief == 1024, "Strict ignores MixedEffort High LMR");
         Depth ext = 0;
         Depth red = 2048;
         Certus::apply_style_depth_bias(f, nc3, false, ext, red);
         check(red == 1024 && ext == 1, "Strict interior: LMR-1 + extension");
+        check(!Certus::make_search_move_filter(pos, false, 1).restrict_moves,
+              "Strict pvIdx>0 no filter");
     }
     mgr.set_certus_style(CertusStyleMode::Mixed);
+    mgr.set_mixed_effort(MixedEffortMode::High);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
 
     mgr.set_certus_style(CertusStyleMode::Off);

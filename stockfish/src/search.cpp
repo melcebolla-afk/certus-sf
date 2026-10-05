@@ -375,14 +375,19 @@ bool Search::Worker::iterative_deepening() {
             mainHistory[c][i] = mainHistory[c][i] * 729 / 1024;
 
 #ifdef CERTUS_SF
-    // Mixed/Strict: search preferred (marked/frequent) root moves first (order + effort).
-    {
+    auto certus_partition_preferred_root = [&] {
         const Certus::SearchMoveFilter rootPref =
           Certus::make_search_move_filter(rootPos, bool(rootPos.checkers()), 0);
         if (rootPref.boost_preferred && !rootPref.preferred.empty())
             std::stable_partition(rootMoves.begin(), rootMoves.end(),
                                   [&](const RootMove& rm) { return rootPref.is_preferred(rm.pv[0]); });
-    }
+    };
+    // Mixed Low / Strict: preferred-first once. Mixed High: again each ID iteration.
+    certus_partition_preferred_root();
+    const Evidence::Manager* certusMgr = Certus::evidence_manager();
+    const bool certusMixedHigh =
+      certusMgr && certusMgr->certus_style() == Evidence::CertusStyleMode::Mixed
+      && certusMgr->mixed_effort() == Evidence::MixedEffortMode::High;
 #endif
 
     // Iterative deepening loop until requested to stop or the target depth is reached
@@ -390,6 +395,10 @@ bool Search::Worker::iterative_deepening() {
            && !(limits.depth && mainThread && rootDepth >= limits.depth))
     {
         rootDepth++;
+#ifdef CERTUS_SF
+        if (certusMixedHigh)
+            certus_partition_preferred_root();
+#endif
 
         // Age out PV variability metric and signal the start of a new iteration
         if (mainThread)

@@ -41,7 +41,8 @@ void finish_search_evidence();
 struct SearchMoveFilter {
     bool              restrict_moves  = false;  // Strict + catalog hit
     bool              boost_preferred = false;  // Mixed or Strict with preferred set
-    bool              interior_depth  = false;  // Strict: LMR/ext bias in tree
+    bool              interior_depth  = false;  // Strict / Mixed High: ext in tree
+    Depth             lmr_relief      = 1024;   // LMR units subtracted on preferred
     std::vector<Move> preferred;
 
     bool allows(Move m) const {
@@ -62,8 +63,8 @@ std::vector<Move> consensus_marked_legal_moves(const Position& pos);
 std::vector<Move> iccf_frequent_legal_moves(const Position& pos);
 bool              allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx);
 
-// reductionUnits are SF LMR units (/1024). Preferred: less LMR (Mixed+Strict);
-// Strict interiors also get a mild extension.
+// reductionUnits are SF LMR units (/1024). Preferred: less LMR (Mixed+Strict).
+// Mixed High / Strict interiors also get a mild extension.
 void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNode, Depth& extension,
                             Depth& reductionUnits);
 

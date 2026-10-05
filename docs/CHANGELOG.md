@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **FEAT-0006 `MixedEffort`:** combo `Low` \| `High` (**default High**). Solo Mixed: High = más esfuerzo en preferred (orden cada ID, LMR−2, ext interiores, boost MultiPV) sin filtro/force; Low = Mixed FEAT-0004. Off/Strict ignoran el valor.
+- **Build:** probes CI enlazan `*.o` planos (`certus.mk`).
+
 - **Hard score path:** SoftOnly ya no salta TB/mate/theory en eval de search; si la raíz es hard evidence, el `score` UCI del PV se fija a ese valor (bestmove sigue del search).
 - **THEORETICAL:** fragmento estático Steingrimsson (18 fortress-entry, IEEE CoG 2021) en `testdata/theoretical/steingrimsson.json`; `theory_repo_update` lo mergea junto a fortresses.epd (sin descarga).
 - **FEAT-0005:** merge Stockfish **19** (`sf_19` @ `edb0d9db`). Overlay Certus re-aplicado; API NNUE única (`Network`, sin `EvalFileSmall`); probes usan `Attacks::init()`.

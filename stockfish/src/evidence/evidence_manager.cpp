@@ -49,6 +49,15 @@ CertusStyleMode parse_certus_style(const std::string& s) {
     return CertusStyleMode::Mixed;
 }
 
+MixedEffortMode parse_mixed_effort(const std::string& s) {
+    std::string t;
+    for (char c : s)
+        t += char(std::tolower(static_cast<unsigned char>(c)));
+    if (t == "low")
+        return MixedEffortMode::Low;
+    return MixedEffortMode::High;
+}
+
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -182,6 +191,12 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
     options.add("CertusStyle",
                 Option("Off Mixed Strict", "Mixed", [this](const Option& o) -> std::optional<std::string> {
                     certus_style_ = parse_certus_style(std::string(o));
+                    return std::nullopt;
+                }));
+
+    options.add("MixedEffort",
+                Option("Low High", "High", [this](const Option& o) -> std::optional<std::string> {
+                    mixed_effort_ = parse_mixed_effort(std::string(o));
                     return std::nullopt;
                 }));
 

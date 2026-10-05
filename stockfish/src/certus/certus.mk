@@ -63,7 +63,7 @@ GOLDEN_PROBE_OBJS = $(notdir $(GOLDEN_PROBE_SRCS:.cpp=.o)) \
 consensus_search_probe: $(CONSENSUS_SEARCH_PROBE_OBJS)
 	+$(CXX) -o $@ $(CONSENSUS_SEARCH_PROBE_OBJS) $(LDFLAGS)
 
-certus/consensus_search_probe.o: certus/consensus_search_probe.cpp
+consensus_search_probe.o: certus/consensus_search_probe.cpp
 	+$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 evidence_probe: $(EVIDENCE_PROBE_OBJS)
@@ -72,8 +72,8 @@ evidence_probe: $(EVIDENCE_PROBE_OBJS)
 golden_probe: $(GOLDEN_PROBE_OBJS)
 	+$(CXX) -o $@ $(GOLDEN_PROBE_OBJS) $(LDFLAGS)
 
-evidence/evidence_probe.o: evidence/evidence_probe.cpp
+evidence_probe.o: evidence/evidence_probe.cpp
 	+$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-evidence/golden_probe.o: evidence/golden_probe.cpp
+golden_probe.o: evidence/golden_probe.cpp
 	+$(CXX) $(CXXFLAGS) -c -o $@ $<

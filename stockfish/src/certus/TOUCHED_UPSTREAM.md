@@ -41,7 +41,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 ### `src/ucioption.cpp`
 
-- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle).
+- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle, MixedEffort).
 
 ### `src/search.cpp`
 
@@ -50,7 +50,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly flag en NonPV quiet >6 piezas; score path siempre TB/mate/theory)
 - `Certus::make_search_move_filter` once per node; `apply_style_depth_bias` (FEAT-0004 CertusStyle)
 - `start_searching`: `Certus::prepare_root_search` (Strict force only); emergency `bestmove` if past `tm.maximum()`
-- `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict order)
+- `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict once; Mixed High each ID)
 - `SearchManager::check_time`: tighter `callsCnt` + short-clock hard cap (SF19 already allows stop before depth≥1)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 

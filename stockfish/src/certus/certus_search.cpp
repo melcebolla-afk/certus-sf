@@ -320,11 +320,18 @@ std::vector<Move> iccf_frequent_legal_moves(const Position& pos) {
 SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int pvIdx) {
     SearchMoveFilter out;
     const Evidence::Manager* mgr = evidence_manager();
-    if (!mgr || inCheck || pvIdx > 0)
+    if (!mgr || inCheck)
         return out;
 
     const auto style = mgr->certus_style();
     if (style == Evidence::CertusStyleMode::Off)
+        return out;
+
+    const bool mixedHigh = style == Evidence::CertusStyleMode::Mixed
+                        && mgr->mixed_effort() == Evidence::MixedEffortMode::High;
+    // Strict and Mixed Low: no boost/filter on MultiPV lines after the first.
+    // Mixed High: keep preferred effort on pvIdx>0 (ICCF analysis).
+    if (pvIdx > 0 && !mixedHigh)
         return out;
 
     // Preferred: consensus marked first, else ICCF frequent (same precedence as Strict filter).
@@ -363,6 +370,13 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
                 out.preferred      = freq;
             }
         }
+        return out;
+    }
+
+    if (mixedHigh)
+    {
+        out.interior_depth = true;
+        out.lmr_relief     = 2048;
     }
 
     return out;
@@ -374,9 +388,9 @@ void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNo
         return;
 
     // Mixed + Strict: less LMR on preferred at root and interiors (priority, not force).
-    reductionUnits = std::max(Depth(0), reductionUnits - 1024);
+    reductionUnits = std::max(Depth(0), reductionUnits - filt.lmr_relief);
 
-    // Strict only: mild extension in interiors (harder dig on the corridor).
+    // Strict / Mixed High: mild extension in interiors (harder dig, no exclusion).
     if (filt.interior_depth && !rootNode && extension < 2)
         extension += 1;
 }

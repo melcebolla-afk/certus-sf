@@ -23,6 +23,9 @@ enum class IccfSearchMode { Off, FreqOnly };
 // Master search style (FEAT-0004). Default Mixed.
 enum class CertusStyleMode { Off, Mixed, Strict };
 
+// Mixed effort dial (FEAT-0006). Only applies when CertusStyle=Mixed. Default High.
+enum class MixedEffortMode { Low, High };
+
 class Manager {
    public:
     Manager() = default;
@@ -47,6 +50,8 @@ class Manager {
     void                  set_iccf_search(IccfSearchMode mode) { iccf_search_ = mode; }
     CertusStyleMode       certus_style() const { return certus_style_; }
     void                  set_certus_style(CertusStyleMode mode) { certus_style_ = mode; }
+    MixedEffortMode       mixed_effort() const { return mixed_effort_; }
+    void                  set_mixed_effort(MixedEffortMode mode) { mixed_effort_ = mode; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -66,6 +71,7 @@ class Manager {
     ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
     IccfSearchMode        iccf_search_      = IccfSearchMode::FreqOnly;
     CertusStyleMode       certus_style_     = CertusStyleMode::Mixed;
+    MixedEffortMode       mixed_effort_     = MixedEffortMode::High;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;
