@@ -342,29 +342,12 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
     if (pvIdx > 0 && !mixedHighOrMax)
         return out;
 
-    // Preferred: Low/High/Strict = marked else frequent; Max = marked ∪ frequent.
+    // Preferred: marked else frequent (Max uses same set as High; only effort differs).
     std::vector<Move> preferred;
-    if (mixedMax)
-    {
-        if (mgr->consensus().ready())
-            preferred = consensus_marked_legal_moves(pos);
-        if (mgr->iccf().ready())
-        {
-            const std::vector<Move> freq = iccf_frequent_legal_moves(pos);
-            for (Move m : freq)
-            {
-                if (std::find(preferred.begin(), preferred.end(), m) == preferred.end())
-                    preferred.push_back(m);
-            }
-        }
-    }
-    else
-    {
-        if (mgr->consensus().ready())
-            preferred = consensus_marked_legal_moves(pos);
-        if (preferred.empty() && mgr->iccf().ready())
-            preferred = iccf_frequent_legal_moves(pos);
-    }
+    if (mgr->consensus().ready())
+        preferred = consensus_marked_legal_moves(pos);
+    if (preferred.empty() && mgr->iccf().ready())
+        preferred = iccf_frequent_legal_moves(pos);
     if (preferred.empty())
         return out;
 

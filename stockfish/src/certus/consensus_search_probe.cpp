@@ -189,7 +189,7 @@ int main(int argc, char** argv) {
     check(!Certus::allow_search_move(pos, a2a3, false, 0), "FreqOnly blocks a3 italian");
     check(Certus::allow_search_move(pos, bc4, false, 0), "FreqOnly allows bc4");
 
-    // FEAT-0007: High = marked only (d4); Max = marked ∪ frequent (d4,bc4,nc3).
+    // FEAT-0007: Max uses same preferred set as High (marked else frequent), more effort only.
     mgr.set_certus_style(CertusStyleMode::Mixed);
     mgr.set_mixed_effort(MixedEffortMode::High);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
@@ -201,8 +201,8 @@ int main(int argc, char** argv) {
     mgr.set_mixed_effort(MixedEffortMode::Max);
     {
         const auto fm = Certus::make_search_move_filter(pos, false, 0);
-        check(fm.is_preferred(d4) && fm.is_preferred(bc4) && fm.is_preferred(nc3i),
-              "Max italian preferred = marked union frequent");
+        check(fm.is_preferred(d4) && !fm.is_preferred(bc4) && !fm.is_preferred(nc3i),
+              "Max italian preferred = marked else frequent (same as High)");
         check(!fm.restrict_moves && fm.zero_lmr, "Max italian no filter + zero LMR");
         check(Certus::allow_search_move(pos, a2a3, false, 0), "Max italian still allows a3");
     }

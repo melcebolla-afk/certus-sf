@@ -77,7 +77,7 @@ Si en raíz:
 | `Mixed` (**default**) | `MixedEffort` Low/High (default High); sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
 | `Strict` | filtro ConsensusSearch/IccfSearch + LMR↓ + ext preferred | Sí | Sí |
 
-`MixedEffort` (FEAT-0006/0007) — solo Mixed: `Low` = orden raíz una vez + LMR−1; `High` (**default**) = orden cada ID + LMR−2 + ext + boost MultiPV; `Max` = High + LMR≈0 + marked∪frequent + bonus MovePicker. Ninguno filtra ni fuerza.
+`MixedEffort` (FEAT-0006/0007) — solo Mixed: `Low` = orden raíz una vez + LMR−1; `High` (**default**) = orden cada ID + LMR−2 + ext + boost MultiPV; `Max` = mismo preferred (marked else frequent) + LMR≈0 + bonus MovePicker. Ninguno filtra ni fuerza.
 
 ## ConsensusSearch (FEAT-0002) — solo aplica filtro si `CertusStyle=Strict`
 

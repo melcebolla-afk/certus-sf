@@ -17,7 +17,7 @@
 ### Phase 1 — Código
 
 - `MixedEffortMode::Max`; parse/register.
-- Filter: High|Max MultiPV/interior; Max union + zero LMR; picker TLS + movepick hook.
+- Filter: High|Max MultiPV/interior; mismo preferred marked-else-frequent; Max zero LMR + picker TLS + movepick hook.
 - search.cpp: filter antes de MovePicker; repartition High|Max.
 - Validación: probes.
 
@@ -36,7 +36,7 @@ make -j -C stockfish/src build evidence_probe golden_probe consensus_search_prob
 ## Cierre de fase
 
 - Phase 0: **CERRADA** 2026-10-06 — spec + UCI-OPTIONS + RESOLVER-SPEC.
-- Phase 1: **CERRADA** 2026-10-06 — Max LMR0, unión, picker bonus, High|Max ID.
+- Phase 1: **CERRADA** 2026-10-06 — Max LMR0, picker bonus, High|Max ID; preferred marked-else-frequent (sin unión).
 - Phase 2: **CERRADA** 2026-10-06 — probes + `./tests/evidence_probe.sh: OK`.
 
 ## Cierre de la unidad

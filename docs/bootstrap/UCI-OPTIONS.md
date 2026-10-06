@@ -40,7 +40,7 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 |-------|----------------|
 | `Low` | Mixed FEAT-0004: orden raíz una vez + LMR−1 preferred; sin ext; sin boost `pvIdx>0` |
 | `High` (**default**) | Orden preferred cada iteración ID + LMR−2 + ext+1 interiores + boost MultiPV; **sin** filtro ni force |
-| `Max` (FEAT-0007) | Como High + LMR≈0 preferred + preferred=marked∪frequent + bonus orden MovePicker (+8000); **sin** filtro ni force |
+| `Max` (FEAT-0007) | Como High (mismo preferred: marked else frequent) + LMR≈0 + bonus orden MovePicker (+8000); **sin** filtro ni force |
 
 `ConsensusSearch=MarkedOnly`: en **Strict**, nodos con consenso + `marked_moves` → solo marked ∩ legal. Raíz Strict: atajo FEAT-0010 + score NNUE.
 

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- **FEAT-0007 `MixedEffort=Max`:** opt-in encima de High — LMR≈0 en preferred, preferred=marked∪frequent, bonus orden MovePicker (+8000) sin mutar history; default sigue High; sin filtro/force ni más extensión.
+- **FEAT-0007 `MixedEffort=Max`:** opt-in encima de High — mismo preferred (marked else frequent) + LMR≈0 + bonus orden MovePicker (+8000) sin mutar history; default sigue High; sin filtro/force. Corrección: sin unión marked∪frequent (marked manda).
 - **FEAT-0006 `MixedEffort`:** combo `Low` \| `High` (**default High**). Solo Mixed: High = más esfuerzo en preferred (orden cada ID, LMR−2, ext interiores, boost MultiPV) sin filtro/force; Low = Mixed FEAT-0004. Off/Strict ignoran el valor.
 - **Build:** probes CI enlazan `*.o` planos (`certus.mk`).
 
