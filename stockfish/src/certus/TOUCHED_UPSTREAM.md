@@ -43,14 +43,19 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 - Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle, MixedEffort).
 
+### `src/movepick.cpp`
+
+- `#ifdef CERTUS_SF` / `#include "certus/certus_search.h"`
+- `score<>`: `m.value += Certus::move_picker_preferred_bonus(m)` (FEAT-0007 Mixed Max order; no history mutation)
+
 ### `src/search.cpp`
 
 - `#ifdef CERTUS_SF` / `#include "certus/certus_eval.h"` + `certus_search.h`
 - `Search::Worker::evaluate`: delegate to `Certus::evaluate` with **single** `network[numaAccessToken]` (SF19; no `Networks`)
 - `CERTUS_SET_EVAL_NEED` before static eval (SoftOnly flag en NonPV quiet >6 piezas; score path siempre TB/mate/theory)
-- `Certus::make_search_move_filter` once per node; `apply_style_depth_bias` (FEAT-0004 CertusStyle)
+- `Certus::make_search_move_filter` once per node **before** `MovePicker`; Max sets picker boost TLS; `apply_style_depth_bias` (FEAT-0004/0006/0007)
 - `start_searching`: `Certus::prepare_root_search` (Strict force only); emergency `bestmove` if past `tm.maximum()`
-- `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict once; Mixed High each ID)
+- `iterative_deepening`: `stable_partition` preferred root moves (Mixed/Strict once; Mixed High|Max each ID)
 - `SearchManager::check_time`: tighter `callsCnt` + short-clock hard cap (SF19 already allows stop before depth≥1)
 - Before `onBestmove`: `Certus::finish_search_evidence` (EvidenceInfo All)
 

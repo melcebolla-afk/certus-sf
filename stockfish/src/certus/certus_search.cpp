@@ -30,6 +30,10 @@ EvidenceHits g_hits;
 bool          g_track_hits = false;
 std::optional<Value> g_root_hard_score;
 
+// FEAT-0007: MovePicker scoring bonus for Mixed Max preferred (no history mutation).
+thread_local const SearchMoveFilter* tls_picker_boost = nullptr;
+constexpr int kPickerPreferredBonus = 8000;
+
 bool show_root_evidence(const Evidence::Manager& mgr) {
     return mgr.evidence_info() != Evidence::EvidenceInfoMode::Off;
 }
@@ -327,19 +331,40 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
     if (style == Evidence::CertusStyleMode::Off)
         return out;
 
-    const bool mixedHigh = style == Evidence::CertusStyleMode::Mixed
-                        && mgr->mixed_effort() == Evidence::MixedEffortMode::High;
+    const auto effort = mgr->mixed_effort();
+    const bool mixedHighOrMax =
+      style == Evidence::CertusStyleMode::Mixed
+      && (effort == Evidence::MixedEffortMode::High || effort == Evidence::MixedEffortMode::Max);
+    const bool mixedMax =
+      style == Evidence::CertusStyleMode::Mixed && effort == Evidence::MixedEffortMode::Max;
     // Strict and Mixed Low: no boost/filter on MultiPV lines after the first.
-    // Mixed High: keep preferred effort on pvIdx>0 (ICCF analysis).
-    if (pvIdx > 0 && !mixedHigh)
+    // Mixed High|Max: keep preferred effort on pvIdx>0 (ICCF analysis).
+    if (pvIdx > 0 && !mixedHighOrMax)
         return out;
 
-    // Preferred: consensus marked first, else ICCF frequent (same precedence as Strict filter).
+    // Preferred: Low/High/Strict = marked else frequent; Max = marked ∪ frequent.
     std::vector<Move> preferred;
-    if (mgr->consensus().ready())
-        preferred = consensus_marked_legal_moves(pos);
-    if (preferred.empty() && mgr->iccf().ready())
-        preferred = iccf_frequent_legal_moves(pos);
+    if (mixedMax)
+    {
+        if (mgr->consensus().ready())
+            preferred = consensus_marked_legal_moves(pos);
+        if (mgr->iccf().ready())
+        {
+            const std::vector<Move> freq = iccf_frequent_legal_moves(pos);
+            for (Move m : freq)
+            {
+                if (std::find(preferred.begin(), preferred.end(), m) == preferred.end())
+                    preferred.push_back(m);
+            }
+        }
+    }
+    else
+    {
+        if (mgr->consensus().ready())
+            preferred = consensus_marked_legal_moves(pos);
+        if (preferred.empty() && mgr->iccf().ready())
+            preferred = iccf_frequent_legal_moves(pos);
+    }
     if (preferred.empty())
         return out;
 
@@ -373,13 +398,24 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
         return out;
     }
 
-    if (mixedHigh)
+    if (mixedHighOrMax)
     {
         out.interior_depth = true;
-        out.lmr_relief     = 2048;
+        if (mixedMax)
+            out.zero_lmr = true;
+        else
+            out.lmr_relief = 2048;
     }
 
     return out;
+}
+
+void set_move_picker_boost(const SearchMoveFilter* filt) { tls_picker_boost = filt; }
+
+int move_picker_preferred_bonus(Move m) {
+    if (!tls_picker_boost || !tls_picker_boost->is_preferred(m))
+        return 0;
+    return kPickerPreferredBonus;
 }
 
 void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNode, Depth& extension,
@@ -387,10 +423,13 @@ void apply_style_depth_bias(const SearchMoveFilter& filt, Move move, bool rootNo
     if (!filt.is_preferred(move))
         return;
 
-    // Mixed + Strict: less LMR on preferred at root and interiors (priority, not force).
-    reductionUnits = std::max(Depth(0), reductionUnits - filt.lmr_relief);
+    // Mixed Max: no LMR on preferred. Else subtract relief (Mixed/Strict priority, not force).
+    if (filt.zero_lmr)
+        reductionUnits = 0;
+    else
+        reductionUnits = std::max(Depth(0), reductionUnits - filt.lmr_relief);
 
-    // Strict / Mixed High: mild extension in interiors (harder dig, no exclusion).
+    // Strict / Mixed High|Max: mild extension in interiors (harder dig, no exclusion).
     if (filt.interior_depth && !rootNode && extension < 2)
         extension += 1;
 }

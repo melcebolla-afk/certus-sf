@@ -55,6 +55,8 @@ MixedEffortMode parse_mixed_effort(const std::string& s) {
         t += char(std::tolower(static_cast<unsigned char>(c)));
     if (t == "low")
         return MixedEffortMode::Low;
+    if (t == "max")
+        return MixedEffortMode::Max;
     return MixedEffortMode::High;
 }
 
@@ -195,7 +197,7 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
                 }));
 
     options.add("MixedEffort",
-                Option("Low High", "High", [this](const Option& o) -> std::optional<std::string> {
+                Option("Low High Max", "High", [this](const Option& o) -> std::optional<std::string> {
                     mixed_effort_ = parse_mixed_effort(std::string(o));
                     return std::nullopt;
                 }));

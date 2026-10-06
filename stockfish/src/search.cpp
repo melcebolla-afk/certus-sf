@@ -382,12 +382,13 @@ bool Search::Worker::iterative_deepening() {
             std::stable_partition(rootMoves.begin(), rootMoves.end(),
                                   [&](const RootMove& rm) { return rootPref.is_preferred(rm.pv[0]); });
     };
-    // Mixed Low / Strict: preferred-first once. Mixed High: again each ID iteration.
+    // Mixed Low / Strict: preferred-first once. Mixed High|Max: again each ID iteration.
     certus_partition_preferred_root();
     const Evidence::Manager* certusMgr = Certus::evidence_manager();
-    const bool certusMixedHigh =
+    const bool certusMixedHighOrMax =
       certusMgr && certusMgr->certus_style() == Evidence::CertusStyleMode::Mixed
-      && certusMgr->mixed_effort() == Evidence::MixedEffortMode::High;
+      && (certusMgr->mixed_effort() == Evidence::MixedEffortMode::High
+          || certusMgr->mixed_effort() == Evidence::MixedEffortMode::Max);
 #endif
 
     // Iterative deepening loop until requested to stop or the target depth is reached
@@ -396,7 +397,7 @@ bool Search::Worker::iterative_deepening() {
     {
         rootDepth++;
 #ifdef CERTUS_SF
-        if (certusMixedHigh)
+        if (certusMixedHighOrMax)
             certus_partition_preferred_root();
 #endif
 
@@ -1199,18 +1200,30 @@ moves_loop:  // When in check, search starts here
       (ss - 4)->continuationHistory, (ss - 5)->continuationHistory, (ss - 6)->continuationHistory};
 
 
+#ifdef CERTUS_SF
+    // Probe catalogs once per node; set Max picker boost before MovePicker scores quiets.
+    const Certus::SearchMoveFilter certusMoves =
+      Certus::make_search_move_filter(pos, ss->inCheck, int(pvIdx));
+    struct CertusPickerBoostGuard {
+        explicit CertusPickerBoostGuard(const Certus::SearchMoveFilter* f) {
+            Certus::set_move_picker_boost(f);
+        }
+        ~CertusPickerBoostGuard() { Certus::set_move_picker_boost(nullptr); }
+    };
+    const Evidence::Manager* certusEffortMgr = Certus::evidence_manager();
+    const bool               certusMaxBoost =
+      certusMoves.boost_preferred && certusEffortMgr
+      && certusEffortMgr->certus_style() == Evidence::CertusStyleMode::Mixed
+      && certusEffortMgr->mixed_effort() == Evidence::MixedEffortMode::Max;
+    CertusPickerBoostGuard certusPickerGuard(certusMaxBoost ? &certusMoves : nullptr);
+#endif
+
     MovePicker mp(pos, ttData.move, depth, &mainHistory, &lowPlyHistory, &captureHistory, contHist,
                   &sharedHistory, ss->ply);
 
     value = bestValue;
 
     int moveCount = 0;
-
-#ifdef CERTUS_SF
-    // Probe catalogs once per node (not once per candidate — was killing nps / clock).
-    const Certus::SearchMoveFilter certusMoves =
-      Certus::make_search_move_filter(pos, ss->inCheck, int(pvIdx));
-#endif
 
     // Step 14. Loop through all pseudo-legal moves until no moves remain
     // or a beta cutoff occurs.
@@ -1884,6 +1897,22 @@ Value Search::Worker::qsearch(Position& pos, Stack* ss, Value alpha, Value beta)
     // Initialize a MovePicker object for the current position, and prepare
     // to search the moves. We presently use two stages of move generator in
     // quiescence search: captures, or evasions only when in check.
+#ifdef CERTUS_SF
+    const Certus::SearchMoveFilter certusQsMoves =
+      Certus::make_search_move_filter(pos, ss->inCheck, int(pvIdx));
+    struct CertusQsPickerBoostGuard {
+        explicit CertusQsPickerBoostGuard(const Certus::SearchMoveFilter* f) {
+            Certus::set_move_picker_boost(f);
+        }
+        ~CertusQsPickerBoostGuard() { Certus::set_move_picker_boost(nullptr); }
+    };
+    const Evidence::Manager* certusQsMgr = Certus::evidence_manager();
+    const bool               certusQsMaxBoost =
+      certusQsMoves.boost_preferred && certusQsMgr
+      && certusQsMgr->certus_style() == Evidence::CertusStyleMode::Mixed
+      && certusQsMgr->mixed_effort() == Evidence::MixedEffortMode::Max;
+    CertusQsPickerBoostGuard certusQsPickerGuard(certusQsMaxBoost ? &certusQsMoves : nullptr);
+#endif
     MovePicker mp(pos, ttData.move, DEPTH_QS, &mainHistory, &lowPlyHistory, &captureHistory,
                   contHist, &sharedHistory, ss->ply);
 

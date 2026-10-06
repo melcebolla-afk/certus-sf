@@ -23,8 +23,8 @@ enum class IccfSearchMode { Off, FreqOnly };
 // Master search style (FEAT-0004). Default Mixed.
 enum class CertusStyleMode { Off, Mixed, Strict };
 
-// Mixed effort dial (FEAT-0006). Only applies when CertusStyle=Mixed. Default High.
-enum class MixedEffortMode { Low, High };
+// Mixed effort dial (FEAT-0006/0007). Only applies when CertusStyle=Mixed. Default High.
+enum class MixedEffortMode { Low, High, Max };
 
 class Manager {
    public:

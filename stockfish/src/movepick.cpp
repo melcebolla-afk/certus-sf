@@ -25,6 +25,9 @@
 #include "bitboard.h"
 #include "misc.h"
 #include "position.h"
+#ifdef CERTUS_SF
+#include "certus/certus_search.h"
+#endif
 
 namespace Stockfish {
 
@@ -222,8 +225,13 @@ ExtMove* MovePicker::score(const MoveList<Type>& ml) {
         const Piece     capturedPiece = pos.piece_on(to);
 
         if constexpr (Type == CAPTURES)
+        {
             m.value = (*captureHistory)[pc][to][type_of(capturedPiece)]
                     + 7 * int(PieceValue[capturedPiece]);
+#ifdef CERTUS_SF
+            m.value += Certus::move_picker_preferred_bonus(m);
+#endif
+        }
 
         else if constexpr (Type == QUIETS)
         {
@@ -247,6 +255,9 @@ ExtMove* MovePicker::score(const MoveList<Type>& ml) {
 
             if (ply < LOW_PLY_HISTORY_SIZE)
                 m.value += 8 * (*lowPlyHistory)[ply][m.raw()] / (1 + ply);
+#ifdef CERTUS_SF
+            m.value += Certus::move_picker_preferred_bonus(m);
+#endif
         }
 
         else  // Type == EVASIONS
@@ -255,6 +266,9 @@ ExtMove* MovePicker::score(const MoveList<Type>& ml) {
                 m.value = PieceValue[capturedPiece] + (1 << 28);
             else
                 m.value = (*mainHistory)[us][m.raw()] + (*continuationHistory[0])[pc][to];
+#ifdef CERTUS_SF
+            m.value += Certus::move_picker_preferred_bonus(m);
+#endif
         }
     }
     return it;

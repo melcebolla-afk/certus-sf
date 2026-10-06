@@ -30,7 +30,7 @@
 
 ## Requisitos funcionales (RF)
 
-- RF-1: UCI `MixedEffort` combo `Low` | `High`, default **High**.
+- RF-1: UCI `MixedEffort` combo `Low` | `High` (| `Max` vía FEAT-0007), default **High**.
 - RF-2: Solo aplica si `CertusStyle=Mixed`. Off y Strict ignoran el valor.
 - RF-3: Ni Low ni High ponen `restrict_moves` ni atajos de raíz.
 - RF-4 High: reorder preferred al inicio de **cada** iteración ID; LMR−2 preferred; ext+1 interiores preferred (`extension < 2`); boost también con `pvIdx>0`.

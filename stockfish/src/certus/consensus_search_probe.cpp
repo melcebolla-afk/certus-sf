@@ -1,5 +1,5 @@
 /*
-  certus-sf — FEAT-0002/0003/0004/0006 consensus + ICCF + CertusStyle + MixedEffort probe.
+  certus-sf — FEAT-0002/0003/0004/0006/0007 consensus + ICCF + CertusStyle + MixedEffort probe.
   Build: make -C stockfish/src consensus_search_probe
 */
 
@@ -89,6 +89,30 @@ int main(int argc, char** argv) {
         check(Certus::allow_search_move(pos, a3, false, 1), "Mixed High pvIdx>0 still allows a3");
     }
 
+    // FEAT-0007: Mixed Max — LMR≈0, inherits High MultiPV/ext, picker bonus TLS.
+    mgr.set_mixed_effort(MixedEffortMode::Max);
+    check(Certus::allow_search_move(pos, a3, false, 0), "Mixed Max allows a3");
+    {
+        const auto f = Certus::make_search_move_filter(pos, false, 0);
+        check(f.boost_preferred && f.is_preferred(nc3) && !f.restrict_moves, "Mixed Max boosts marked");
+        check(f.interior_depth && f.zero_lmr, "Mixed Max interior + zero LMR");
+        Depth ext = 0;
+        Depth red = 3072;
+        Certus::apply_style_depth_bias(f, nc3, false, ext, red);
+        check(red == 0 && ext == 1, "Mixed Max interior: LMR 0 + extension");
+        ext = 0;
+        red = 3072;
+        Certus::apply_style_depth_bias(f, a3, false, ext, red);
+        check(red == 3072 && ext == 0, "Mixed Max non-preferred untouched");
+        check(Certus::make_search_move_filter(pos, false, 1).boost_preferred,
+              "Mixed Max boosts pvIdx>0");
+        Certus::set_move_picker_boost(&f);
+        check(Certus::move_picker_preferred_bonus(nc3) == 8000, "Max picker bonus preferred");
+        check(Certus::move_picker_preferred_bonus(a3) == 0, "Max picker bonus non-preferred");
+        Certus::set_move_picker_boost(nullptr);
+        check(Certus::move_picker_preferred_bonus(nc3) == 0, "picker boost cleared");
+    }
+
     // FEAT-0006: Mixed Low = FEAT-0004 (LMR-1, no ext, no MultiPV boost).
     mgr.set_mixed_effort(MixedEffortMode::Low);
     check(Certus::allow_search_move(pos, a3, false, 0), "Mixed Low allows a3");
@@ -109,12 +133,12 @@ int main(int argc, char** argv) {
     }
 
     mgr.set_certus_style(CertusStyleMode::Strict);
-    mgr.set_mixed_effort(MixedEffortMode::High);
+    mgr.set_mixed_effort(MixedEffortMode::Max);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
     {
         const auto f = Certus::make_search_move_filter(pos, false, 0);
         check(f.interior_depth && f.restrict_moves, "Strict filters + interior depth");
-        check(f.lmr_relief == 1024, "Strict ignores MixedEffort High LMR");
+        check(!f.zero_lmr && f.lmr_relief == 1024, "Strict ignores MixedEffort Max LMR");
         Depth ext = 0;
         Depth red = 2048;
         Certus::apply_style_depth_bias(f, nc3, false, ext, red);
@@ -155,15 +179,36 @@ int main(int argc, char** argv) {
     pos.set(fen_italian, false, &states->back());
     const Move bc4 = UCIEngine::to_move(pos, "f1c4");
     const Move d4  = UCIEngine::to_move(pos, "d2d4");
+    const Move nc3i = UCIEngine::to_move(pos, "b1c3");
     const Move a2a3 = UCIEngine::to_move(pos, "a2a3");
-    check(bc4 != Move::none() && d4 != Move::none() && a2a3 != Move::none(), "italian uci");
+    check(bc4 != Move::none() && d4 != Move::none() && nc3i != Move::none() && a2a3 != Move::none(),
+          "italian uci");
     const auto freq = Certus::iccf_frequent_legal_moves(pos);
     check(freq.size() == 3, "three frequent italian");
     check(std::find(freq.begin(), freq.end(), bc4) != freq.end(), "freq bc4");
     check(!Certus::allow_search_move(pos, a2a3, false, 0), "FreqOnly blocks a3 italian");
     check(Certus::allow_search_move(pos, bc4, false, 0), "FreqOnly allows bc4");
 
+    // FEAT-0007: High = marked only (d4); Max = marked ∪ frequent (d4,bc4,nc3).
+    mgr.set_certus_style(CertusStyleMode::Mixed);
+    mgr.set_mixed_effort(MixedEffortMode::High);
+    mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
+    mgr.set_iccf_search(IccfSearchMode::FreqOnly);
+    {
+        const auto fh = Certus::make_search_move_filter(pos, false, 0);
+        check(fh.is_preferred(d4) && !fh.is_preferred(bc4), "High italian preferred = marked only");
+    }
+    mgr.set_mixed_effort(MixedEffortMode::Max);
+    {
+        const auto fm = Certus::make_search_move_filter(pos, false, 0);
+        check(fm.is_preferred(d4) && fm.is_preferred(bc4) && fm.is_preferred(nc3i),
+              "Max italian preferred = marked union frequent");
+        check(!fm.restrict_moves && fm.zero_lmr, "Max italian no filter + zero LMR");
+        check(Certus::allow_search_move(pos, a2a3, false, 0), "Max italian still allows a3");
+    }
+
     pos.set(fen, false, &states->back());
+    mgr.set_certus_style(CertusStyleMode::Strict);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
     mgr.set_iccf_search(IccfSearchMode::FreqOnly);
     check(!Certus::allow_search_move(pos, a3, false, 0), "consensus still blocks a3");

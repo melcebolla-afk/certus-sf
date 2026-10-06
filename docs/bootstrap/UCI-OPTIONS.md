@@ -20,7 +20,7 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 | Option | Type | Default | Values |
 |--------|------|---------|--------|
 | `CertusStyle` | combo | **Mixed** | Off, Mixed, Strict |
-| `MixedEffort` | combo | **High** | Low, High — solo si `CertusStyle=Mixed` |
+| `MixedEffort` | combo | **High** | Low, High, Max — solo si `CertusStyle=Mixed` |
 | `EvidenceInfo` | combo | Root | Off, Root, All |
 | `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly — filtro solo si `CertusStyle=Strict` |
 | `IccfSearch` | combo | FreqOnly | Off, FreqOnly — filtro solo si `CertusStyle=Strict` |
@@ -34,12 +34,13 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 | `Mixed` (**default**) | Sin filtro ni force. Intensidad: `MixedEffort` (**High** default). |
 | `Strict` | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR↓ + extensión en preferred |
 
-`MixedEffort` (FEAT-0006) — ignorado si `CertusStyle` no es Mixed:
+`MixedEffort` (FEAT-0006/0007) — ignorado si `CertusStyle` no es Mixed:
 
 | Valor | Comportamiento |
 |-------|----------------|
 | `Low` | Mixed FEAT-0004: orden raíz una vez + LMR−1 preferred; sin ext; sin boost `pvIdx>0` |
 | `High` (**default**) | Orden preferred cada iteración ID + LMR−2 + ext+1 interiores + boost MultiPV; **sin** filtro ni force |
+| `Max` (FEAT-0007) | Como High + LMR≈0 preferred + preferred=marked∪frequent + bonus orden MovePicker (+8000); **sin** filtro ni force |
 
 `ConsensusSearch=MarkedOnly`: en **Strict**, nodos con consenso + `marked_moves` → solo marked ∩ legal. Raíz Strict: atajo FEAT-0010 + score NNUE.
 
