@@ -19,7 +19,7 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 
 | Option | Type | Default | Values |
 |--------|------|---------|--------|
-| `CertusStyle` | combo | **Mixed** | Off, Mixed, Strict |
+| `CertusStyle` | combo | **Strict** | Off, Mixed, Strict |
 | `MixedEffort` | combo | **High** | Low, High, Max — solo si `CertusStyle=Mixed` |
 | `EvidenceInfo` | combo | Root | Off, Root, All |
 | `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly — filtro solo si `CertusStyle=Strict` |
@@ -31,8 +31,8 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 | Valor | Comportamiento |
 |-------|----------------|
 | `Off` | SF puro: sin filtro, sin bias, sin atajos, eval sin capas evidencia |
-| `Mixed` (**default**) | Sin filtro ni force. Intensidad: `MixedEffort` (**High** default). |
-| `Strict` | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR↓ + extensión en preferred |
+| `Mixed` | Sin filtro ni force. Intensidad: `MixedEffort` (**High** default). |
+| `Strict` (**default**) | Filtro MarkedOnly/FreqOnly + atajos raíz + LMR↓ + extensión en preferred; oráculo ICCF recomendado |
 
 `MixedEffort` (FEAT-0006/0007) — ignorado si `CertusStyle` no es Mixed:
 

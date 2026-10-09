@@ -71,7 +71,8 @@ PROVEN_TB > PROVEN_MATE > THEORETICAL > STRONG_CONSENSUS > EMPIRICAL_ICCF > INFE
 | FEAT-0001 evidence layers SF | **cerrado** 2026-09-01 |
 | FEAT-0002 consensus marked search | **hecho** 2026-09-02 |
 | FEAT-0003 ICCF frequent_moves filter | **hecho** 2026-09-02 |
-| FEAT-0004 CertusStyle Off/Mixed/Strict | **hecho** 2026-09-09 |
+| FEAT-0004 CertusStyle Off/Mixed/Strict | **hecho** 2026-09-09; default UCI → **Strict** 2026-10-09 |
+| Informe ICCF Strict vs Mixed | `docs/analysis/2026-10-09-iccf-style-strict-vs-mixed.md` |
 | FEAT-0006 MixedEffort Low/High | **hecho** 2026-10-05 |
 | FEAT-0007 MixedEffort Max | **hecho** 2026-10-06 |
 

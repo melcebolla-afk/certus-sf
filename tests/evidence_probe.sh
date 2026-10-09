@@ -30,7 +30,7 @@ echo "$out" | grep -qv 'info depth 20 score cp 0 '
 out="$(printf 'uci\nsetoption name ConsensusPath value %s/testdata/consensus\nisready\nquit\n' "$ROOT" | "$BIN" 2>&1)"
 echo "$out" | grep -q 'id name certus-sf dev'
 echo "$out" | grep -q 'option name ConsensusPath'
-echo "$out" | grep -q 'option name CertusStyle type combo default Mixed'
+echo "$out" | grep -q 'option name CertusStyle type combo default Strict'
 echo "$out" | grep -q 'option name MixedEffort type combo default High'
 echo "$out" | grep -q 'option name MixedEffort type combo default High var Low var High var Max'
 echo "$out" | grep -q 'option name ConsensusSearch type combo default MarkedOnly'

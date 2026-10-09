@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Default `CertusStyle=Strict`:** (antes Mixed). Oráculo ICCF / contrapeso a SF; ver `docs/analysis/2026-10-09-iccf-style-strict-vs-mixed.md`.
 - **FEAT-0007 `MixedEffort=Max`:** opt-in encima de High — mismo preferred (marked else frequent) + LMR≈0 + bonus orden MovePicker (+8000) sin mutar history; default sigue High; sin filtro/force. Corrección: sin unión marked∪frequent (marked manda).
 - **FEAT-0006 `MixedEffort`:** combo `Low` \| `High` (**default High**). Solo Mixed: High = más esfuerzo en preferred (orden cada ID, LMR−2, ext interiores, boost MultiPV) sin filtro/force; Low = Mixed FEAT-0004. Off/Strict ignoran el valor.
 - **Build:** probes CI enlazan `*.o` planos (`certus.mk`).
@@ -10,7 +11,7 @@
 - **THEORETICAL:** fragmento estático Steingrimsson (18 fortress-entry, IEEE CoG 2021) en `testdata/theoretical/steingrimsson.json`; `theory_repo_update` lo mergea junto a fortresses.epd (sin descarga).
 - **FEAT-0005:** merge Stockfish **19** (`sf_19` @ `edb0d9db`). Overlay Certus re-aplicado; API NNUE única (`Network`, sin `EvalFileSmall`); probes usan `Attacks::init()`.
 - **mate_build / mate_probe:** early-exit mate-in-1, checks-first, `--jobs` paralelo + progreso; `mate_repo_update --jobs` (bootstrap masivo).
-- **FEAT-0004 `CertusStyle`:** `Off` \| `Mixed` (**default**) \| `Strict`. Mixed = orden raíz + LMR↓ preferred en raíz e interiores (sin force); Strict = filtro+atajos+LMR/ext; Off = SF puro.
+- **FEAT-0004 `CertusStyle`:** `Off` \| `Mixed` \| `Strict` (default histórico Mixed; **default actual Strict** desde 2026-10-09). Mixed = orden/LMR preferred sin force; Strict = filtro+atajos+LMR/ext; Off = SF puro.
 - **Time safety:** atajos raíz actualizan `bestPreviousScore` (evita fallingEval máximo); `check_time` puede cortar depth-1; con `wtime≤2s` hard-stop ≈ `1.15×optimum` (no sentarse en `maximum`); checks más frecuentes con poco reloj.
 - **Search perf:** filtro marked/frequent una vez por nodo; match UCI con una `MoveList`; eval de search **no** probea consenso/ICCF (solo TB/mate/theory → NNUE); hash Certus por bitboards + cache TLS.
 - **ICCF singleton root:** con `IccfSearch=FreqOnly` y exactamente 1 `frequent_moves` legal → atajo `bestmove` (como consenso trivial).

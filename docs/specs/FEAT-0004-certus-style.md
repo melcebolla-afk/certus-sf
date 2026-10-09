@@ -7,7 +7,7 @@
 Un solo sabor de search Certus (filtro duro + atajos raíz) no sirve igual para correspondencia agresiva y para uso “SF con sesgo” (p. ej. ICCF blitz/análisis). Hace falta un interruptor de estilo.
 
 ## Decisión de producto (2026-09-09)
-UCI `CertusStyle`: `Off` | `Mixed` | `Strict`. **Default: `Mixed`.**
+UCI `CertusStyle`: `Off` | `Mixed` | `Strict`. **Default: `Strict`** (desde 2026-10-09; antes `Mixed` — ver `docs/analysis/2026-10-09-iccf-style-strict-vs-mixed.md`).
 
 | Modo | Search | Atajos raíz force | Eval evidencia (TB/mate/theory) |
 |------|--------|-------------------|----------------------------------|
@@ -23,7 +23,7 @@ UCI `CertusStyle`: `Off` | `Mixed` | `Strict`. **Default: `Mixed`.**
 - Cambiar schema de catálogos.
 
 ## Criterios de aceptación
-- CA-1: `uci` lista `CertusStyle` default `Mixed`.
+- CA-1: `uci` lista `CertusStyle` default `Strict`.
 - CA-2: `Off` → `allow_search_move` no bloquea; `prepare_root_search` no fuerza.
 - CA-3: `Strict` + MarkedOnly → filtro como FEAT-0002.
 - CA-4: `Mixed` → no filtra; preferred en raíz reordenadas primero (intensidad: FEAT-0006 `MixedEffort`).

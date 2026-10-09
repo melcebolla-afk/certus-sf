@@ -191,7 +191,7 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
     }));
 
     options.add("CertusStyle",
-                Option("Off Mixed Strict", "Mixed", [this](const Option& o) -> std::optional<std::string> {
+                Option("Off Mixed Strict", "Strict", [this](const Option& o) -> std::optional<std::string> {
                     certus_style_ = parse_certus_style(std::string(o));
                     return std::nullopt;
                 }));

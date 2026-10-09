@@ -70,7 +70,7 @@ class Manager {
     EvidenceInfoMode      evidence_info_ = EvidenceInfoMode::Root;
     ConsensusSearchMode   consensus_search_ = ConsensusSearchMode::MarkedOnly;
     IccfSearchMode        iccf_search_      = IccfSearchMode::FreqOnly;
-    CertusStyleMode       certus_style_     = CertusStyleMode::Mixed;
+    CertusStyleMode       certus_style_     = CertusStyleMode::Strict;
     MixedEffortMode       mixed_effort_     = MixedEffortMode::High;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
