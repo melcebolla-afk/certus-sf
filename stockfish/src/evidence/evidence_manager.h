@@ -20,11 +20,14 @@ enum class ConsensusSearchMode { Off, MarkedOnly };
 
 enum class IccfSearchMode { Off, FreqOnly };
 
-// Master search style (FEAT-0004). Default Mixed.
+// Master search style (FEAT-0004). Default Strict.
 enum class CertusStyleMode { Off, Mixed, Strict };
 
 // Mixed effort dial (FEAT-0006/0007). Only applies when CertusStyle=Mixed. Default High.
 enum class MixedEffortMode { Low, High, Max };
+
+// FEAT-0008: how Strict builds preferred/filter set. Ignored unless CertusStyle=Strict.
+enum class StrictPreferredMode { Priority, Union };
 
 class Manager {
    public:
@@ -52,6 +55,8 @@ class Manager {
     void                  set_certus_style(CertusStyleMode mode) { certus_style_ = mode; }
     MixedEffortMode       mixed_effort() const { return mixed_effort_; }
     void                  set_mixed_effort(MixedEffortMode mode) { mixed_effort_ = mode; }
+    StrictPreferredMode   strict_preferred() const { return strict_preferred_; }
+    void set_strict_preferred(StrictPreferredMode mode) { strict_preferred_ = mode; }
 
     const ConsensusEntry* probe_consensus(const Position& pos) const {
         return consensus_.probe(pos);
@@ -72,6 +77,7 @@ class Manager {
     IccfSearchMode        iccf_search_      = IccfSearchMode::FreqOnly;
     CertusStyleMode       certus_style_     = CertusStyleMode::Strict;
     MixedEffortMode       mixed_effort_     = MixedEffortMode::High;
+    StrictPreferredMode   strict_preferred_ = StrictPreferredMode::Union;
 
     std::optional<std::string> ready_line(const char* label, bool ready,
                                           const std::string& version, size_t entries) const;

@@ -62,6 +62,8 @@ struct SearchMoveFilter {
 SearchMoveFilter  make_search_move_filter(const Position& pos, bool inCheck, int pvIdx);
 std::vector<Move> consensus_marked_legal_moves(const Position& pos);
 std::vector<Move> iccf_frequent_legal_moves(const Position& pos);
+// FEAT-0008: Strict filter/preferred set (Priority or Union); empty if no hit.
+std::vector<Move> strict_preferred_moves(const Position& pos);
 bool              allow_search_move(const Position& pos, Move move, bool inCheck, int pvIdx);
 
 // FEAT-0007 Max: MovePicker order bonus without mutating history tables.

@@ -41,7 +41,7 @@ All product code: `src/evidence/` + `src/certus/` (except this doc).
 
 ### `src/ucioption.cpp`
 
-- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle, MixedEffort).
+- Combo options: emit `default` from `currentValue` and `var` for each token in `defaultValue` (EvidenceInfo, ConsensusSearch, IccfSearch, CertusStyle, MixedEffort, StrictPreferred).
 
 ### `src/movepick.cpp`
 

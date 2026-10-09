@@ -21,6 +21,7 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 |--------|------|---------|--------|
 | `CertusStyle` | combo | **Strict** | Off, Mixed, Strict |
 | `MixedEffort` | combo | **High** | Low, High, Max — solo si `CertusStyle=Mixed` |
+| `StrictPreferred` | combo | **Union** | Priority, Union — solo si `CertusStyle=Strict` (FEAT-0008) |
 | `EvidenceInfo` | combo | Root | Off, Root, All |
 | `ConsensusSearch` | combo | MarkedOnly | Off, MarkedOnly — filtro solo si `CertusStyle=Strict` |
 | `IccfSearch` | combo | FreqOnly | Off, FreqOnly — filtro solo si `CertusStyle=Strict` |
@@ -44,7 +45,14 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 
 `ConsensusSearch=MarkedOnly`: en **Strict**, nodos con consenso + `marked_moves` → solo marked ∩ legal. Raíz Strict: atajo FEAT-0010 + score NNUE.
 
-`IccfSearch=FreqOnly`: en **Strict**, filtra frequent ∩ legal; raíz Strict + 1 frequent → atajo.
+`IccfSearch=FreqOnly`: en **Strict**, filtra frequent ∩ legal; raíz Strict + 1 frequent → atajo (modo Priority).
+
+`StrictPreferred` (FEAT-0008) — ignorado si no Strict:
+
+| Valor | Conjunto filtro/effort `P` | Force raíz |
+|-------|----------------------------|------------|
+| **Priority** | marked else frequent | marked[0] si hay marked; si no, frequent singleton |
+| **Union** (default) | marked ∪ frequent | solo si \|P\|=1 |
 
 ## No implementar en fork (v1)
 

@@ -60,6 +60,15 @@ MixedEffortMode parse_mixed_effort(const std::string& s) {
     return MixedEffortMode::High;
 }
 
+StrictPreferredMode parse_strict_preferred(const std::string& s) {
+    std::string t;
+    for (char c : s)
+        t += char(std::tolower(static_cast<unsigned char>(c)));
+    if (t == "union")
+        return StrictPreferredMode::Union;
+    return StrictPreferredMode::Priority;
+}
+
 }  // namespace
 
 std::optional<std::string> Manager::ready_line(const char* label, bool ready,
@@ -199,6 +208,12 @@ void Manager::register_options(OptionsMap& options, std::function<void()> on_rel
     options.add("MixedEffort",
                 Option("Low High Max", "High", [this](const Option& o) -> std::optional<std::string> {
                     mixed_effort_ = parse_mixed_effort(std::string(o));
+                    return std::nullopt;
+                }));
+
+    options.add("StrictPreferred",
+                Option("Priority Union", "Union", [this](const Option& o) -> std::optional<std::string> {
+                    strict_preferred_ = parse_strict_preferred(std::string(o));
                     return std::nullopt;
                 }));
 

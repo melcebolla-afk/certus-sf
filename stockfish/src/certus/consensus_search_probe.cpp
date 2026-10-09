@@ -207,6 +207,29 @@ int main(int argc, char** argv) {
         check(Certus::allow_search_move(pos, a2a3, false, 0), "Max italian still allows a3");
     }
 
+    // FEAT-0008: Strict Priority vs Union on italian (marked + frequent both present).
+    mgr.set_certus_style(CertusStyleMode::Strict);
+    mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);
+    mgr.set_iccf_search(IccfSearchMode::FreqOnly);
+    mgr.set_strict_preferred(StrictPreferredMode::Priority);
+    {
+        const auto fp = Certus::make_search_move_filter(pos, false, 0);
+        check(fp.restrict_moves && fp.is_preferred(d4) && !fp.is_preferred(bc4),
+              "Strict Priority = marked only when marked present");
+        check(!Certus::allow_search_move(pos, bc4, false, 0), "Strict Priority blocks frequent-only bc4");
+    }
+    mgr.set_strict_preferred(StrictPreferredMode::Union);
+    {
+        const auto fu = Certus::make_search_move_filter(pos, false, 0);
+        check(fu.restrict_moves && fu.is_preferred(d4) && fu.is_preferred(bc4),
+              "Strict Union includes marked and frequent");
+        check(Certus::allow_search_move(pos, bc4, false, 0), "Strict Union allows bc4");
+        check(!Certus::allow_search_move(pos, a2a3, false, 0), "Strict Union still blocks a3");
+        const auto P = Certus::strict_preferred_moves(pos);
+        check(P.size() >= 3, "Strict Union italian |P|>=3");
+    }
+    mgr.set_strict_preferred(StrictPreferredMode::Priority);
+
     pos.set(fen, false, &states->back());
     mgr.set_certus_style(CertusStyleMode::Strict);
     mgr.set_consensus_search(ConsensusSearchMode::MarkedOnly);

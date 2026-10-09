@@ -217,11 +217,37 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
             set_root_hard_score(score_ev.to_value());
     }
 
-    // Mixed/Off: never force move. Strict: consensus / ICCF singleton shortcuts.
+    // Mixed/Off: never force move. Strict: consensus / ICCF / Union shortcuts.
     if (mgr->certus_style() != Evidence::CertusStyleMode::Strict)
         return false;
 
-    // 1) Consensus: force first legal marked.
+    // FEAT-0008 Union: force only when |P|==1 (no marked[0] preference).
+    if (mgr->strict_preferred() == Evidence::StrictPreferredMode::Union)
+    {
+        const std::vector<Move> pref = strict_preferred_moves(rootPos);
+        if (show_root_evidence(*mgr) && !pref.empty())
+        {
+            std::ostringstream ss;
+            ss << "info string preferred=";
+            for (std::size_t i = 0; i < pref.size(); ++i)
+            {
+                if (i)
+                    ss << ',';
+                ss << UCIEngine::move(pref[i], rootPos.is_chess960());
+            }
+            print_info(ss.str());
+        }
+        if (pref.size() == 1 && !rootPos.checkers())
+        {
+            emit_forced_root_bestmove(manager, rootPos,
+                                      UCIEngine::move(pref[0], rootPos.is_chess960()), getNnueEval,
+                                      displayDepth, showWdl);
+            return true;
+        }
+        return false;
+    }
+
+    // Priority (legacy): consensus force first marked; else ICCF singleton frequent.
     if (root_ev.evidence_class == Evidence::EvidenceClass::StrongConsensus)
     {
         const Evidence::ConsensusEntry* entry = mgr->probe_consensus(rootPos);
@@ -255,7 +281,6 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
         }
     }
 
-    // 2) ICCF: FreqOnly + exactly one legal frequent move.
     if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && !rootPos.checkers())
     {
         const std::vector<Move> freq = iccf_frequent_legal_moves(rootPos);
@@ -321,6 +346,33 @@ std::vector<Move> iccf_frequent_legal_moves(const Position& pos) {
     return legal_marked_moves(pos, entry->frequent_moves);
 }
 
+std::vector<Move> strict_preferred_moves(const Position& pos) {
+    const Evidence::Manager* mgr = evidence_manager();
+    if (!mgr)
+        return {};
+
+    std::vector<Move> marked;
+    std::vector<Move> freq;
+    if (mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly && mgr->consensus().ready())
+        marked = consensus_marked_legal_moves(pos);
+    if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && mgr->iccf().ready())
+        freq = iccf_frequent_legal_moves(pos);
+
+    if (mgr->strict_preferred() == Evidence::StrictPreferredMode::Union)
+    {
+        std::vector<Move> out = marked;
+        for (Move m : freq)
+            if (std::find(out.begin(), out.end(), m) == out.end())
+                out.push_back(m);
+        return out;
+    }
+
+    // Priority: marked else frequent.
+    if (!marked.empty())
+        return marked;
+    return freq;
+}
+
 SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int pvIdx) {
     SearchMoveFilter out;
     const Evidence::Manager* mgr = evidence_manager();
@@ -342,7 +394,19 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
     if (pvIdx > 0 && !mixedHighOrMax)
         return out;
 
-    // Preferred: marked else frequent (Max uses same set as High; only effort differs).
+    if (style == Evidence::CertusStyleMode::Strict)
+    {
+        std::vector<Move> preferred = strict_preferred_moves(pos);
+        if (preferred.empty())
+            return out;
+        out.preferred       = std::move(preferred);
+        out.boost_preferred = true;
+        out.restrict_moves  = true;
+        out.interior_depth  = true;
+        return out;
+    }
+
+    // Mixed: preferred marked else frequent (StrictPreferred ignored).
     std::vector<Move> preferred;
     if (mgr->consensus().ready())
         preferred = consensus_marked_legal_moves(pos);
@@ -353,33 +417,6 @@ SearchMoveFilter make_search_move_filter(const Position& pos, bool inCheck, int 
 
     out.preferred       = std::move(preferred);
     out.boost_preferred = true;
-
-    if (style == Evidence::CertusStyleMode::Strict)
-    {
-        out.interior_depth = true;
-        // Hard filter when fine-grained options request it (FEAT-0002/0003).
-        if (mgr->consensus_search() == Evidence::ConsensusSearchMode::MarkedOnly
-            && mgr->consensus().ready())
-        {
-            const std::vector<Move> marked = consensus_marked_legal_moves(pos);
-            if (!marked.empty())
-            {
-                out.restrict_moves = true;
-                out.preferred      = marked;
-                return out;
-            }
-        }
-        if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && mgr->iccf().ready())
-        {
-            const std::vector<Move> freq = iccf_frequent_legal_moves(pos);
-            if (!freq.empty())
-            {
-                out.restrict_moves = true;
-                out.preferred      = freq;
-            }
-        }
-        return out;
-    }
 
     if (mixedHighOrMax)
     {

@@ -75,7 +75,9 @@ Si en raíz:
 |-------|--------|--------------|------------|
 | `Off` | SF puro | No | No (NNUE directo) |
 | `Mixed` | `MixedEffort` Low/High/Max (default High); sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
-| `Strict` (**default**) | Filtro MarkedOnly/FreqOnly + LMR↓ + ext preferred | Sí (consenso / ICCF singleton) | Sí (TB/mate/theory + SoftOnly) |
+| `Strict` (**default**) | Filtro MarkedOnly/FreqOnly + LMR↓ + ext preferred | Sí (ver StrictPreferred) | Sí (TB/mate/theory + SoftOnly) |
+
+`StrictPreferred` (FEAT-0008) — solo Strict: `Priority` (marked else frequent; force marked[0] / frequent singleton) \| `Union` (**default**; marked ∪ frequent; force solo si \|P\|=1).
 
 `MixedEffort` (FEAT-0006/0007) — solo Mixed: `Low` = orden raíz una vez + LMR−1; `High` (**default**) = orden cada ID + LMR−2 + ext + boost MultiPV; `Max` = mismo preferred (marked else frequent) + LMR≈0 + bonus MovePicker. Ninguno filtra ni fuerza.
 
