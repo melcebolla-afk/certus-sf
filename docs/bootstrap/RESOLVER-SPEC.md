@@ -77,7 +77,7 @@ Si en raíz:
 | `Mixed` | `MixedEffort` Low/High/Max (default High); sin filtro | No | Sí (TB/mate/theory + SoftOnly) |
 | `Strict` (**default**) | Filtro MarkedOnly/FreqOnly + LMR↓ + ext preferred | Sí (ver StrictPreferred) | Sí (TB/mate/theory + SoftOnly) |
 
-`StrictPreferred` (FEAT-0008) — solo Strict: `Priority` (marked else frequent; force marked[0] / frequent singleton) \| `Union` (**default**; marked ∪ frequent; force solo si \|P\|=1).
+`StrictPreferred` (FEAT-0008) — solo Strict: `Priority` (marked else frequent; force marked[0] / frequent singleton) \| `Union` (**default**; marked ∪ frequent; force solo si \|P\|=1). Force de singleton / marked[0] **también en jaque** (preferred ya ∩ legal). S-3 (FEAT-0002): en jaque no filtrar movegen de search; no aplica al atajo raíz.
 
 `MixedEffort` (FEAT-0006/0007) — solo Mixed: `Low` = orden raíz una vez + LMR−1; `High` (**default**) = orden cada ID + LMR−2 + ext + boost MultiPV; `Max` = mismo preferred (marked else frequent) + LMR≈0 + bonus MovePicker. Ninguno filtra ni fuerza.
 
@@ -95,7 +95,7 @@ Salvaguardas: en jaque → todas legales; `MultiPV` línea `pvIdx>0` → sin fil
 | Valor | Movegen (search principal) | Eval | Raíz |
 |-------|---------------------------|------|------|
 | `Off` | Todas legales | NNUE | Sin atajo ICCF |
-| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | Atajo raíz solo si **exactamente 1** frequent legal (**Strict**) |
+| `FreqOnly` (default) | Solo `frequent_moves` ∩ legal si hit ICCF schema v2 | NNUE | Atajo raíz si **exactamente 1** frequent legal (**Strict**; también en jaque; Priority) |
 
 Precedencia Strict: marked > frequent. Atajo raíz consenso gana sobre ICCF singleton.
 

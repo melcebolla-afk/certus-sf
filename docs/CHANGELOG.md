@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- **FEAT-0008 `StrictPreferred`:** combo `Priority` \| `Union` (**default Union**). Solo Strict: Priority = marked else frequent; Union = marked ∪ frequent sin preferencia; force raíz Union solo si \|P\|=1.
+- **Strict root force en jaque:** Union `|P|==1` y singleton ICCF (Priority) fuerzan también bajo jaque; S-3 sigue sin filtrar search cuando no hay force.
+- **FEAT-0008 `StrictPreferred`:** combo `Priority` \| `Union` (**default Union**). Solo Strict: Priority = marked else frequent; Union = marked ∪ frequent sin preferencia; force raíz Union solo si \|P\|=1 (también en jaque).
 - **Default `CertusStyle=Strict`:** (antes Mixed). Oráculo ICCF / contrapeso a SF; ver `docs/analysis/2026-10-09-iccf-style-strict-vs-mixed.md`.
 - **FEAT-0007 `MixedEffort=Max`:** opt-in encima de High — mismo preferred (marked else frequent) + LMR≈0 + bonus orden MovePicker (+8000) sin mutar history; default sigue High; sin filtro/force. Corrección: sin unión marked∪frequent (marked manda).
 - **FEAT-0006 `MixedEffort`:** combo `Low` \| `High` (**default High**). Solo Mixed: High = más esfuerzo en preferred (orden cada ID, LMR−2, ext interiores, boost MultiPV) sin filtro/force; Low = Mixed FEAT-0004. Off/Strict ignoran el valor.

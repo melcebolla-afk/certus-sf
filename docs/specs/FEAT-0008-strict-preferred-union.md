@@ -67,10 +67,12 @@ Excepciones (igual que hoy):
 
 | Condición | Priority (hoy) | **Union** |
 |-----------|----------------|-----------|
-| Consenso + marked legales | Force **marked[0]** (aunque haya varios marked) | **No** force solo por ser marked; ver fila siguiente |
-| `|P| == 1` | Cubierto por marked[0] o frequent singleton | Force ese único movimiento de `P` |
-| `|P| > 1` | Si hubo marked, ya forzó marked[0]; si solo frequent y size>1, search | **Search** entre `P` (sin elegir marked sobre frequent) |
-| Solo frequent y size==1 | Force frequent | Force (idem, `|P|==1`) |
+| Consenso + marked legales | Force **marked[0]** (aunque haya varios marked; también en jaque) | **No** force solo por ser marked; ver fila siguiente |
+| `|P| == 1` | Cubierto por marked[0] o frequent singleton | Force ese único movimiento de `P` (**también en jaque**) |
+| `|P| > 1` | Si hubo marked, ya forzó marked[0]; si solo frequent y size>1, search | **Search** entre `P` (sin elegir marked sobre frequent); en jaque S-3 = sin filtro |
+| Solo frequent y size==1 | Force frequent (también en jaque) | Force (idem, `|P|==1`) |
+
+Nota: S-3 (no filtrar en jaque) sigue para el movegen de search cuando no hay force; no bloquea el atajo raíz singleton.
 
 Info strings (recomendado): además de `marked=` / `frequent=`, opcional `preferred=` listando `P` en Union.
 

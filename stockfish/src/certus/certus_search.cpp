@@ -237,7 +237,9 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
             }
             print_info(ss.str());
         }
-        if (pref.size() == 1 && !rootPos.checkers())
+        // |P|==1 → force even in check (legal preferred already resolves check).
+        // S-3 (no filter in check) still applies to search movegen when we do not force.
+        if (pref.size() == 1)
         {
             emit_forced_root_bestmove(manager, rootPos,
                                       UCIEngine::move(pref[0], rootPos.is_chess960()), getNnueEval,
@@ -281,7 +283,8 @@ bool prepare_root_search(const Position& rootPos, const Tablebases::Config& tbCo
         }
     }
 
-    if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly && !rootPos.checkers())
+    // Singleton frequent: same as Union |P|==1 — force even in check.
+    if (mgr->iccf_search() == Evidence::IccfSearchMode::FreqOnly)
     {
         const std::vector<Move> freq = iccf_frequent_legal_moves(rootPos);
         if (freq.size() == 1)

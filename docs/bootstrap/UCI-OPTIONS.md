@@ -51,8 +51,8 @@ Vacío → clear capa; inválido → `info string warning …` sin crash.
 
 | Valor | Conjunto filtro/effort `P` | Force raíz |
 |-------|----------------------------|------------|
-| **Priority** | marked else frequent | marked[0] si hay marked; si no, frequent singleton |
-| **Union** (default) | marked ∪ frequent | solo si \|P\|=1 |
+| **Priority** | marked else frequent | marked[0] si hay marked; si no, frequent singleton (también en jaque) |
+| **Union** (default) | marked ∪ frequent | solo si \|P\|=1 (también en jaque; S-3 = no filtrar search, no bloquea force) |
 
 ## No implementar en fork (v1)
 
