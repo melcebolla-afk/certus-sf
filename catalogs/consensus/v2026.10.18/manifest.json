@@ -1,0 +1,14 @@
+{
+  "layer": "STRONG_CONSENSUS",
+  "schema_version": 1,
+  "content_version": "2026.10.18",
+  "checksum": "sha256:052737be80f3566f09c736e74d9d08f3d8e75bfb89fa624d311647ba51e93a91",
+  "coverage": {
+    "positions": 8741
+  },
+  "sources": [
+    "human:iccf-star",
+    "oracle-elo-max"
+  ],
+  "built_at": "2026-10-18T02:15:04Z"
+}

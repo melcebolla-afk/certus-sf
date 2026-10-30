@@ -2,12 +2,12 @@
   "schema_version": 1,
   "layer": "PROVEN_MATE",
   "content_version": "2026.08.29",
-  "checksum": "sha256:75d1c8990afd4c846643bce36506cb01e44a44eeda74e60d6311120a111d8404",
-  "n_entries": 1688219,
+  "checksum": "sha256:aeb5efb0265dce110da38cadf34d60957ffb484bc5dafe7ae146ced9619c740f",
+  "n_entries": 1705878,
   "max_plies": 3,
   "source": "mate_build",
-  "updated": "2026-09-02",
+  "updated": "2026-10-25",
   "merged": true,
-  "added": 1678216,
+  "added": 2659,
   "jobs": 8
 }
